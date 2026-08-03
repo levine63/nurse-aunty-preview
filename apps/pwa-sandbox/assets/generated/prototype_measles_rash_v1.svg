@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="title desc">
+  <title id="title">Prototype rash sample</title>
+  <desc id="desc">Prototype rash and fever visual cue for measles/rash screen; not a diagnostic reference image.</desc>
+  <rect width="720" height="420" rx="24" fill="#fffdf7"/>
+  <rect x="28" y="28" width="664" height="364" rx="22" fill="#f7f0de" stroke="#d6d0c3" stroke-width="4"/>
+  <text x="52" y="72" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#24302f">Prototype sample: fever with rash concern</text>
+  <text x="52" y="103" font-family="Arial, sans-serif" font-size="15" fill="#5e5146">Illustration only - use outbreak/local guidance and checklist.</text>
+  <g transform="translate(138 122)">
+    <ellipse cx="120" cy="95" rx="64" ry="70" fill="#a96b43"/>
+    <path d="M75 57c25-38 82-38 105 0" fill="#2b201c"/>
+    <circle cx="98" cy="92" r="5" fill="#1d1d1b"/>
+    <circle cx="143" cy="92" r="5" fill="#1d1d1b"/>
+    <path d="M98 126c15-9 39-9 54 0" fill="none" stroke="#1d1d1b" stroke-width="5" stroke-linecap="round"/>
+    <path d="M66 238c15-76 119-92 158 0" fill="#f2b75b"/>
+    <g fill="#b3261e" opacity=".78">
+      <circle cx="86" cy="184" r="7"/><circle cx="118" cy="178" r="6"/><circle cx="154" cy="188" r="7"/>
+      <circle cx="98" cy="216" r="6"/><circle cx="142" cy="224" r="6"/><circle cx="176" cy="210" r="7"/>
+    </g>
+  </g>
+  <g transform="translate(434 150)">
+    <circle cx="72" cy="72" r="52" fill="#fff" stroke="#ca6556" stroke-width="8"/>
+    <path d="M72 34v76M45 58l27-24 27 24" fill="none" stroke="#ca6556" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="-28" y="170" font-family="Arial, sans-serif" font-size="18" fill="#24302f">Separate and seek local care if advised.</text>
+  </g>
+</svg>

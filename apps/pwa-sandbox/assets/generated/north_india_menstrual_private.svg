@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+<title id="title">North India menstrual health private module draft</title>
+<desc id="desc">A private North India wash corner with clean water, period-supply placeholders, drying cloth, calendar, and privacy shield.</desc>
+<rect width="640" height="360" fill="#f6f1f7"/>
+<rect x="54" y="54" width="532" height="248" rx="8" fill="#fffafb" stroke="#9d78a8" stroke-width="4"/>
+<path d="M92 54h456l-32-28H124z" fill="#8f4e91"/>
+<rect x="98" y="108" width="122" height="150" rx="10" fill="#e5f1ef" stroke="#6d9f93" stroke-width="4"/>
+<path d="M126 148h66M126 176h66M126 204h44" stroke="#6d9f93" stroke-width="6" stroke-linecap="round"/>
+<path d="M286 128q38 22 76 0v76q-38 28-76 0z" fill="#d65d75"/>
+<rect x="400" y="128" width="74" height="102" rx="12" fill="#cbe6ef" stroke="#457f91" stroke-width="4"/>
+<path d="M413 158h48M413 188h48" stroke="#457f91" stroke-width="6" stroke-linecap="round"/>
+<rect x="503" y="120" width="44" height="130" rx="22" fill="#f2d77c"/>
+<path d="M503 167h44" stroke="#9c7730" stroke-width="5"/>
+<rect x="282" y="235" width="92" height="38" rx="8" fill="#fff" stroke="#9d78a8" stroke-width="4"/>
+<path d="M302 254h52" stroke="#9d78a8" stroke-width="5" stroke-linecap="round"/>
+<path d="M488 250l52-34 52 34v32h-104z" fill="#e8d9ec" stroke="#9d78a8" stroke-width="4"/>
+<circle cx="540" cy="253" r="10" fill="#9d78a8"/>
+</svg>

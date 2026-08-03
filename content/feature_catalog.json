@@ -1,0 +1,1215 @@
+{
+  "about": "Tagged prototype feature catalog. Caregiver-facing labels resolve through the phrase bank. Prototype Localizer choices are logged in GOVERNANCE-DECISIONS.md.",
+  "schemaVersion": "0.1",
+  "memoryProfiles": [
+    "low_1gb",
+    "standard_8gb"
+  ],
+  "subjects": [
+    {
+      "id": "pregnancy",
+      "titleSlug": "tx.subject_pregnancy",
+      "ageBand": "pregnancy"
+    },
+    {
+      "id": "newborn_mom",
+      "titleSlug": "tx.subject_newborn_mom",
+      "ageBand": "postpartum"
+    },
+    {
+      "id": "newborn_baby",
+      "titleSlug": "tx.subject_newborn_baby",
+      "ageBand": "0_28_days"
+    },
+    {
+      "id": "child_under5",
+      "titleSlug": "tx.subject_child_under5",
+      "ageBand": "1_59_months"
+    },
+    {
+      "id": "school_child",
+      "titleSlug": "tx.subject_school_child",
+      "ageBand": "5_12_years"
+    },
+    {
+      "id": "household",
+      "titleSlug": "tx.subject_household",
+      "ageBand": "all"
+    }
+  ],
+  "types": [
+    {
+      "id": "triage",
+      "titleSlug": "tx.type_triage"
+    },
+    {
+      "id": "howto",
+      "titleSlug": "tx.type_howto"
+    },
+    {
+      "id": "story",
+      "titleSlug": "tx.type_story"
+    },
+    {
+      "id": "reminder",
+      "titleSlug": "tx.type_reminder"
+    },
+    {
+      "id": "tracker",
+      "titleSlug": "tx.type_tracker"
+    },
+    {
+      "id": "tool",
+      "titleSlug": "tx.type_tool"
+    }
+  ],
+  "topics": [
+    {
+      "id": "child_health",
+      "titleSlug": "tx.topic_child_health"
+    },
+    {
+      "id": "diarrhoea_ors",
+      "titleSlug": "tx.topic_diarrhoea_ors"
+    },
+    {
+      "id": "dental",
+      "titleSlug": "tx.topic_dental"
+    },
+    {
+      "id": "anc_birth",
+      "titleSlug": "tx.topic_anc_birth"
+    },
+    {
+      "id": "pnc_breastfeeding",
+      "titleSlug": "tx.topic_pnc_breastfeeding"
+    },
+    {
+      "id": "safe_water",
+      "titleSlug": "tx.topic_safe_water"
+    },
+    {
+      "id": "immunization",
+      "titleSlug": "tx.topic_immunization"
+    },
+    {
+      "id": "handwashing",
+      "titleSlug": "tx.topic_handwashing"
+    },
+    {
+      "id": "cold_flu",
+      "titleSlug": "tx.topic_cold_flu"
+    },
+    {
+      "id": "malaria",
+      "titleSlug": "tx.topic_malaria"
+    },
+    {
+      "id": "newborn",
+      "titleSlug": "tx.topic_newborn"
+    },
+    {
+      "id": "nutrition",
+      "titleSlug": "tx.topic_nutrition"
+    },
+    {
+      "id": "lead_kohl",
+      "titleSlug": "tx.topic_lead_kohl"
+    },
+    {
+      "id": "vision_hearing",
+      "titleSlug": "tx.topic_vision_hearing"
+    },
+    {
+      "id": "chronic_meds",
+      "titleSlug": "tx.topic_chronic_meds"
+    },
+    {
+      "id": "preparedness",
+      "titleSlug": "tx.topic_preparedness"
+    },
+    {
+      "id": "research_quality",
+      "titleSlug": "tx.topic_research_quality"
+    },
+    {
+      "id": "sanitation",
+      "titleSlug": "tx.topic_sanitation"
+    }
+  ],
+  "personIntentRoutes": [
+    {
+      "subject": "child_under5",
+      "intent": "check",
+      "featureId": "u5_triage"
+    }
+  ],
+  "features": [
+    {
+      "id": "u5_triage",
+      "titleSlug": "tx.feature_u5_triage",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "child_health"
+      ],
+      "status": "implemented",
+      "dangerEligible": true,
+      "launch": "triage.under5",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "clinical_rules_draft_verified_by_tests_needs_clinician_approval"
+    },
+    {
+      "id": "ors_voucher",
+      "titleSlug": "tx.feature_ors_voucher",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "tool",
+        "howto"
+      ],
+      "topic": [
+        "diarrhoea_ors"
+      ],
+      "status": "implemented",
+      "dangerEligible": false,
+      "launch": "ors.voucher",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "ors_slideshow",
+      "titleSlug": "tx.feature_ors_slideshow",
+      "subject": [
+        "child_under5",
+        "household"
+      ],
+      "type": [
+        "story",
+        "howto"
+      ],
+      "topic": [
+        "diarrhoea_ors"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "seq.ors_mixing",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "zinc_tracker",
+      "titleSlug": "tx.feature_zinc_tracker",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "tracker",
+        "reminder"
+      ],
+      "topic": [
+        "diarrhoea_ors"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.zinc_tracker",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "dental_brushing",
+      "titleSlug": "tx.feature_dental_brushing",
+      "subject": [
+        "child_under5",
+        "school_child"
+      ],
+      "type": [
+        "tool",
+        "tracker",
+        "reminder"
+      ],
+      "topic": [
+        "dental"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "dental.brushing",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "dental_triage",
+      "titleSlug": "tx.feature_dental_triage",
+      "subject": [
+        "child_under5",
+        "school_child"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "dental"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "dental.triage",
+      "integratedIntoBySubject": {
+        "child_under5": "u5_triage"
+      },
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "immunization_reminders",
+      "titleSlug": "tx.feature_immunization_reminders",
+      "subject": [
+        "newborn_baby",
+        "child_under5"
+      ],
+      "type": [
+        "reminder"
+      ],
+      "topic": [
+        "immunization",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.immunization_reminders",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "anc_birth_plan",
+      "titleSlug": "tx.feature_anc_birth_plan",
+      "subject": [
+        "pregnancy"
+      ],
+      "type": [
+        "tool",
+        "reminder"
+      ],
+      "topic": [
+        "anc_birth"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.anc_birth_plan",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "pnc_lactation",
+      "titleSlug": "tx.feature_pnc_lactation",
+      "subject": [
+        "newborn_mom",
+        "newborn_baby"
+      ],
+      "type": [
+        "triage",
+        "howto"
+      ],
+      "topic": [
+        "pnc_breastfeeding"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "screen.pnc_lactation",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "breastfeeding_aid_triage",
+      "titleSlug": "tx.feature_breastfeeding_aid_triage",
+      "subject": [
+        "newborn_mom",
+        "newborn_baby"
+      ],
+      "type": [
+        "triage",
+        "howto"
+      ],
+      "topic": [
+        "pnc_breastfeeding",
+        "newborn"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "screen.breastfeeding_aid_triage",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "safe_water_chlorine",
+      "titleSlug": "tx.feature_safe_water_chlorine",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "tool",
+        "howto"
+      ],
+      "topic": [
+        "safe_water"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.safe_water_chlorine",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "hh_handwashing_story",
+      "titleSlug": "tx.feature_hh_handwashing_story",
+      "subject": [
+        "child_under5",
+        "school_child",
+        "household"
+      ],
+      "type": [
+        "story",
+        "howto"
+      ],
+      "topic": [
+        "handwashing",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "story.hh_handwashing_story",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://hygieneheroes.berkeley.edu/handwashing.html",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "hh_safe_water_story",
+      "titleSlug": "tx.feature_hh_safe_water_story",
+      "subject": [
+        "school_child",
+        "household"
+      ],
+      "type": [
+        "story",
+        "howto"
+      ],
+      "topic": [
+        "safe_water"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "story.hh_safe_water_story",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://hygieneheroes.berkeley.edu/safewater.html",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "hh_dental_story",
+      "titleSlug": "tx.feature_hh_dental_story",
+      "subject": [
+        "school_child"
+      ],
+      "type": [
+        "story",
+        "howto"
+      ],
+      "topic": [
+        "dental"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "story.hh_dental_story",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://hygieneheroes.berkeley.edu/dental.html",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "hh_cold_flu_story",
+      "titleSlug": "tx.feature_hh_cold_flu_story",
+      "subject": [
+        "child_under5",
+        "school_child"
+      ],
+      "type": [
+        "story",
+        "howto"
+      ],
+      "topic": [
+        "cold_flu",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "story.hh_cold_flu_story",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://hygieneheroes.berkeley.edu/coldandflu.html",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "kmc_timer",
+      "titleSlug": "tx.feature_kmc_timer",
+      "subject": [
+        "newborn_mom",
+        "newborn_baby"
+      ],
+      "type": [
+        "tool",
+        "tracker"
+      ],
+      "topic": [
+        "newborn",
+        "pnc_breastfeeding"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.kmc_timer",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://www.who.int/publications/m/item/kangaroo-mother-care--a-clinical-practice-guide",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "newborn_triage",
+      "titleSlug": "tx.feature_newborn_triage",
+      "subject": [
+        "newborn_baby"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "newborn",
+        "pnc_breastfeeding"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "screen.newborn_triage",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "pnc_reminders",
+      "titleSlug": "tx.feature_pnc_reminders",
+      "subject": [
+        "newborn_mom",
+        "newborn_baby"
+      ],
+      "type": [
+        "reminder"
+      ],
+      "topic": [
+        "pnc_breastfeeding",
+        "newborn"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.pnc_reminders",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://www.who.int/publications/i/item/9789240045989",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "breastfeeding_audio",
+      "titleSlug": "tx.feature_breastfeeding_audio",
+      "subject": [
+        "newborn_mom",
+        "newborn_baby"
+      ],
+      "type": [
+        "howto",
+        "story"
+      ],
+      "topic": [
+        "pnc_breastfeeding",
+        "nutrition"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.breastfeeding_audio",
+      "audience": "reviewer",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "anc_triage",
+      "titleSlug": "tx.feature_anc_triage",
+      "subject": [
+        "pregnancy"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "anc_birth"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "screen.anc_triage",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://www.who.int/publications/i/item/9789241549912",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "delivery_kit_checklist",
+      "titleSlug": "tx.feature_delivery_kit_checklist",
+      "subject": [
+        "pregnancy"
+      ],
+      "type": [
+        "tool",
+        "tracker"
+      ],
+      "topic": [
+        "anc_birth",
+        "preparedness"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.delivery_kit_checklist",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "chlorine_contact_timer",
+      "titleSlug": "tx.feature_chlorine_contact_timer",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "tool"
+      ],
+      "topic": [
+        "safe_water"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.chlorine_contact_timer",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "boil_water_timer",
+      "titleSlug": "tx.feature_boil_water_timer",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "tool"
+      ],
+      "topic": [
+        "safe_water"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.boil_water_timer",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "cholera_hotspot_alert",
+      "titleSlug": "tx.feature_cholera_hotspot_alert",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "reminder",
+        "howto"
+      ],
+      "topic": [
+        "safe_water"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.cholera_hotspot_alert",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "handwashing_timer",
+      "titleSlug": "tx.feature_handwashing_timer",
+      "subject": [
+        "child_under5",
+        "school_child",
+        "household"
+      ],
+      "type": [
+        "tool",
+        "reminder"
+      ],
+      "topic": [
+        "handwashing",
+        "sanitation"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.handwashing_timer",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "source": "https://www.cdc.gov/clean-hands/about/index.html",
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "kohl_lead_screen",
+      "titleSlug": "tx.feature_kohl_lead_screen",
+      "subject": [
+        "household",
+        "child_under5"
+      ],
+      "type": [
+        "howto"
+      ],
+      "topic": [
+        "lead_kohl"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "screen.kohl_lead_screen",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "child_vision_screen",
+      "titleSlug": "tx.feature_child_vision_screen",
+      "subject": [
+        "school_child"
+      ],
+      "type": [
+        "tool",
+        "triage"
+      ],
+      "topic": [
+        "vision_hearing",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "screen.child_vision_screen",
+      "memoryProfile": [
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "child_hearing_screen",
+      "titleSlug": "tx.feature_child_hearing_screen",
+      "subject": [
+        "school_child"
+      ],
+      "type": [
+        "tool",
+        "triage"
+      ],
+      "topic": [
+        "vision_hearing",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "screen.child_hearing_screen",
+      "memoryProfile": [
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "child_ear_check",
+      "titleSlug": "tx.feature_child_ear_check",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "screen.child_ear_check",
+      "integratedIntoBySubject": {
+        "child_under5": "u5_triage"
+      },
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "child_measles_rash_check",
+      "titleSlug": "tx.feature_child_measles_rash_check",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "child_health",
+        "immunization"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "screen.child_measles_rash_check",
+      "integratedIntoBySubject": {
+        "child_under5": "u5_triage"
+      },
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "child_muac_malnutrition_screen",
+      "titleSlug": "tx.feature_child_muac_malnutrition_screen",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "nutrition",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": true,
+      "launch": "screen.child_muac_malnutrition_screen",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "child_injury_first_aid_check",
+      "titleSlug": "tx.feature_child_injury_first_aid_check",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "triage"
+      ],
+      "topic": [
+        "child_health",
+        "preparedness"
+      ],
+      "status": "prototype",
+      "audience": "reviewer",
+      "dangerEligible": true,
+      "launch": "screen.child_injury_first_aid_check",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "family_preparedness",
+      "titleSlug": "tx.feature_family_preparedness",
+      "subject": [
+        "household",
+        "pregnancy"
+      ],
+      "type": [
+        "tool",
+        "tracker"
+      ],
+      "topic": [
+        "preparedness"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.family_preparedness",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "chronic_refill_tracker",
+      "titleSlug": "tx.feature_chronic_refill_tracker",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "reminder",
+        "tracker"
+      ],
+      "topic": [
+        "chronic_meds"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.chronic_refill_tracker",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "labor_clock",
+      "titleSlug": "tx.feature_labor_clock",
+      "subject": [
+        "pregnancy"
+      ],
+      "type": [
+        "tool",
+        "reminder"
+      ],
+      "topic": [
+        "anc_birth"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.labor_clock",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "bednet_hanging_reminder",
+      "titleSlug": "tx.feature_bednet_hanging_reminder",
+      "subject": [
+        "household",
+        "pregnancy",
+        "child_under5"
+      ],
+      "type": [
+        "reminder",
+        "howto"
+      ],
+      "topic": [
+        "malaria"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.bednet_hanging_reminder",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "dehydration_visual_guide",
+      "titleSlug": "tx.feature_dehydration_visual_guide",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "howto",
+        "tool"
+      ],
+      "topic": [
+        "diarrhoea_ors",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.dehydration_visual_guide",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "complementary_feeding_card",
+      "titleSlug": "tx.feature_complementary_feeding_card",
+      "subject": [
+        "child_under5"
+      ],
+      "type": [
+        "howto",
+        "tool"
+      ],
+      "topic": [
+        "nutrition",
+        "child_health"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.complementary_feeding_card",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "chlorine_dose_helper",
+      "titleSlug": "tx.feature_chlorine_dose_helper",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "tool"
+      ],
+      "topic": [
+        "safe_water"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.chlorine_dose_helper",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "sanitation_checklist",
+      "titleSlug": "tx.feature_sanitation_checklist",
+      "subject": [
+        "household",
+        "child_under5"
+      ],
+      "type": [
+        "tool",
+        "howto"
+      ],
+      "topic": [
+        "sanitation",
+        "handwashing"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.sanitation_checklist",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "channel_twins_preview",
+      "titleSlug": "tx.feature_channel_twins_preview",
+      "subject": [
+        "household",
+        "pregnancy",
+        "newborn_mom",
+        "newborn_baby",
+        "child_under5"
+      ],
+      "type": [
+        "tool",
+        "howto"
+      ],
+      "topic": [
+        "research_quality",
+        "preparedness"
+      ],
+      "status": "prototype",
+      "audience": "reviewer",
+      "dangerEligible": false,
+      "launch": "tool.channel_twins_preview",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "referral_followup_queue",
+      "titleSlug": "tx.feature_referral_followup_queue",
+      "subject": [
+        "household",
+        "pregnancy",
+        "newborn_mom",
+        "newborn_baby",
+        "child_under5"
+      ],
+      "type": [
+        "tool",
+        "tracker"
+      ],
+      "topic": [
+        "research_quality",
+        "preparedness"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.referral_followup_queue",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "shared_phone_privacy_mode",
+      "titleSlug": "tx.feature_shared_phone_privacy_mode",
+      "subject": [
+        "household",
+        "pregnancy",
+        "newborn_mom"
+      ],
+      "type": [
+        "tool"
+      ],
+      "topic": [
+        "research_quality",
+        "anc_birth"
+      ],
+      "status": "prototype",
+      "dangerEligible": false,
+      "launch": "tool.shared_phone_privacy_mode",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "partner_service_dashboard",
+      "titleSlug": "tx.feature_partner_service_dashboard",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "tool",
+        "tracker"
+      ],
+      "topic": [
+        "research_quality"
+      ],
+      "status": "prototype",
+      "audience": "reviewer",
+      "dangerEligible": false,
+      "launch": "tool.partner_service_dashboard",
+      "memoryProfile": [
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "research_engagement",
+      "titleSlug": "tx.feature_research_engagement",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "tracker"
+      ],
+      "topic": [
+        "research_quality"
+      ],
+      "status": "prototype",
+      "audience": "reviewer",
+      "dangerEligible": false,
+      "launch": "tool.research_engagement",
+      "memoryProfile": [
+        "low_1gb",
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "id": "localizer_quality_console",
+      "titleSlug": "tx.feature_localizer_quality_console",
+      "subject": [
+        "household"
+      ],
+      "type": [
+        "tool"
+      ],
+      "topic": [
+        "research_quality"
+      ],
+      "status": "prototype",
+      "audience": "reviewer",
+      "dangerEligible": false,
+      "launch": "tool.localizer_quality_console",
+      "memoryProfile": [
+        "standard_8gb"
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "about": "MOH-editable household container catalog. To add a container: append a row with a unique id, volumeMl, per-locale labels, an iconPath, a treatment kind, and a phrase-bank slug (add the matching slug to i18n/phrase_bank.json). No IR or code change required. Updates are checksum-gated (see CONTRACTS.md Section: Config).",
+  "version": "containers-2026-07-01",
+  "containers": [
+    {
+      "id": "small_tea_cup",
+      "kind": "ors",
+      "volumeMl": 200,
+      "iconPath": "assets/generated/generated_ors_container_cup_200ml_v1.png",
+      "slug": "tx.ors_small_tea_cup",
+      "labels": {
+        "en": "Small tea cup (200 mL)",
+        "fr": "Petite tasse à thé (200 mL)",
+        "hi-IN": "छोटा चाय का कप (200 mL)",
+        "bn-BD": ""
+      },
+      "imageDesc": "A 200 ml cup with an ORS sachet next to it, to show scale"
+    },
+    {
+      "id": "ceramic_mug",
+      "kind": "ors",
+      "volumeMl": 300,
+      "iconPath": "assets/generated/generated_ors_container_mug_300ml_v1.png",
+      "slug": "tx.ors_ceramic_mug",
+      "labels": {
+        "en": "Drinking mug (300 mL)",
+        "fr": "Grande tasse (300 mL)",
+        "hi-IN": "पीने का मग (300 mL)",
+        "bn-BD": ""
+      },
+      "imageDesc": "A standard 300 ml mug with an ORS sachet beside it, to show scale"
+    },
+    {
+      "id": "water_bottle_500",
+      "kind": "ors",
+      "volumeMl": 500,
+      "iconPath": "assets/generated/generated_ors_container_bottle_500ml_v1.png",
+      "slug": "tx.ors_water_bottle_500",
+      "labels": {
+        "en": "Water bottle (500 mL)",
+        "fr": "Bouteille d'eau (500 mL)",
+        "hi-IN": "पानी की बोतल (500 mL)",
+        "bn-BD": ""
+      },
+      "imageDesc": "A 500 ml water bottle with an ORS sachet, to show scale"
+    },
+    {
+      "id": "soda_bottle_1500",
+      "kind": "ors",
+      "volumeMl": 1500,
+      "iconPath": "assets/generated/generated_ors_container_bottle_1500ml_1l_line_v1.png",
+      "slug": "tx.ors_soda_bottle_1500",
+      "labels": {
+        "en": "Large bottle to line (1.5 L)",
+        "fr": "Grande bouteille jusqu'au trait de 1 L (bouteille de 1,5 L)",
+        "hi-IN": "बड़ी बोतल में 1 लीटर के निशान तक (1.5 L बोतल)",
+        "bn-BD": ""
+      },
+      "imageDesc": "Image prompt: transparent or light 1.5 L bottle with a thick visible 1 L fill line, label \"1 L\", water exactly to the line, full ORS sachet beside it, and a warning icon saying do not guess if no line is visible."
+    },
+    {
+      "id": "chlorine_jerrycan_20l",
+      "kind": "chlorine",
+      "volumeMl": 20000,
+      "iconPath": "assets/placeholders/jerrycan_20l.webp",
+      "slug": "tx.chlorine_jerrycan_20l",
+      "labels": {
+        "en": "Jerrycan (20 L)",
+        "fr": "Bidon (20 L)",
+        "hi-IN": "पानी की बड़ी कैन (20 L)",
+        "bn-BD": ""
+      },
+      "imageDesc": "A 20 L jerrycan with the chlorine dose cap, to show scale"
+    }
+  ]
+}

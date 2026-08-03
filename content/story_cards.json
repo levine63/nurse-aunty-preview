@@ -1,0 +1,62 @@
+{
+  "about": "Adapted educational story cards. These are short prototype summaries with provenance; editable source decks/docs should replace them before approval.",
+  "schemaVersion": "0.1",
+  "cards": [
+    {
+      "featureId": "hh_handwashing_story",
+      "titleSlug": "tx.feature_hh_handwashing_story",
+      "source": "https://hygieneheroes.berkeley.edu/handwashing.html",
+      "sourceName": "Hygiene Heroes handwashing",
+      "imageDesc": "Friendly germ character near a sink while a child uses soap and clean water.",
+      "frames": ["tx.story_hh_handwashing_1", "tx.story_hh_handwashing_2", "tx.story_hh_handwashing_3", "tx.story_hh_handwashing_4", "tx.story_hh_handwashing_5"],
+      "actions": [
+        { "id": "storyhandwash", "labelSlug": "tx.story_action_handwashing_coach", "launch": "tool.handwashing_timer" },
+        { "id": "storyhandwashquiz", "labelSlug": "tx.story_action_quiz", "launch": "tool.quiz_runner", "quizFeatureId": "hh_handwashing_story", "style": "ghost" }
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "featureId": "hh_safe_water_story",
+      "titleSlug": "tx.feature_hh_safe_water_story",
+      "source": "https://hygieneheroes.berkeley.edu/safewater.html",
+      "sourceName": "Hygiene Heroes safe water",
+      "imageDesc": "Family choosing covered clean water while a story character points to unsafe water.",
+      "frames": ["tx.story_hh_safe_water_1", "tx.story_hh_safe_water_2", "tx.story_hh_safe_water_3"],
+      "actions": [
+        { "id": "storysafecheck", "labelSlug": "tx.story_action_safe_water_checker", "launch": "tool.safe_water_chlorine" },
+        { "id": "storysafequiz", "labelSlug": "tx.story_action_quiz", "launch": "tool.quiz_runner", "quizFeatureId": "hh_safe_water_story", "style": "ghost" },
+        { "id": "storyboil", "labelSlug": "tx.story_action_boil_water_timer", "launch": "tool.boil_water_timer", "style": "ghost" },
+        { "id": "storycholera", "labelSlug": "tx.story_action_cholera_alert", "launch": "tool.cholera_hotspot_alert", "style": "ghost" }
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "featureId": "hh_dental_story",
+      "titleSlug": "tx.feature_hh_dental_story",
+      "source": "https://hygieneheroes.berkeley.edu/dental.html",
+      "sourceName": "Hygiene Heroes dental",
+      "imageDesc": "Tooth character smiling beside toothbrush, toothpaste, and a low-sugar snack choice.",
+      "frames": ["tx.story_hh_dental_1", "tx.story_hh_dental_2", "tx.story_hh_dental_3"],
+      "actions": [
+        { "id": "storybrush", "labelSlug": "tx.story_action_brushing_coach", "launch": "dental.brushing" },
+        { "id": "storydentalquiz", "labelSlug": "tx.story_action_quiz", "launch": "tool.quiz_runner", "quizFeatureId": "hh_dental_story", "style": "ghost" },
+        { "id": "storytoothpain", "labelSlug": "tx.story_action_tooth_pain_check", "launch": "dental.triage", "style": "ghost" }
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    },
+    {
+      "featureId": "hh_cold_flu_story",
+      "titleSlug": "tx.feature_hh_cold_flu_story",
+      "source": "https://hygieneheroes.berkeley.edu/coldandflu.html",
+      "sourceName": "Hygiene Heroes cold and flu",
+      "imageDesc": "Child covering cough with elbow, then washing hands before joining friends.",
+      "frames": ["tx.story_hh_cold_flu_1", "tx.story_hh_cold_flu_2", "tx.story_hh_cold_flu_3"],
+      "actions": [
+        { "id": "storycoldwash", "labelSlug": "tx.story_action_handwashing_coach", "launch": "tool.handwashing_timer" },
+        { "id": "storycoldquiz", "labelSlug": "tx.story_action_quiz", "launch": "tool.quiz_runner", "quizFeatureId": "hh_cold_flu_story", "style": "ghost" },
+        { "id": "storycoldsickcheck", "labelSlug": "tx.story_action_sick_child_check", "launch": "triage.cough", "style": "ghost" }
+      ],
+      "governanceStatus": "CODEX Decision - needs approval"
+    }
+  ]
+}

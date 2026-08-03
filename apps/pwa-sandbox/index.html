@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NurseAunty(TM) prototype</title>
+<style>
+  :root { --ink:#1a1a2e; --line:#d9d9e3; --accent:#0b6b5b; --warn:#b3261e; --ok:#0b6b5b; --bg:#f7f7fb; }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; margin: 0; background: var(--bg); color: var(--ink); }
+  .wrap { max-width: none; min-height:100vh; margin: 0; padding: 16px 16px 16px 180px; }
+  .appnav { position:fixed; left:16px; top:16px; bottom:16px; width:146px; z-index:30; display:flex; flex-direction:column; gap:8px; padding:10px; border:1px solid var(--line); border-radius:10px; background:#fff; box-shadow:0 8px 22px rgba(20,28,48,.08); }
+  .navitem { width:100%; min-height:54px; display:flex; align-items:center; gap:9px; justify-content:flex-start; background:#fff; color:var(--ink); border-color:var(--line); border-radius:8px; font-weight:700; }
+  .navitem.active { border-color:var(--accent); background:#e9f4f1; color:#0b3d35; }
+  .navitem.urgent { border-color:var(--warn); color:var(--warn); }
+  .navitem.urgent.active { background:#fdebea; color:#8f1f18; }
+  .navicon { width:24px; height:24px; border-radius:50%; display:inline-grid; place-items:center; border:1px solid currentColor; font-size:12px; line-height:1; flex:0 0 auto; }
+  .appmain { max-width: 780px; margin:0 auto; }
+  .screenbar { position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px; min-width:0; max-width:100%; padding:8px 0 10px; background:var(--bg); }
+  .screenbar.hidden { display:none; }
+  .screenbar button { flex:0 0 auto; }
+  .screenlabel { min-width:0; font-weight:800; font-size:15px; overflow-wrap:anywhere; }
+  #slidetitle.duplicate-shell-title { display:none; }
+  .progressstrip { display:flex; gap:6px; flex-wrap:wrap; margin-left:auto; counter-reset: step; }
+  .progressstep { counter-increment: step; border:1px solid var(--line); border-radius:999px; padding:5px 8px; background:#fff; color:#555; font-size:12px; display:inline-flex; align-items:center; gap:5px; }
+  .progressstep::before { content: counter(step); width:18px; height:18px; border-radius:50%; display:inline-grid; place-items:center; background:#eef1f0; color:#44514c; font-size:11px; font-weight:800; }
+  .progressstep.done { border-color:#b8d7cc; color:#315d50; }
+  .progressstep.done::before { content:"ok"; background:#e0f0ea; color:#0b6b5b; }
+  .progressstep.active { border-color:var(--accent); background:#e9f4f1; color:#0b3d35; font-weight:800; }
+  .progressstep.active::before { background:var(--accent); color:#fff; }
+  .banner { background: #fff4e5; border: 1px solid #f0c36d; border-radius: 8px; padding: 8px 12px; font-size: 13px; margin-bottom: 14px; }
+  .status { font-size: 12px; margin: 0 0 12px; color: #666; }
+  h1 { font-size: 20px; margin: 6px 0 2px; }
+  h2 { font-size: 16px; margin: 16px 0 8px; }
+  .sub { color: #666; font-size: 13px; margin-bottom: 16px; }
+  .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 12px 0; }
+  .search { min-height:48px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 15px; width: 100%; background:#fff; color:var(--ink); }
+  .tabs, .chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+  #maindoors { display:none; }
+  .chip, .tab { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 999px; padding: 8px 12px; min-height:48px; display:inline-flex; align-items:center; justify-content:center; font-size: 13px; }
+  .chip.active, .tab.active { border-color: var(--accent); background: #e9f4f1; color: var(--accent); }
+  .tab.dangerdoor, #showtriage { border-color: var(--warn); background:#fff; color:var(--warn); font-weight:700; }
+  .tab.dangerdoor.active, #showtriage:focus { background:#fdebea; color:#8f1f18; }
+  #showtriage { display:none; }
+  .feature-grid { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
+  .feature { border: 1px solid var(--line); border-radius: 8px; padding: 10px; background:#fff; text-align:left; color:var(--ink); }
+  .feature strong { display:block; font-size:15px; margin-bottom:4px; }
+  .feature span { display:inline-block; font-size:11px; color:#666; margin-right:6px; }
+  .feature .statuspill, .feature .cardmeta { display:none; }
+  .featurethumb { display:block; width:100%; height:132px; object-fit:contain; object-position:center; border-radius:6px; border:1px solid #e4ece8; background:#fff; margin:6px 0 8px; }
+  .demo-panel { border:1px solid var(--line); border-radius:8px; padding:12px; background:#fff; margin:0 0 14px; }
+  .demo-head { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; margin-bottom:10px; }
+  .demo-head strong { display:block; font-size:15px; margin-bottom:2px; }
+  .demo-head span { display:block; font-size:12px; color:#666; }
+  .demo-actions { display:grid; grid-template-columns:1fr; gap:8px; }
+  .demo-action { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fbfbfd; color:var(--ink); text-align:left; }
+  .demo-action strong { display:block; font-size:14px; margin-bottom:3px; }
+  .demo-action span { display:block; font-size:12px; color:#666; }
+  .demo-action.primary { border-color:var(--accent); background:#e9f4f1; }
+  .profilebar { display:flex; justify-content:space-between; gap:8px; align-items:center; font-size:12px; color:#666; margin:10px 0; }
+  .profilebar select { min-height:48px; padding:8px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); }
+  .prefs-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .today-panel, .prefs-panel { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fff; margin:0 0 14px; }
+  .today-panel { display:grid; gap:10px; }
+  .today-layout { display:grid; grid-template-columns:1.25fr .85fr; gap:10px; align-items:stretch; }
+  .today-main, .today-side { border:1px solid var(--line); border-radius:8px; background:#fbfbfd; padding:10px; }
+  .today-main { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+  .today-family { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .today-person { border:1px solid #cfd8d3; border-radius:999px; padding:7px 10px; background:#fff; font-weight:800; font-size:13px; color:#20332e; }
+  .today-reminders { display:grid; gap:7px; margin-top:8px; }
+  .today-reminder { border-left:4px solid var(--accent); padding:7px 8px; background:#fff; border-radius:6px; font-size:13px; }
+  .today-reminder strong { font-size:13px; }
+  .home-flow { border-top:1px solid var(--line); padding-top:14px; }
+  .home-flow h2 { margin:0 0 4px; font-size:20px; }
+  .home-actions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-top:10px; }
+  .home-action { min-height:64px; text-align:left; padding:10px 12px; }
+  .home-action strong { font-size:18px; }
+  .home-action span { font-size:16px; line-height:1.35; color:#fff; }
+  .catalog-step { margin:0 0 12px; }
+  .show-more { width:100%; min-height:48px; margin-top:4px; }
+  .today-panel strong, .prefs-panel strong { display:block; font-size:15px; }
+  .today-panel span, .prefs-panel span { display:block; font-size:12px; color:#666; margin-top:2px; }
+  .prefs-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .prefs-grid label { display:block; font-size:13px; color:#444; }
+  .prefs-grid select, .prefs-grid input[type="time"] { width:100%; margin-top:4px; padding:8px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); }
+  .prefs-checks { display:grid; gap:6px; margin-top:10px; font-size:13px; }
+  .prefs-checks label { min-height:48px; display:flex; align-items:center; gap:8px; }
+  .reviewer-settings { margin-top:14px; border:1px solid var(--line); border-radius:8px; background:#f7f8f9; padding:8px 10px; }
+  .reviewer-settings summary { min-height:48px; display:flex; align-items:center; cursor:pointer; font-weight:800; color:#3f4850; }
+  .reviewer-settings .reviewer-note { margin:0 0 8px; color:#5d6872; font-size:12px; }
+  .family-panel { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fff; margin: 0 0 14px; }
+  .family-panel .row { display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:8px; margin-top:8px; }
+  .family-panel input, .family-panel select { min-width:0; padding:9px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); }
+  .family-edit { margin-top:8px; }
+  .family-edit summary { min-height:48px; display:flex; align-items:center; color:#555; cursor:pointer; font-size:13px; }
+  .people { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin-top:8px; }
+  .person-card { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px; min-width:0; }
+  .person { width:100%; border:1px solid var(--line); border-radius:12px; padding:8px 14px; min-height:48px; background:#fbfbfd; color:var(--ink); text-align:left; font-size:15px; }
+  .person strong { display:block; }
+  .person span { display:none; color:#666; }
+  .edit-person { min-width:64px; padding:8px 10px; border-radius:12px; }
+  .person-editor-actions { display:flex; gap:6px; flex-wrap:wrap; }
+  .person-edit-feedback { margin:8px 0 0; border-radius:8px; padding:10px; background:#e9f4f1; color:#173f37; font-weight:750; }
+  .person-edit-feedback:empty { display:none; }
+  @media (max-width:720px) {
+    .family-panel .row { grid-template-columns:minmax(0,1fr); }
+    .person-editor-actions button { flex:1 1 8rem; }
+  }
+  .module-manager { border-top:1px solid var(--line); margin-top:10px; padding-top:10px; }
+  .module-head { display:flex; justify-content:space-between; gap:8px; align-items:center; min-height:48px; font-size:12px; color:#666; margin-bottom:8px; }
+  .module-head label { display:flex; align-items:center; gap:6px; min-height:48px; white-space:nowrap; }
+  .module-head input { width:18px; height:18px; min-width:18px; padding:0; }
+  .module-toggles { display:flex; gap:6px; overflow-x:auto; padding-bottom:2px; }
+  .module-toggle { flex:0 0 auto; border-color:var(--line); background:#fff; color:var(--ink); border-radius:999px; padding:8px 12px; min-height:48px; font-size:12px; }
+  .module-toggle.active { border-color:var(--accent); background:#e9f4f1; color:var(--accent); }
+  .section { margin-bottom: 14px; }
+  fieldset { border: 1px solid var(--line); border-radius: 10px; margin: 0 0 14px; padding: 12px 14px; background: #fff; }
+  legend { font-weight: 600; font-size: 13px; padding: 0 6px; }
+  .field label { display: block; font-size: 14px; margin-bottom: 6px; color:#444; }
+  input[type="date"], input[type="number"], .field select { min-height:48px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 16px; width: 100%; background:#fff; color:var(--ink); }
+  .muted { color:#40524c; font-size:16px; line-height:1.45; margin-top:6px; }
+  .sign { display: flex; align-items: center; gap: 10px; padding: 10px 0; min-height:48px; font-size: 15px; cursor: pointer; }
+  .sign input { width: 20px; height: 20px; flex: 0 0 auto; }
+  .rrbox { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  button { min-width: 48px; min-height: 48px; font-size: 15px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
+  button.ghost { background: #fff; color: var(--accent); }
+  button.tap { font-size: 20px; padding: 18px 22px; min-width: 160px; }
+  #assess { width: 100%; font-size: 17px; padding: 14px; margin: 4px 0 16px; }
+  #assess:disabled { opacity:.5; cursor:default; }
+  .result { border-radius: 12px; padding: 0; margin-bottom: 14px; border: 2px solid var(--line); background:#fff; overflow:hidden; }
+  .result.refer { border-color: var(--warn); } .result.home { border-color: var(--ok); }
+  .result-band { padding:10px 14px; color:#fff; font-weight:900; letter-spacing:0; font-size:16px; }
+  .result.refer .result-band { background:var(--warn); }
+  .result.home .result-band { background:var(--ok); }
+  .result-body { padding:14px; }
+  .result h2 { margin: 0 0 6px; font-size: 18px; text-transform: capitalize; }
+  .result-action { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fbfbfd; margin:8px 0 10px; font-size:15px; }
+  .result-action strong { display:block; margin-bottom:3px; color:#172921; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .card { border: 1px solid var(--line); border-radius: 10px; padding: 12px; text-align: center; cursor: pointer; background:#fff; }
+  .card:hover { border-color: var(--accent); } .card .vol { font-size: 12px; color: #666; }
+  .card.selected { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,123,94,.14); background:#f7fffc; }
+  .ors-container-choice { width:100%; color:var(--text); font:inherit; }
+  .result-action-button { margin-top:8px; width:100%; }
+  .request-card { scroll-margin-top:16px; }
+  .request-instruction { font-weight:700; margin-bottom:8px; }
+  .seller-card { border:2px solid var(--accent); border-radius:10px; padding:12px; background:#f7fffc; font-family:Georgia, "Times New Roman", serif; font-size:17px; line-height:1.35; }
+  .seller-card strong { display:block; font-family:system-ui, -apple-system, sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:0; color:#0b3d35; margin-bottom:6px; }
+  .fineprint { font-size:11px; line-height:1.35; color:#666; border-top:1px solid var(--line); margin-top:10px; padding-top:8px; }
+  .mix-instruction { border:2px solid var(--accent); border-radius:10px; background:#f7fffc; padding:12px; margin-top:12px; }
+  .mix-instruction h3 { margin:0 0 8px; font-size:16px; }
+  .trace { font-family: ui-monospace, monospace; font-size: 12px; background: #f0f0f5; border-radius: 8px; padding: 10px; white-space: pre-wrap; margin-top: 12px; color:#333; }
+  .slidebox .trace:not(details) { display:none; }
+  .imgph { border:1px dashed #b9b9c6; border-radius:6px; padding:6px 8px; font-size:11px; color:#8a8a99; margin:2px 0 4px 30px; background:#fbfbfd; }
+  .card .imgph { margin:0 0 6px; }
+  .questionasset { margin: 4px 0 10px 30px; max-width: 220px; border: 1px solid #e2ded5; border-radius: 8px; background: #fffaf0; padding: 8px; }
+  .questionasset img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: contain; border-radius: 6px; background: #faf8f2; }
+  .questionasset figcaption { margin-top: 6px; font-size: 12px; line-height: 1.35; color: #5f574d; }
+  .questionasset details { margin-top:8px; }
+  .questionasset summary { cursor:pointer; color:var(--accent); font-weight:750; min-height:44px; display:flex; align-items:center; }
+  .questionasset details img { margin-top:8px; width:min(82vw, 520px); max-width:none; aspect-ratio:auto; }
+  .questionexamples { margin:8px 0; }
+  .questionexamples > summary { min-height:48px; display:flex; align-items:center; color:var(--accent); font-weight:800; cursor:pointer; }
+  .questionexamples .questionasset { margin-left:0; }
+  .visualasset { display:block; width:100%; max-height:210px; object-fit:contain; border-radius:8px; background:#fff; }
+  .visualfallback { display:grid; place-items:center; min-height:150px; border-radius:10px; border:1px solid #cfd8d3; background:linear-gradient(135deg,#e9f4f1,#fff7dc); color:#30524b; padding:14px; text-align:center; font-size:14px; }
+  .visualfallback strong { display:block; font-size:16px; margin-bottom:4px; color:#0b3d35; }
+  .imgcredit { display:none; }
+  .inlinevisual { margin:8px 0 12px; }
+  .inlinevisual .visualasset { max-height:280px; border:1px solid #dde6e1; }
+  .dosegrid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:0 0 12px; }
+  .dosecard { margin:0; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:#fff; }
+  .dosecard img { display:block; width:100%; aspect-ratio:1 / 1; object-fit:contain; background:#fff; }
+  .dosecard figcaption { padding:8px; font-size:13px; line-height:1.25; color:#122036; }
+  @media (max-width:560px) { .dosegrid { grid-template-columns:1fr; } }
+  .slideshow { min-width:0; max-width:100%; border: 1px solid var(--line); border-radius: 8px; padding: 12px; background:#fff; margin-bottom:14px; }
+  .slidebox { min-width:0; max-width:100%; min-height: 120px; border:1px dashed #b9b9c6; border-radius:8px; padding:12px; background:#fbfbfd; overflow-wrap:anywhere; }
+  .slidecontrols { display:flex; justify-content:space-between; gap:8px; margin-top:10px; }
+  .slidecontrols.wrap-controls { flex-wrap:wrap; }
+  .slidecontrols.checklist-controls { display:grid; grid-template-columns:minmax(0,1fr); width:100%; min-width:0; }
+  .slidecontrols label { display:flex; gap:8px; align-items:flex-start; min-height:48px; min-width:0; max-width:100%; margin:7px 0; overflow-wrap:anywhere; }
+  #slidecache { display:block; min-width:0; max-width:100%; }
+  #slidecache > .slidecontrols { flex-wrap:wrap; min-width:0; max-width:100%; }
+  #slidecache > .slidecontrols > label,
+  #slidecache > .slidecontrols > fieldset,
+  #slidecache > .slidecontrols > p { flex:1 1 100%; min-width:0; max-width:100%; }
+  #slidecache > .slidecontrols > button { flex:1 1 14rem; min-width:0; max-width:100%; white-space:normal; overflow-wrap:anywhere; }
+  .symptom-group { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fff; }
+  .symptom-group legend { max-width:100%; font-weight:700; overflow-wrap:anywhere; }
+  .symptom-group label { display:flex; align-items:flex-start; gap:8px; max-width:100%; min-width:0; padding:10px 0; min-height:48px; font-size:15px; line-height:1.35; overflow-wrap:anywhere; }
+  .symptom-group input[type="checkbox"] { margin-top:2px; flex:0 0 auto; }
+  .checklist-feedback { margin:0; font-size:14px; color:#555; }
+  .trace summary { cursor:pointer; font-family:system-ui, -apple-system, sans-serif; font-weight:600; }
+  .cardvisual { width:100%; height:82px; object-fit:contain; display:block; margin:0 0 6px; border-radius:6px; background:#fbfbfd; border:1px solid #ececf2; }
+  .containerphoto { height:112px; background:#fff; }
+  .progress-panel { border:1px solid var(--line); border-radius:8px; padding:10px; background:#fbfbfd; margin-bottom:10px; }
+  .progress-row { display:flex; justify-content:space-between; gap:8px; align-items:center; margin-top:6px; font-size:13px; }
+  .zinc-guide { display:grid; gap:10px; margin:10px 0; }
+  .zinc-guide-card { border:1px solid var(--line); border-radius:8px; background:#fff; padding:10px; font-size:14px; line-height:1.35; }
+  .zinc-guide-card strong { display:block; color:#0b3d35; margin-bottom:4px; }
+  .zinc-calendar { display:grid; grid-template-columns:repeat(5,minmax(42px,1fr)); gap:8px; margin:10px 0; }
+  .zinc-calendar .zinc-box { min-height:42px; display:grid; place-items:center; border:2px solid var(--accent); border-radius:8px; background:#f7fffc; font-weight:700; color:#0b3d35; }
+  @media (max-width:420px) { .zinc-calendar { grid-template-columns:repeat(2,minmax(42px,1fr)); } }
+  .immun-plan-card { border:2px solid var(--accent); border-radius:8px; padding:12px; background:#f7fffc; color:var(--ink); font-size:15px; line-height:1.35; margin-bottom:10px; }
+  .immun-plan-card strong { display:block; font-size:16px; color:#0b3d35; margin-bottom:4px; }
+  .immun-plan-card p { margin:6px 0; color:var(--ink); }
+  .immun-plan-card ul { margin:6px 0 0 20px; padding:0; }
+  .immun-plan-card li { margin:3px 0; }
+  .timer-panel { display:grid; gap:8px; }
+  .timer-topline { display:flex; justify-content:space-between; gap:10px; align-items:center; font-size:13px; color:#444; }
+  .timer-clock { font-variant-numeric:tabular-nums; font-size:56px; line-height:1; font-weight:800; color:#0b3d35; letter-spacing:0; }
+  .timer-caption { font-size:13px; color:#555; }
+  .timerbar { height:14px; border-radius:999px; overflow:hidden; background:#e4e7eb; border:1px solid #c6ccd2; }
+  .timerbarfill { height:100%; width:100%; background:linear-gradient(90deg, #0b6b5b, #5aa469); transition:width .2s linear; }
+  @media (max-width:520px) { .timer-clock { font-size:46px; } }
+  .stars { font-family:ui-monospace, monospace; font-size:20px; letter-spacing:0; color:#6b4d00; }
+  .hidden { display: none; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  .listen-icon { width:20px; height:20px; fill:currentColor; flex:0 0 auto; }
+  .listen-button { display:inline-flex; align-items:center; justify-content:center; gap:7px; }
+  .howto-panel { border:2px solid var(--accent); border-radius:12px; padding:16px; background:#fff; margin:0 0 14px; }
+  .howto-panel h2 { font-size:24px; margin:0 0 10px; }
+  .howto-panel p { font-size:18px; line-height:1.55; color:#263b46; }
+  .howto-actions { display:flex; gap:10px; flex-wrap:wrap; }
+  .multi-select-instruction { margin:0 0 10px; padding:10px 12px; border-left:5px solid var(--accent); background:#eef8f5; color:#203b34; font-size:17px; line-height:1.45; font-weight:700; }
+  .is-speaking { outline:4px solid #f5a623 !important; outline-offset:3px; background:#fff4cc !important; color:#172338 !important; }
+  body:not(.reviewer-mode) { font-size:18px; line-height:1.5; }
+  body:not(.reviewer-mode) #slidetext { font-size:18px; line-height:1.6; color:#263b46; }
+  body:not(.reviewer-mode) .feature strong { font-size:18px; }
+  body:not(.reviewer-mode) .feature span,
+  body:not(.reviewer-mode) .today-panel span,
+  body:not(.reviewer-mode) .prefs-panel span { font-size:16px; color:#40524c; }
+  body:not(.reviewer-mode) .today-panel .home-action span { color:#fff; }
+  body:not(.reviewer-mode) .slidebox .slidecontrols label,
+  body:not(.reviewer-mode) .symptom-group label,
+  body:not(.reviewer-mode) .sign { min-height:52px; font-size:18px; line-height:1.45; }
+  body:not(.reviewer-mode) .status.status-ready { display:none; }
+  @media (min-width:1180px) {
+    .appmain { max-width:920px; }
+    #featurelist { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    #triagepanel, #slideshow { max-width:760px; margin-left:auto; margin-right:auto; }
+  }
+  @media (max-width:759px) {
+    .wrap { padding: 12px 10px 84px; }
+    .appmain { max-width:none; }
+    .appnav { left:0; right:0; top:auto; bottom:0; width:auto; height:72px; flex-direction:row; border-radius:10px 10px 0 0; padding:7px 8px; gap:6px; }
+    .navitem { min-width:0; min-height:56px; flex:1 1 0; flex-direction:column; justify-content:center; gap:3px; padding:5px 2px; font-size:11px; }
+    .navicon { width:22px; height:22px; font-size:11px; }
+    .screenbar { top:0; }
+    .today-layout, .today-main, .home-actions { grid-template-columns:1fr; }
+  }
+  @media (max-width:260px) {
+    .screenbar { flex-wrap:wrap; align-items:flex-start; }
+    .progressstrip { flex:1 1 100%; width:100%; min-width:0; margin-left:0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="banner"><b>Prototype.</b> Synthetic data only. Not for medical care.</div>
+  <h1>NurseAunty&trade;</h1>
+  <div class="sub">Family health actions: check a problem, learn a step, set a reminder, or track a habit.</div>
+  <p class="status" id="status">Loading engine...</p>
+  <nav class="appnav" id="appnav" data-i18n-aria-label="tx.shell.primary_navigation" aria-label="Primary">
+    <button class="navitem active" id="navhome" data-screen="home" type="button"><span class="navicon" aria-hidden="true">H</span><span data-i18n="tx.shell.nav_home">Home</span></button>
+    <button class="navitem" id="navpeople" data-screen="people" type="button"><span class="navicon" aria-hidden="true">P</span><span data-i18n="tx.shell.nav_people">People</span></button>
+    <button class="navitem" id="navlearn" data-screen="learn" type="button"><span class="navicon" aria-hidden="true">L</span><span data-i18n="tx.shell.nav_learn">Learn</span></button>
+    <button class="navitem" id="navtools" data-screen="tools" type="button"><span class="navicon" aria-hidden="true">T</span><span data-i18n="tx.shell.nav_tools">Tools</span></button>
+    <button class="navitem urgent" id="navurgent" data-screen="urgent" type="button"><span class="navicon" aria-hidden="true">!</span><span data-i18n="tx.shell.nav_urgent">Urgent</span></button>
+  </nav>
+  <main class="appmain" id="appmain">
+
+  <div class="profilebar">
+    <span class="sr-only">Open Settings to change language, quiet hours, privacy, or Demo Mode.</span>
+    <span>
+      <button class="ghost" id="showprefs" type="button" aria-label="Settings and local preferences" title="Settings and local preferences">Settings</button>
+      <button class="ghost" id="howtobutton" type="button">How to use</button>
+      <button class="ghost listen-button" id="listenbutton" type="button" aria-pressed="false"><svg class="listen-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3zm12.5 3a3.5 3.5 0 0 0-2-3.16v6.32A3.5 3.5 0 0 0 15.5 12zm0-7.1v2.06a6 6 0 0 1 0 10.08v2.06a8 8 0 0 0 0-14.2z"/></svg><span id="listenlabel">Listen</span></button>
+    </span>
+  </div>
+  <div class="screenbar hidden" id="screenbar">
+    <button class="ghost" id="screenback" type="button" data-i18n="tx.shell.back">Back</button>
+    <span class="screenlabel" id="screenlabel">Today</span>
+    <div class="progressstrip" id="screenprogress" data-i18n-aria-label="tx.shell.progress" aria-label="Progress"></div>
+  </div>
+
+  <section class="today-panel" id="todaypanel" aria-label="Today">
+    <div class="today-main">
+      <div>
+        <strong>Activities today: Toothbrush timer!</strong>
+        <span>Start the two-minute brushing coach and mark the star chart.</span>
+      </div>
+      <button id="todaybrush" type="button">Open timer</button>
+    </div>
+    <div class="home-flow" aria-labelledby="homeflowtitle">
+      <h2 id="homeflowtitle">What do you need?</h2>
+      <span>Choose one path. The app will show only the next useful choices.</span>
+      <div class="home-actions">
+        <button class="home-action" id="homecare" type="button"><strong>Care for someone</strong><span>Choose a person, then what they need.</span></button>
+        <button class="home-action" id="homelearn" type="button"><strong>Learn something</strong><span>Choose one kind of lesson.</span></button>
+        <button class="home-action" id="hometools" type="button"><strong>Use a tool</strong><span>Choose a timer, reminder, or tracker.</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section class="prefs-panel hidden" id="localprefs">
+    <div class="prefs-head">
+      <div>
+        <strong>Local preferences</strong>
+        <span>Choose language, privacy, and quiet hours. Nothing here stores real health data.</span>
+      </div>
+      <button class="ghost" id="closeprefs" type="button">Done</button>
+    </div>
+    <div class="prefs-grid">
+      <label>Language
+        <select id="preflanguage"><option value="en">English</option><option value="fr">Fran&ccedil;ais</option><option value="hi-IN">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368; (&#2350;&#2360;&#2380;&#2342;&#2366;)</option><option value="bn-BD">Bangla (pending)</option></select>
+      </label>
+      <label>Quiet starts
+        <input id="prefquiet" type="time" value="21:00" />
+      </label>
+    </div>
+    <div class="prefs-checks">
+      <label><input id="prefprivacy" type="checkbox" /> Extra privacy on shared phone</label>
+      <label><input id="prefgeneric" type="checkbox" checked /> Use generic reminder text</label>
+      <label><input id="demomodeon" type="checkbox" /> Demo shortcuts</label>
+    </div>
+    <details class="reviewer-settings hidden" id="reviewersettings">
+      <summary>Reviewer testing controls</summary>
+      <p class="reviewer-note">Hidden internal controls. These are not part of the caregiver app.</p>
+      <div class="prefs-grid">
+        <label>Memory profile
+          <select id="memoryprofile"><option value="low_1gb">1 GB</option><option value="standard_8gb">8 GB</option></select>
+        </label>
+      </div>
+      <div class="prefs-checks">
+        <label><input id="hotspotmode" type="checkbox" /> Show cholera/hotspot support</label>
+      </div>
+      <div class="module-manager" id="modulemanager">
+        <div class="module-head">
+          <span id="modulesummary">Modules adjust to this family profile.</span>
+        </div>
+        <div class="module-toggles" id="moduletoggles"></div>
+      </div>
+    </details>
+    <p class="muted" id="prefsummary">Language: English. Privacy: standard prototype mode.</p>
+  </section>
+
+  <section class="howto-panel hidden" id="howtopanel" aria-live="polite" aria-labelledby="howtotitle">
+    <div class="screenlabel" id="howtoprogress">Step 1 of 3</div>
+    <h2 id="howtotitle">Hear this screen</h2>
+    <p id="howtotext">Tap Listen to hear the important words and choices. A yellow outline shows what the app is reading. Tap Stop at any time.</p>
+    <div class="howto-actions"><button class="ghost" id="howtoprev" type="button">Back</button><button id="howtonext" type="button">Next</button><button class="ghost" id="howtodone" type="button">Done</button></div>
+  </section>
+
+  <section class="demo-panel hidden" id="demomode">
+    <div class="demo-head">
+      <div>
+        <strong>Demo Mode</strong>
+        <span>Five tested synthetic flows. Prototype only; not for care.</span>
+      </div>
+      <button class="ghost" id="resetdemo" type="button">Reset</button>
+    </div>
+    <div class="demo-actions" id="demoactions"></div>
+  </section>
+
+  <section class="section" id="catalogshell">
+    <div class="tabs" id="maindoors"></div>
+    <div class="toolbar" id="catalogtoolbar">
+      <input class="search" id="search" aria-label="Search modules" placeholder="Search modules" />
+      <button class="ghost" id="showtriage" type="button">Something's wrong</button>
+    </div>
+    <div class="family-panel" id="familypanel">
+      <strong>Who?</strong>
+      <span class="muted">Tap a name to show their options below.</span>
+      <div class="people" id="peoplelist"></div>
+      <details class="family-edit" id="personeditor">
+        <summary id="personeditlabel">Add a person</summary>
+        <div class="muted">To change someone, tap Edit next to their name.</div>
+        <div class="row">
+          <input id="personname" aria-label="Name or nickname" placeholder="Name or nickname" />
+          <select id="personrole" aria-label="Family role">
+            <option value="child_under5">Child under 5</option>
+            <option value="newborn_baby">Newborn baby</option>
+            <option value="newborn_mom">Recently gave birth</option>
+            <option value="pregnancy">Pregnant person</option>
+            <option value="school_child">School-age child</option>
+            <option value="household">Household</option>
+          </select>
+          <input id="persondob" type="date" min="1900-01-01" data-max-today="true" aria-label="Date of birth" />
+          <div class="person-editor-actions">
+            <button id="addperson" type="button">Add person</button>
+            <button class="ghost hidden" id="cancelperson" type="button">Cancel</button>
+          </div>
+        </div>
+        <p class="person-edit-feedback" id="personeditfeedback" tabindex="-1" aria-live="polite"></p>
+        <div class="muted">Use made-up names only. This prototype does not protect personal information.</div>
+      </details>
+    </div>
+    <div class="catalog-step" id="catalogstep">
+    <h2 id="filtertitle">Choose a person</h2>
+    <div class="chips" id="filterchips"></div>
+    </div>
+    <div class="feature-grid" id="featurelist"></div>
+  </section>
+
+  <section class="slideshow hidden" id="slideshow" tabindex="-1" aria-live="polite">
+    <h2 id="slidetitle">How to mix ORS</h2>
+    <div class="slidebox">
+      <div class="imgph" id="slideimage">Image placeholder</div>
+      <div id="slidetext"></div>
+      <p class="muted" id="slidecache"></p>
+    </div>
+    <div class="slidecontrols wrap-controls">
+      <button class="ghost" id="slidehome" type="button">Home</button>
+      <button class="ghost" id="slideread" type="button">Read screen aloud</button>
+      <button class="ghost" id="slidepauseaudio" type="button">Pause</button>
+      <button class="ghost" id="sliderestartaudio" type="button">Restart</button>
+      <button class="ghost" id="slideprev" type="button">Prev</button>
+      <button id="slidenext" type="button">Next</button>
+    </div>
+    <p class="muted" id="globalaudiostatus">Read-aloud ready.</p>
+  </section>
+
+  <section id="triagepanel" class="hidden" tabindex="-1" aria-live="polite">
+  <h2 data-i18n="tx.triage.chrome.title">Under-5 sick-child triage</h2>
+  <div class="sub" data-i18n="tx.triage.chrome.intro">Danger signs first, then the main complaints. Follow-up questions appear only when relevant.</div>
+
+  <fieldset id="triagechildgroup">
+    <legend data-i18n="tx.triage.chrome.child_legend">Child</legend>
+    <div class="field"><label for="triagechildselect" data-i18n="tx.triage.chrome.who_sick">Who is sick?</label><select id="triagechildselect" data-i18n-aria-label="tx.triage.chrome.child_select_aria" aria-label="Child for sick-child check"><option value="" data-i18n="tx.triage.chrome.add_unknown_child">Add/unknown child</option></select></div>
+    <div class="field"><label for="dob" data-i18n="tx.triage.chrome.date_of_birth">Date of birth</label><input type="date" id="dob" data-i18n-aria-label="tx.triage.chrome.date_of_birth" min="1900-01-01" data-max-today="true" /></div>
+    <div class="muted" id="age"></div>
+  </fieldset>
+
+  <div class="triage-clinical-block" id="dangergroup">
+    <h3 data-i18n="tx.triage.chrome.general_danger_heading">General danger signs</h3>
+    <div class="muted" data-i18n="tx.triage.chrome.general_danger_instruction">If any danger sign is happening now, check it. If none are happening, you must check "No danger signs" before continuing.</div>
+    <div id="dangersigns"></div>
+  </div>
+
+  <fieldset id="complaintgroup" class="hidden">
+    <legend data-i18n="tx.triage.chrome.complaint_legend">Is the child sick with...</legend>
+    <div id="mainsigns"></div>
+  </fieldset>
+
+  <fieldset id="coughgroup" class="hidden">
+    <legend data-i18n="tx.triage.chrome.cough_legend">Because of cough - also check</legend>
+    <div id="coughsigns"></div>
+  </fieldset>
+
+  <fieldset id="rrsection" class="hidden">
+    <legend data-i18n="tx.triage.chrome.breathing_rate_legend">Breathing rate (cough is present)</legend>
+    <div class="rrbox" id="rridle">
+      <button class="ghost" id="rrstart" type="button" data-i18n="tx.triage.chrome.start_count">Start 60-second count</button>
+      <button class="ghost hidden" id="rragain" type="button" data-i18n="tx.triage.chrome.time_again">Time again</button>
+      <button class="ghost hidden" id="rrcancel" type="button" data-i18n="tx.triage.chrome.cancel">Cancel</button>
+      <span id="rrout" class="muted" data-i18n="tx.triage.chrome.not_measured">not measured. When counting starts, tap once for each breath you see.</span>
+    </div>
+    <div class="rrbox hidden" id="rrcounting">
+      <button class="tap" id="rrtapbtn" type="button"><span data-i18n="tx.triage.chrome.tap_button">TAP</span><br><small id="tapnum" data-i18n="tx.rr.breath_count">0 breaths</small></button>
+      <span id="rrleft" class="muted" data-i18n="tx.triage.chrome.tap_instruction">Tap once each time the child breathes in or the chest rises.</span>
+    </div>
+  </fieldset>
+
+  <fieldset id="diargroup" class="hidden">
+    <legend data-i18n="tx.triage.chrome.diarrhoea_legend">Because of diarrhoea - also tell us</legend>
+    <div id="diarrhoeastoolfields">
+      <div class="field"><label for="diarrhoeadays" data-i18n="tx.triage.chrome.diarrhoea_days">How many days has the child had loose or watery stools?</label><input type="number" id="diarrhoeadays" min="0" max="60" inputmode="numeric" data-i18n-placeholder="tx.triage.chrome.leave_blank" placeholder="Leave blank if you are not sure" /></div>
+      <div id="diarrhoeastoolsigns"></div>
+    </div>
+    <div id="diarrhoeadehydrationsigns" class="hidden"></div>
+  </fieldset>
+
+  <fieldset id="fevergroup" class="hidden">
+    <legend data-i18n="tx.triage.chrome.fever_legend">Because of fever - also tell us</legend>
+    <div id="fevercoursefields">
+      <div class="field"><label for="feverdays" data-i18n="tx.triage.chrome.fever_days">How many days has the fever or unusually hot feeling lasted?</label><input type="number" id="feverdays" min="0" max="60" data-i18n-placeholder="tx.triage.chrome.leave_blank" placeholder="Leave blank if you are not sure" /></div>
+      <div id="fevercoursesigns"></div>
+    </div>
+    <div id="fevermeasurementfields" class="hidden">
+      <p class="muted" data-i18n="tx.triage.chrome.thermometer_not_required">A thermometer or malaria test is not required. Do not delay urgent care to take a reading or get a test.</p>
+      <div class="field"><label for="feverrdt" data-i18n="tx.triage.chrome.malaria_test_result">If malaria testing applies, what is the current test result?</label><select id="feverrdt"><option value="not_done" data-i18n="tx.triage.chrome.not_done">Not done</option><option value="positive" data-i18n="tx.triage.chrome.positive">Positive</option><option value="negative" data-i18n="tx.triage.chrome.negative">Negative</option><option value="invalid" data-i18n="tx.triage.chrome.invalid">Invalid</option><option value="unknown" data-i18n="tx.triage.chrome.not_sure">Not sure</option></select></div>
+      <div class="field"><label for="fevertempvalue" data-i18n="tx.triage.chrome.optional_temperature">Optional thermometer reading</label><input type="number" step="0.1" inputmode="decimal" id="fevertempvalue" data-i18n-placeholder="tx.triage.chrome.skip_thermometer" placeholder="Skip if there is no thermometer" /></div>
+      <div class="field"><label for="fevertempunit" data-i18n="tx.triage.chrome.temperature_unit">Temperature unit</label><select id="fevertempunit"><option value="unknown" data-i18n="tx.triage.chrome.choose_unit">Choose unit</option><option value="C" data-i18n="tx.triage.chrome.celsius">Celsius</option><option value="F" data-i18n="tx.triage.chrome.fahrenheit">Fahrenheit</option></select></div>
+      <div class="field"><label for="fevertempsite" data-i18n="tx.triage.chrome.temperature_site">Where was it taken?</label><select id="fevertempsite"><option value="unknown" data-i18n="tx.triage.chrome.choose_place">Choose place</option><option value="axillary" data-i18n="tx.triage.chrome.armpit">Armpit</option><option value="oral" data-i18n="tx.triage.chrome.mouth">Mouth</option><option value="rectal" data-i18n="tx.triage.chrome.rectum">Rectum</option><option value="tympanic" data-i18n="tx.triage.chrome.ear">Ear</option><option value="temporal" data-i18n="tx.triage.chrome.forehead">Forehead</option></select></div>
+      <p class="muted" data-i18n="tx.triage.chrome.temperature_cutoff_note">Only an armpit reading uses the current prototype cutoff. The app does not add or subtract an offset for another body site.</p>
+      <div id="fevermeasurementsigns"></div>
+    </div>
+  </fieldset>
+
+  <fieldset id="eargroup" class="hidden">
+    <legend data-i18n="tx.triage.chrome.ear_legend">Because of ear problem - also check</legend>
+    <div id="earsigns"></div>
+  </fieldset>
+
+  <fieldset id="dentalgroup" class="hidden">
+    <legend data-i18n="tx.triage.chrome.dental_legend">Because of tooth or mouth problem - also check</legend>
+    <div id="dentalsigns"></div>
+  </fieldset>
+
+  <fieldset id="measlesgroup" class="hidden">
+    <legend data-i18n="tx.triage.chrome.measles_legend">Because of fever with a spreading rash - also check</legend>
+    <div id="measlessigns"></div>
+  </fieldset>
+
+  <button id="assess" class="hidden" type="button" data-i18n="tx.triage.chrome.assess">Assess</button>
+  <div id="out"></div>
+</section>
+</main>
+</div>
+<script>
+  (function () {
+    var today = new Date().toISOString().slice(0, 10);
+    ["persondob", "dob"].forEach(function (id) {
+      var input = document.getElementById(id);
+      if (!input) return;
+      input.min = input.min || "1900-01-01";
+      input.max = today;
+    });
+  })();
+</script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

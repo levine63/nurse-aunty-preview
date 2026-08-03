@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Menstrual product choice illustration</title>
+  <desc id="desc">Private period supplies, clean water, and disposal options.</desc>
+  <rect width="640" height="360" fill="#f7f1f7"/>
+  <rect x="76" y="72" width="488" height="222" rx="32" fill="#ffffff" stroke="#d9d9e3" stroke-width="8"/>
+  <rect x="120" y="126" width="110" height="98" rx="28" fill="#f3b7c8"/>
+  <path d="M146 170c28-28 54-28 82 0" fill="none" stroke="#8a3150" stroke-width="10" stroke-linecap="round"/>
+  <rect x="274" y="122" width="92" height="126" rx="34" fill="#d7f1ff" stroke="#176b83" stroke-width="8"/>
+  <path d="M286 170h68" stroke="#65c4df" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="450" cy="180" r="54" fill="#eff8f4" stroke="#0b6b5b" stroke-width="8"/>
+  <path d="M426 180h48M450 156v48" stroke="#0b6b5b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M104 270h432" stroke="#e6d8ea" stroke-width="18" stroke-linecap="round"/>
+</svg>
