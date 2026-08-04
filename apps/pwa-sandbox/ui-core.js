@@ -360,6 +360,17 @@ export function mountUI(engine) {
       esc(tx("tx.clinical_screen.under5.picture_examples", "Show picture examples")) +
       "</summary>" + examples + "</details>";
   }
+  function stridorSoundExampleHtml() {
+    var asset = assetById("audio.clinical.stridor_example_cc_by_sa_3");
+    if (!asset || !asset.targetPath) return "";
+    return '<aside class="soundexample" aria-label="' + esc(tx("tx.stridor_sound.play", "Hear an example")) + '">' +
+      '<p>' + esc(tx("tx.stridor_sound.hint", "This is one example sound. It is not a test. If you are worried about breathing, seek urgent care.")) + '</p>' +
+      '<div class="slidecontrols wrap-controls"><button id="stridorsoundplay" type="button" data-asset-id="' + esc(asset.assetId) + '">' + esc(tx("tx.stridor_sound.play", "Hear an example")) + '</button>' +
+      '<button class="ghost" id="stridorsoundstop" type="button">' + esc(tx("tx.stridor_sound.stop", "Stop sound")) + '</button>' +
+      '<span id="stridorsoundstatus" class="muted" aria-live="polite"></span></div>' +
+      '<details class="media-attribution"><summary>' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</summary><p>' + esc(tx("tx.stridor_sound.attribution_summary", "Sound: ‘Stridor NP OGG 2.ogg,’ Wikimedia Commons. Recording supplied by James Heilman, MD; processed by Natural Philo. CC BY-SA 3.0. No changes made.")) +
+      ' <a href="https://commons.wikimedia.org/wiki/File:Stridor_NP_OGG_2.ogg" target="_blank" rel="noopener noreferrer">' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</a></p></details></aside>';
+  }
   function traceDetails(label, body) {
     return '<details class="trace"><summary>' + esc(label || "Prototype review details") + '</summary>' + esc(body || "") + "</details>";
   }
@@ -1442,42 +1453,49 @@ export function mountUI(engine) {
       setMusicStatus(currentPrototypeMusic.statusId, "Tune could not play in this browser.");
     }
   }
-  function playPrototypeMusic(assetId, statusId, loop) {
+  function playPrototypeMusic(assetId, statusId, loop, labels) {
+    labels = labels || {};
+    var message = function (key, fallback) { return labels[key] || fallback; };
     var asset = assetById(assetId);
     if (!asset || !asset.targetPath) {
-      setMusicStatus(statusId, "Tune is missing from the asset manifest.");
+      setMusicStatus(statusId, message("missing", "Tune is missing from the asset manifest."));
       return false;
     }
     stopPrototypeMusic(statusId, "");
     if (typeof Audio === "undefined") {
-      currentPrototypeMusic = { audio: null, assetId: assetId, statusId: statusId, loop: !!loop };
-      setMusicStatus(statusId, "Tune ready; audio playback is unavailable in this test browser.");
+      currentPrototypeMusic = { audio: null, assetId: assetId, statusId: statusId, loop: !!loop, context: labels.context || "" };
+      setMusicStatus(statusId, message("unavailable", "Tune ready; audio playback is unavailable in this test browser."));
       return false;
     }
     try {
       var audio = new Audio(asset.targetPath);
       audio.loop = !!loop;
-      audio.onended = function () { setMusicStatus(statusId, "Tune complete."); };
-      audio.onerror = function () { setMusicStatus(statusId, "Tune could not load; keep using the visible timer."); };
-      currentPrototypeMusic = { audio: audio, assetId: assetId, statusId: statusId, loop: !!loop };
+      audio.onended = function () { setMusicStatus(statusId, message("complete", "Tune complete.")); };
+      audio.onerror = function () { setMusicStatus(statusId, message("failed", "Tune could not load; keep using the visible timer.")); };
+      currentPrototypeMusic = { audio: audio, assetId: assetId, statusId: statusId, loop: !!loop, context: labels.context || "" };
       var playResult = audio.play();
       if (playResult && playResult.catch) playResult.catch(function () {
-        setMusicStatus(statusId, "Tap Play tune if the browser blocked audio.");
+        setMusicStatus(statusId, message("blocked", "Tap Play tune if the browser blocked audio."));
       });
-      setMusicStatus(statusId, "Tune playing.");
+      setMusicStatus(statusId, message("playing", "Tune playing."));
       return true;
     } catch (e) {
       currentPrototypeMusic = null;
-      setMusicStatus(statusId, "Tune could not play in this browser.");
+      setMusicStatus(statusId, message("failed", "Tune could not play in this browser."));
       return false;
     }
   }
-  function togglePrototypeMusic(assetId, statusId, loop) {
+  function togglePrototypeMusic(assetId, statusId, loop, labels) {
+    labels = labels || {};
     if (currentPrototypeMusic && currentPrototypeMusic.assetId === assetId) {
-      stopPrototypeMusic(statusId, "Tune stopped.");
+      stopPrototypeMusic(statusId, labels.stopped || "Tune stopped.");
       return false;
     }
-    return playPrototypeMusic(assetId, statusId, loop);
+    return playPrototypeMusic(assetId, statusId, loop, labels);
+  }
+  function stopPrototypeMusicForContext(context) {
+    if (!context || !currentPrototypeMusic || currentPrototypeMusic.context !== context) return;
+    stopPrototypeMusic(currentPrototypeMusic.statusId, "");
   }
   var currentPrototypeSpeechText = "";
   var prototypeSpeechPaused = false;
@@ -5130,6 +5148,7 @@ export function mountUI(engine) {
     if (action && !action.dataset.bound) {
       action.dataset.bound = surfaceId;
       action.addEventListener("click", function () {
+        stopPrototypeMusicForContext(surfaceId);
         if (typeof onContinue === "function") onContinue();
       });
     }
@@ -5191,8 +5210,35 @@ export function mountUI(engine) {
   }
   function renderUnder5CoughGate() {
     renderUnder5RegistryGate("under5.followup.cough", "coughsigns", advanceUnder5Branch, {
-      afterFieldsHtml: questionExamplesHtml(COUGH_FU)
+      afterFieldsHtml: questionExamplesHtml(COUGH_FU) + stridorSoundExampleHtml()
     });
+    var play = $("stridorsoundplay");
+    if (play && !play.dataset.bound) {
+      play.dataset.bound = "stridor-example";
+      play.addEventListener("click", function () {
+        stopReadAloudForContextChange(tx("tx.stridor_sound.status.stopped", "Sound example stopped."));
+        togglePrototypeMusic("audio.clinical.stridor_example_cc_by_sa_3", "stridorsoundstatus", false, {
+          context: "under5.followup.cough",
+          unavailable: tx("tx.stridor_sound.status.ready", "Sound example ready; playback is unavailable in this browser."),
+          playing: tx("tx.stridor_sound.status.playing", "Sound example playing."),
+          complete: tx("tx.stridor_sound.status.complete", "Sound example complete."),
+          stopped: tx("tx.stridor_sound.status.stopped", "Sound example stopped."),
+          failed: tx("tx.stridor_sound.status.failed", "Sound example could not load. If you are worried about breathing, seek urgent care."),
+          blocked: tx("tx.stridor_sound.status.failed", "Sound example could not load. If you are worried about breathing, seek urgent care.")
+        });
+      });
+    }
+    var stop = $("stridorsoundstop");
+    if (stop && !stop.dataset.bound) {
+      stop.dataset.bound = "stridor-example";
+      stop.addEventListener("click", function () {
+        if (currentPrototypeMusic && currentPrototypeMusic.assetId === "audio.clinical.stridor_example_cc_by_sa_3") {
+          stopPrototypeMusic("stridorsoundstatus", tx("tx.stridor_sound.status.stopped", "Sound example stopped."));
+        } else {
+          setMusicStatus("stridorsoundstatus", tx("tx.stridor_sound.status.stopped", "Sound example stopped."));
+        }
+      });
+    }
   }
   function renderUnder5DiarrhoeaStoolGate() {
     renderUnder5RegistryGate("under5.followup.diarrhoea_stool", "diarrhoeastoolsigns", advanceUnder5Branch, {
@@ -5220,6 +5266,7 @@ export function mountUI(engine) {
     renderUnder5RegistryGate("under5.followup.measles", "measlessigns", advanceUnder5Branch);
   }
   function showUnder5Stage(stage) {
+    if (stage !== "cough") stopPrototypeMusicForContext("under5.followup.cough");
     under5Stage = stage;
     hideUnder5StageRegions();
     if (stage === "danger") {

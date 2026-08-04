@@ -2845,6 +2845,25 @@
       "targetPath": "assets/generated/generated_zinc_prepare_dispersible_v2.png",
       "altText": "One hand steadies a small medicine cup while another stirs a partly dissolved dispersible zinc dose in a little clean liquid.",
       "source": "Built-in Codex image edit of v1: changed the action from dropping a whole tablet to actively stirring a partly dissolved dose in a small cup; generated 2026-07-20."
+    },
+    {
+      "assetId": "audio.clinical.stridor_example_cc_by_sa_3",
+      "featureIds": [
+        "u5_triage"
+      ],
+      "module": "Child health / Sick-child breathing check",
+      "assetType": "prototype_audio",
+      "sourceType": "external_cc_audio_prototype",
+      "source": "Wikimedia Commons File:Stridor NP OGG 2.ogg, https://commons.wikimedia.org/wiki/File:Stridor_NP_OGG_2.ogg. Inspiratory and expiratory stridor; processed version of a recording supplied by James Heilman, MD, processed by Natural Philo.",
+      "license": "Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0). Bundled unchanged; attribution and source/licence link are displayed beside the playback control.",
+      "costUsd": 0,
+      "regionFocus": "Generic prototype clinical sound example",
+      "targetPath": "assets/audio/clinical/stridor_np_ogg_2_cc_by_sa_3.ogg",
+      "altText": "Fifteen-second audio example of inspiratory and expiratory stridor.",
+      "clinicalReviewStatus": "Child Health/ARI Review Needed - example sound only, not a diagnostic test",
+      "localReviewStatus": "North India Local Language and Caregiver-Comprehension Review Needed",
+      "approvalStatus": "CODEX Decision - needs approval",
+      "date_accessed_or_captured": "2026-08-04"
     }
   ],
   "reviewChecklist": [

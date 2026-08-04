@@ -1381,6 +1381,66 @@
         "text": "जब बच्चा सांस लेता है तो तेज आवाज आती है, यहां तक कि आराम करने पर भी"
       }
     },
+    "tx.stridor_sound.play": {
+      "en": { "text": "Hear an example" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Écouter un exemple" },
+      "hi-IN": { "text": "उदाहरण सुनें" }
+    },
+    "tx.stridor_sound.stop": {
+      "en": { "text": "Stop sound" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Arrêter le son" },
+      "hi-IN": { "text": "आवाज़ बंद करें" }
+    },
+    "tx.stridor_sound.hint": {
+      "en": { "text": "This is one example sound. It is not a test. If you are worried about breathing, seek urgent care." },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Ceci est un seul exemple de son. Ce n'est pas un test. Si vous vous inquiétez pour la respiration, cherchez des soins urgents." },
+      "hi-IN": { "text": "यह आवाज़ का केवल एक उदाहरण है। यह जांच नहीं है। अगर आप सांस लेने को लेकर चिंतित हैं, तो तुरंत देखभाल लें।" }
+    },
+    "tx.stridor_sound.attribution_summary": {
+      "en": { "text": "Sound: ‘Stridor NP OGG 2.ogg,’ Wikimedia Commons. Recording supplied by James Heilman, MD; processed by Natural Philo. CC BY-SA 3.0. No changes made." },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Son : « Stridor NP OGG 2.ogg », Wikimedia Commons. Enregistrement fourni par James Heilman, MD ; traité par Natural Philo. CC BY-SA 3.0. Aucune modification." },
+      "hi-IN": { "text": "ध्वनि: ‘Stridor NP OGG 2.ogg,’ Wikimedia Commons। रिकॉर्डिंग James Heilman, MD ने दी; Natural Philo ने संसाधित की। CC BY-SA 3.0। कोई बदलाव नहीं किया गया।" }
+    },
+    "tx.stridor_sound.attribution_link": {
+      "en": { "text": "View source and licence" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Voir la source et la licence" },
+      "hi-IN": { "text": "स्रोत और लाइसेंस देखें" }
+    },
+    "tx.stridor_sound.status.ready": {
+      "en": { "text": "Sound example ready; playback is unavailable in this browser." },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Exemple sonore prêt ; la lecture n'est pas disponible dans ce navigateur." },
+      "hi-IN": { "text": "ध्वनि उदाहरण तैयार है; इस ब्राउज़र में चलाना उपलब्ध नहीं है।" }
+    },
+    "tx.stridor_sound.status.playing": {
+      "en": { "text": "Sound example playing." },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Lecture de l'exemple sonore." },
+      "hi-IN": { "text": "ध्वनि उदाहरण चल रहा है।" }
+    },
+    "tx.stridor_sound.status.complete": {
+      "en": { "text": "Sound example complete." },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Exemple sonore terminé." },
+      "hi-IN": { "text": "ध्वनि उदाहरण पूरा हुआ।" }
+    },
+    "tx.stridor_sound.status.stopped": {
+      "en": { "text": "Sound example stopped." },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Exemple sonore arrêté." },
+      "hi-IN": { "text": "ध्वनि उदाहरण बंद कर दिया गया।" }
+    },
+    "tx.stridor_sound.status.failed": {
+      "en": { "text": "Sound example could not load. If you are worried about breathing, seek urgent care." },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "L'exemple sonore n'a pas pu être chargé. Si vous vous inquiétez pour la respiration, cherchez des soins urgents." },
+      "hi-IN": { "text": "ध्वनि उदाहरण लोड नहीं हो सका। अगर आप सांस लेने को लेकर चिंतित हैं, तो तुरंत देखभाल लें।" }
+    },
     "tx.q_sunken_eyes": {
       "en": {
         "text": "The eyes look sunken"
