@@ -133,6 +133,12 @@ export function mountUI(engine) {
   var pncView = "acute", pncSelections = {}, pncAnsweredViews = {};
   var under5DangerGateUpdate = null;
   var under5Stage = "danger", under5BranchQueue = [], under5BranchIndex = 0;
+  // A duration is a required numeric field, not a checklist surface. Keep its stage
+  // name in one constant so the registry's checklist-coverage audit remains exact.
+  var DIARRHOEA_DURATION_STAGE = "diarrhoea_duration";
+  // Registry-rendered one-choice screens are replaced as the caregiver advances. Retain
+  // their explicit selections separately so the decision engine and Back both see them.
+  var coughChoiceState = {};
   var bfAidView = "baby_urgent", bfAidSelections = {};
   var feedingPlanSelections = {};
   var safeWaterSelections = {};
@@ -363,61 +369,59 @@ export function mountUI(engine) {
       esc(tx("tx.clinical_screen.under5.picture_examples", "Show picture examples")) +
       "</summary>" + examples + "</details>";
   }
+  function signExampleHtml(id) {
+    var asset = assetById(FOLLOWUP_IMAGE_ASSETS[id]);
+    if (!renderableAsset(asset)) return "";
+    var alt = tx("tx.q_" + id, caregiverAlt(asset.altText));
+    return '<details class="sign-example"><summary>' + esc(tx("tx.clinical.show_me", "Show me")) + '</summary>' +
+      '<img src="' + esc(asset.targetPath) + '" alt="' + esc(alt) + '" data-asset-id="' + esc(asset.assetId) + '"></details>';
+  }
   function chestIndrawingFlipbookHtml() {
     var outward = assetById("img.user_supplied.chest_indrawing_breath_out_v2");
     var inward = assetById("img.user_supplied.chest_indrawing_pulls_in_v2");
     if (!renderableAsset(outward) || !renderableAsset(inward)) return "";
     return '<aside class="breath-flipbook" aria-label="' + esc(tx("tx.chest_flipbook.title", "Watch one breath")) + '">' +
-      '<h4>' + esc(tx("tx.chest_flipbook.title", "Watch one breath")) + '</h4>' +
-      '<p>' + esc(tx("tx.chest_flipbook.instruction", "Watch the lower chest, between the ribs and belly. When the child breathes in, the chest and belly move out. If this lower chest pulls inward instead, choose this sign and get urgent care now.")) + '</p>' +
+      '<h4>' + esc(tx("tx.chest_flipbook.title", "Watch the lower chest")) + '</h4>' +
+      '<p>' + esc(tx("tx.chest_flipbook.instruction", "When the child breathes in, the chest and belly move out. Look at the space between the ribs and belly.")) + '</p>' +
       '<img class="breath-frame" id="chestflipframe1" src="' + esc(outward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_out_alt", "Child’s chest and belly moving out as the child breathes in.")) + '" data-asset-id="' + esc(outward.assetId) + '">' +
       '<img class="breath-frame" id="chestflipframe2" src="' + esc(inward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_in_alt", "Child’s lower chest pulling inward while the child breathes in.")) + '" data-asset-id="' + esc(inward.assetId) + '" hidden>' +
-      '<span class="breath-frame-label" id="chestfliplabel" aria-live="polite">' + esc(tx("tx.chest_flipbook.frame", "Picture {current} of {total}", { current: 1, total: 2 })) + '</span>' +
-      '<div class="breath-controls"><button class="breath-play" id="chestflipplay" type="button">' + esc(tx("tx.chest_flipbook.play", "Play example")) + '</button><button class="ghost" id="chestflipstop" type="button">' + esc(tx("tx.chest_flipbook.pause", "Pause example")) + '</button></div>' +
-      '<p class="muted">' + esc(tx("tx.chest_flipbook.note", "These pictures show one example. They are not a test.")) + '</p></aside>';
+      '<span class="breath-frame-label" id="chestfliplabel" aria-live="polite">' + esc(tx("tx.chest_flipbook.frame_normal", "Normal breathing")) + '</span>' +
+      '<div class="breath-controls"><button id="chestflipshowin" type="button">' + esc(tx("tx.chest_flipbook.show_in", "Show pulling-in example")) + '</button><button class="ghost" id="chestflipshowout" type="button">' + esc(tx("tx.chest_flipbook.show_out", "Show normal breathing")) + '</button></div></aside>';
   }
   function stridorSoundExampleHtml() {
     var asset = assetById("audio.clinical.stridor_example_cc_by_sa_3");
     if (!asset || !asset.targetPath) return "";
     return '<aside class="soundexample" aria-label="' + esc(tx("tx.stridor_sound.play", "Hear an example")) + '">' +
-      '<p>' + esc(tx("tx.stridor_sound.hint", "This is one example sound. It is not a test. If you are worried about breathing, seek urgent care.")) + '</p>' +
+      '<p>' + esc(tx("tx.stridor_sound.hint_short", "Listen to an example of a harsh sound when breathing in.")) + '</p>' +
       '<div class="slidecontrols wrap-controls"><button id="stridorsoundplay" type="button" data-asset-id="' + esc(asset.assetId) + '">' + esc(tx("tx.stridor_sound.play", "Hear an example")) + '</button>' +
       '<button class="ghost" id="stridorsoundstop" type="button">' + esc(tx("tx.stridor_sound.stop", "Stop sound")) + '</button>' +
       '<span id="stridorsoundstatus" class="muted" aria-live="polite"></span></div>' +
       '<details class="media-attribution"><summary>' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</summary><p>' + esc(tx("tx.stridor_sound.attribution_summary", "Sound: ‘Stridor NP OGG 2.ogg,’ Wikimedia Commons. Recording supplied by James Heilman, MD; processed by Natural Philo. CC BY-SA 3.0. No changes made.")) +
       ' <a href="https://commons.wikimedia.org/wiki/File:Stridor_NP_OGG_2.ogg" target="_blank" rel="noopener noreferrer">' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</a></p></details></aside>';
   }
-  var chestFlipTimer = null;
   function stopChestFlipbook() {
-    if (chestFlipTimer) clearInterval(chestFlipTimer);
-    chestFlipTimer = null;
+    // The comparison is deliberately manual: it remains understandable when motion is
+    // reduced or unavailable, and it cannot keep moving after the caregiver changes screen.
   }
   function showChestFlipbookFrame(frame) {
     var first = $("chestflipframe1"), second = $("chestflipframe2"), label = $("chestfliplabel");
     if (!first || !second) { stopChestFlipbook(); return; }
     first.hidden = frame !== 1;
     second.hidden = frame !== 2;
-    if (label) label.textContent = tx("tx.chest_flipbook.frame", "Picture {current} of {total}", { current: frame, total: 2 });
+    if (label) label.textContent = frame === 1
+      ? tx("tx.chest_flipbook.frame_normal", "Normal breathing")
+      : tx("tx.chest_flipbook.frame_in", "Lower chest pulling in");
   }
   function bindChestFlipbook() {
-    stopChestFlipbook();
     showChestFlipbookFrame(1);
-    var play = $("chestflipplay"), pause = $("chestflipstop");
-    if (play && !play.dataset.bound) {
-      play.dataset.bound = "chest-flipbook";
-      play.addEventListener("click", function () {
-        stopChestFlipbook();
-        var frame = 1;
-        chestFlipTimer = setInterval(function () {
-          frame = frame === 1 ? 2 : 1;
-          showChestFlipbookFrame(frame);
-        }, 900);
-        if (chestFlipTimer && chestFlipTimer.unref) chestFlipTimer.unref();
-      });
+    var showIn = $("chestflipshowin"), showOut = $("chestflipshowout");
+    if (showIn && !showIn.dataset.bound) {
+      showIn.dataset.bound = "chest-flipbook";
+      showIn.addEventListener("click", function () { showChestFlipbookFrame(2); });
     }
-    if (pause && !pause.dataset.bound) {
-      pause.dataset.bound = "chest-flipbook";
-      pause.addEventListener("click", stopChestFlipbook);
+    if (showOut && !showOut.dataset.bound) {
+      showOut.dataset.bound = "chest-flipbook";
+      showOut.addEventListener("click", function () { showChestFlipbookFrame(1); });
     }
   }
   function traceDetails(label, body) {
@@ -605,7 +609,11 @@ export function mountUI(engine) {
       if (!box || box.dataset.explicitAnswerGate) return;
       box.dataset.explicitAnswerGate = opts.actionId || "explicit";
       box.addEventListener("change", function () {
-        if (id === noneId && box.checked) {
+        if (opts.singleSelect && box.checked) {
+          ids.forEach(function (otherId) {
+            if (otherId !== id && $(otherId)) $(otherId).checked = false;
+          });
+        } else if (id === noneId && box.checked) {
           ids.forEach(function (otherId) {
             if (otherId !== noneId && $(otherId)) $(otherId).checked = false;
           });
@@ -645,6 +653,7 @@ export function mountUI(engine) {
         var label = option.label || tx(option.labelSlug, option.labelSlug);
         html += '<label><input id="' + esc(option.id) + '" type="checkbox" data-clinical-option-kind="' + esc(option.kind) + '"' +
           (selected[option.stateId || option.id] ? " checked" : "") + "> " + esc(label) + "</label>";
+        if (typeof opts.optionHelpHtml === "function") html += opts.optionHelpHtml(option) || "";
       });
       html += "</fieldset>";
     });
@@ -672,6 +681,7 @@ export function mountUI(engine) {
       noneId: noneId,
       actionId: opts.actionId || screen.actionId,
       feedbackId: opts.feedbackId || screen.feedbackId,
+      singleSelect: opts.singleSelect === true,
       readySlug: opts.readySlug,
       readyFallback: opts.readyFallback,
       requiredSlug: opts.requiredSlug,
@@ -1257,6 +1267,7 @@ export function mountUI(engine) {
     ["diarrhoeadays", "feverdays", "fevertempvalue"].forEach(function (id) {
       if ($(id)) $(id).value = "";
     });
+    if ($("diarrhoeadays")) delete $("diarrhoeadays").dataset.notSure;
     if ($("feverrdt")) $("feverrdt").value = "not_done";
     if ($("fevertempunit")) $("fevertempunit").value = "unknown";
     if ($("fevertempsite")) $("fevertempsite").value = "unknown";
@@ -1274,6 +1285,7 @@ export function mountUI(engine) {
     under5Stage = "danger";
     under5BranchQueue = [];
     under5BranchIndex = 0;
+    coughChoiceState = {};
     resetUnder5TriageSession();
     person = person && person.subject === "child_under5" ? person : defaultChildPerson();
     if (person) {
@@ -4969,7 +4981,10 @@ export function mountUI(engine) {
   if ($("navlearn")) $("navlearn").addEventListener("click", function () { showCatalogScreen("learn"); });
   if ($("navtools")) $("navtools").addEventListener("click", function () { showCatalogScreen("tools"); });
   if ($("navurgent")) $("navurgent").addEventListener("click", beginDangerFlow);
-  if ($("screenback")) $("screenback").addEventListener("click", returnFromWork);
+  if ($("screenback")) $("screenback").addEventListener("click", function () {
+    if (activeShellScreen === "urgent-check") returnToPreviousUnder5Step();
+    else returnFromWork();
+  });
   if ($("showprefs")) $("showprefs").addEventListener("click", function () {
     if ($("localprefs")) $("localprefs").classList.toggle("hidden");
     if ($("localprefs") && !$("localprefs").classList.contains("hidden")) moveToNextStep("localprefs");
@@ -5167,7 +5182,9 @@ export function mountUI(engine) {
     var labels = {
       danger: tx("tx.triage.chrome.stage_danger", "danger signs"),
       complaints: tx("tx.triage.chrome.stage_complaints", "main problem"),
-      cough: tx("tx.triage.chrome.stage_cough", "cough signs"),
+      cough_chest: tx("tx.cough.chest.title", "watch breathing"),
+      cough_sound: tx("tx.cough.sound.title", "listen to breathing"),
+      diarrhoea_duration: tx("tx.diarrhoea_duration.title", "days with diarrhoea"),
       diarrhoea_stool: tx("tx.triage.chrome.stage_diarrhoea_stool", "diarrhoea and stool"),
       diarrhoea_dehydration: tx("tx.triage.chrome.stage_diarrhoea_dehydration", "dehydration signs"),
       fever_course: tx("tx.triage.chrome.stage_fever_course", "fever changes"),
@@ -5185,7 +5202,7 @@ export function mountUI(engine) {
   function hideUnder5StageRegions() {
     [
       "triagechildgroup", "dangergroup", "complaintgroup", "coughgroup", "rrsection",
-      "diargroup", "diarrhoeastoolfields", "diarrhoeadehydrationsigns", "fevergroup",
+      "diargroup", "diarrhoeadurationfields", "diarrhoeastoolfields", "diarrhoeadehydrationsigns", "fevergroup",
       "fevercoursefields", "fevermeasurementfields", "eargroup", "dentalgroup", "measlesgroup", "out"
     ].forEach(function (id) {
       if ($(id)) $(id).classList.add("hidden");
@@ -5195,7 +5212,7 @@ export function mountUI(engine) {
     var target = $(targetId);
     if (!target) return;
     target.innerHTML = renderClinicalChecklist(surfaceId, opts || {});
-    var binding = bindClinicalChecklist(surfaceId);
+    var binding = bindClinicalChecklist(surfaceId, opts || {});
     var action = $(binding.screen.actionId);
     if (action && !action.dataset.bound) {
       action.dataset.bound = surfaceId;
@@ -5244,8 +5261,8 @@ export function mountUI(engine) {
   function renderUnder5ComplaintGate() {
     renderUnder5RegistryGate("under5.presenting_complaints", "mainsigns", function () {
       under5BranchQueue = [];
-      if ($("s_cough").checked) under5BranchQueue.push("cough");
-      if ($("s_diarrhoea").checked) under5BranchQueue.push("diarrhoea_stool", "diarrhoea_dehydration");
+      if ($("s_cough").checked) under5BranchQueue.push("cough_chest", "cough_sound");
+      if ($("s_diarrhoea").checked) under5BranchQueue.push(DIARRHOEA_DURATION_STAGE, "diarrhoea_stool", "diarrhoea_dehydration");
       if ($("s_fever").checked) under5BranchQueue.push("fever_course", "fever_measurement");
       if ($("s_ear_problem").checked) under5BranchQueue.push("ear");
       if ($("s_tooth_mouth").checked) under5BranchQueue.push("tooth_mouth");
@@ -5258,21 +5275,34 @@ export function mountUI(engine) {
   function advanceUnder5Branch() {
     under5BranchIndex += 1;
     if (under5BranchIndex < under5BranchQueue.length) showUnder5Stage(under5BranchQueue[under5BranchIndex]);
-    else finishUnder5Triage();
+    else {
+      stopPrototypeMusicForContext("under5.followup.cough_sound");
+      finishUnder5Triage();
+    }
   }
-  function renderUnder5CoughGate() {
-    renderUnder5RegistryGate("under5.followup.cough", "coughsigns", advanceUnder5Branch, {
+  function renderUnder5CoughChestGate() {
+    renderUnder5RegistryGate("under5.followup.cough_chest", "coughsigns", advanceUnder5Branch, {
       beforeFieldsHtml: chestIndrawingFlipbookHtml(),
-      afterFieldsHtml: stridorSoundExampleHtml()
+      singleSelect: true,
+      state: coughChoiceState,
+      requiredFallback: tx("tx.cough.answer_required", "Choose one answer to continue.")
     });
     bindChestFlipbook();
+  }
+  function renderUnder5CoughSoundGate() {
+    renderUnder5RegistryGate("under5.followup.cough_sound", "coughsigns", advanceUnder5Branch, {
+      beforeFieldsHtml: stridorSoundExampleHtml(),
+      singleSelect: true,
+      state: coughChoiceState,
+      requiredFallback: tx("tx.cough.answer_required", "Choose one answer to continue.")
+    });
     var play = $("stridorsoundplay");
     if (play && !play.dataset.bound) {
       play.dataset.bound = "stridor-example";
       play.addEventListener("click", function () {
         stopReadAloudForContextChange(tx("tx.stridor_sound.status.stopped", "Sound example stopped."));
         togglePrototypeMusic("audio.clinical.stridor_example_cc_by_sa_3", "stridorsoundstatus", false, {
-          context: "under5.followup.cough",
+          context: "under5.followup.cough_sound",
           unavailable: tx("tx.stridor_sound.status.ready", "Sound example ready; playback is unavailable in this browser."),
           playing: tx("tx.stridor_sound.status.playing", "Sound example playing."),
           complete: tx("tx.stridor_sound.status.complete", "Sound example complete."),
@@ -5294,14 +5324,40 @@ export function mountUI(engine) {
       });
     }
   }
+  function bindDiarrhoeaDurationGate() {
+    var input = $("diarrhoeadays"), notSure = $("diarrhoeadaysnotsure"), action = $("triagediarrhoeadayscontinue"), feedback = $("diarrhoeadaysfeedback");
+    function update() {
+      var entered = !!(input && String(input.value || "") !== "");
+      var unsure = !!(input && input.dataset.notSure === "true");
+      if (action) action.disabled = !(entered || unsure);
+      if (feedback) feedback.textContent = entered || unsure ? "" : tx("tx.diarrhoea_duration.answer_required", "Enter the number of days or choose Not sure.");
+    }
+    if (input && !input.dataset.durationBound) {
+      input.dataset.durationBound = "true";
+      input.addEventListener("input", function () { delete input.dataset.notSure; update(); });
+      input.addEventListener("change", function () { delete input.dataset.notSure; update(); });
+    }
+    if (notSure && !notSure.dataset.durationBound) {
+      notSure.dataset.durationBound = "true";
+      notSure.addEventListener("click", function () { if (input) { input.value = ""; input.dataset.notSure = "true"; } update(); });
+    }
+    if (action && !action.dataset.durationBound) {
+      action.dataset.durationBound = "true";
+      action.addEventListener("click", advanceUnder5Branch);
+    }
+    update();
+  }
   function renderUnder5DiarrhoeaStoolGate() {
     renderUnder5RegistryGate("under5.followup.diarrhoea_stool", "diarrhoeastoolsigns", advanceUnder5Branch, {
-      afterFieldsHtml: questionExamplesHtml(DIAR_FU.filter(function (item) { return item.id === "bloody_stool"; }))
+      optionHelpHtml: function (option) { return option.id === "s_bloody_stool" ? signExampleHtml("bloody_stool") : ""; }
     });
   }
   function renderUnder5DiarrhoeaDehydrationGate() {
     renderUnder5RegistryGate("under5.followup.diarrhoea_dehydration", "diarrhoeadehydrationsigns", advanceUnder5Branch, {
-      afterFieldsHtml: questionExamplesHtml(DIAR_FU.filter(function (item) { return item.id !== "bloody_stool"; }))
+      optionHelpHtml: function (option) {
+        var id = option.id.replace(/^s_/, "");
+        return id === "sunken_eyes" || id === "skin_pinch_slow" ? signExampleHtml(id) : "";
+      }
     });
   }
   function renderUnder5FeverCourseGate() {
@@ -5320,8 +5376,8 @@ export function mountUI(engine) {
     renderUnder5RegistryGate("under5.followup.measles", "measlessigns", advanceUnder5Branch);
   }
   function showUnder5Stage(stage) {
-    if (stage !== "cough") stopPrototypeMusicForContext("under5.followup.cough");
-    if (stage !== "cough") stopChestFlipbook();
+    if (stage !== "cough_sound") stopPrototypeMusicForContext("under5.followup.cough_sound");
+    if (stage !== "cough_chest") stopChestFlipbook();
     under5Stage = stage;
     hideUnder5StageRegions();
     if (stage === "danger") {
@@ -5333,10 +5389,19 @@ export function mountUI(engine) {
       renderUnder5ComplaintGate();
       $("complaintgroup").classList.remove("hidden");
       moveToNextStep("complaintgroup");
-    } else if (stage === "cough") {
-      renderUnder5CoughGate();
+    } else if (stage === "cough_chest") {
+      renderUnder5CoughChestGate();
       $("coughgroup").classList.remove("hidden");
       moveToNextStep("coughgroup");
+    } else if (stage === "cough_sound") {
+      renderUnder5CoughSoundGate();
+      $("coughgroup").classList.remove("hidden");
+      moveToNextStep("coughgroup");
+    } else if (stage === DIARRHOEA_DURATION_STAGE) {
+      $("diargroup").classList.remove("hidden");
+      $("diarrhoeadurationfields").classList.remove("hidden");
+      bindDiarrhoeaDurationGate();
+      moveToNextStep("diargroup");
     } else if (stage === "diarrhoea_stool") {
       renderUnder5DiarrhoeaStoolGate();
       $("diargroup").classList.remove("hidden");
@@ -5370,6 +5435,28 @@ export function mountUI(engine) {
       $("measlesgroup").classList.remove("hidden");
       moveToNextStep("measlesgroup");
     }
+    applyShellVisibility();
+  }
+  function returnToPreviousUnder5Step() {
+    if (under5Stage === "danger") { returnFromWork(); return; }
+    if (under5Stage === "complaints") {
+      under5Stage = "danger";
+      hideUnder5StageRegions();
+      $("triagechildgroup").classList.remove("hidden");
+      $("dangergroup").classList.remove("hidden");
+      moveToNextStep("dangergroup");
+      applyShellVisibility();
+      return;
+    }
+    if (under5BranchIndex > 0) {
+      under5BranchIndex -= 1;
+      showUnder5Stage(under5BranchQueue[under5BranchIndex]);
+      return;
+    }
+    under5Stage = "complaints";
+    hideUnder5StageRegions();
+    $("complaintgroup").classList.remove("hidden");
+    moveToNextStep("complaintgroup");
     applyShellVisibility();
   }
   function snapshotUnder5Inputs() {
@@ -5829,13 +5916,13 @@ export function mountUI(engine) {
       temp_c_axillary_valid: feverTempValid,
       cough: b("cough"), diarrhoea: b("diarrhoea"), fever: b("fever"), bloody_stool: b("bloody_stool"),
       unable_to_drink: b("unable_to_drink"), vomits_everything: b("vomits_everything"), convulsions: b("convulsions"),
-      lethargic_unconscious: b("lethargic_unconscious"), chest_indrawing: b("chest_indrawing"), stridor_calm: b("stridor_calm"),
+      lethargic_unconscious: b("lethargic_unconscious"), chest_indrawing: b("chest_indrawing") || !!coughChoiceState.s_chest_indrawing, stridor_calm: b("stridor_calm") || !!coughChoiceState.s_stridor_calm,
       sunken_eyes: b("sunken_eyes"), skin_pinch_slow: b("skin_pinch_slow"), restless_irritable: b("restless_irritable"), drinks_eagerly: b("drinks_eagerly"),
       ear_problem: b("ear_problem"), ear_discharge: b("ear_discharge"), ear_swelling_behind: b("ear_swelling_behind"),
       tooth_mouth: b("tooth_mouth"), tooth_severe_pain: b("tooth_severe_pain"), mouth_face_swelling: b("mouth_face_swelling"), mouth_injury_bleeding: b("mouth_injury_bleeding"), mouth_breathing_swallowing: b("mouth_breathing_swallowing"),
       measles_rash: b("measles_rash"), measles_cough: b("measles_cough"), measles_eyes: b("measles_eyes"), measles_mouth: b("measles_mouth"), measles_breathing: b("measles_breathing"),
-      other_problem: b("other_problem") || b("cough_other") || b("diarrhoea_stool_other") ||
-        b("diarrhoea_dehydration_other") || b("fever_other") || b("fever_measurement_other") ||
+      other_problem: b("other_problem") || b("cough_chest_unsure") || b("cough_sound_unsure") || !!coughChoiceState.s_cough_chest_unsure || !!coughChoiceState.s_cough_sound_unsure || b("diarrhoea_dehydration_other") ||
+        b("fever_other") || b("fever_measurement_other") ||
         b("ear_other") || b("tooth_mouth_other") || b("measles_other")
     };
     var r = engine.triageEval(inputs, engine.gd);

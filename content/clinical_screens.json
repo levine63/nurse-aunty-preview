@@ -58,34 +58,65 @@
       "browserCoverage": true
     },
     {
-      "id": "under5.followup.cough",
+      "id": "under5.followup.cough_chest",
       "featureId": "u5_triage",
-      "entry": { "kind": "under5_urgent", "subject": "child_under5", "view": "cough" },
+      "entry": { "kind": "under5_urgent", "subject": "child_under5", "view": "cough_chest" },
       "riskTier": "clinical_safety",
       "templateId": "T3",
-      "renderer": "shared_clinical_checklist",
+      "renderer": "shared_single_choice",
+      "introSlug": "tx.cough.chest.title",
       "groups": [
         {
-          "id": "under5_cough",
-          "legendSlug": "tx.clinical_screen.under5.cough_legend",
-          "optionIds": ["s_chest_indrawing", "s_stridor_calm", "s_cough_other", "s_cough_none"]
+          "id": "under5_cough_chest",
+          "legendSlug": "tx.cough.chest.question",
+          "optionIds": ["s_chest_indrawing", "s_cough_chest_unsure", "s_cough_chest_none"]
         }
       ],
       "options": [
-        { "id": "s_chest_indrawing", "labelSlug": "tx.q_chest_indrawing", "kind": "positive" },
-        { "id": "s_stridor_calm", "labelSlug": "tx.q_stridor_calm", "kind": "positive" },
-        { "id": "s_cough_other", "labelSlug": "tx.danger_checklist.other", "kind": "other" },
-        { "id": "s_cough_none", "labelSlug": "tx.danger_checklist.none", "kind": "none" }
+        { "id": "s_chest_indrawing", "labelSlug": "tx.cough.chest.yes", "kind": "positive" },
+        { "id": "s_cough_chest_unsure", "labelSlug": "tx.cough.not_sure", "kind": "other" },
+        { "id": "s_cough_chest_none", "labelSlug": "tx.cough.chest.no", "kind": "none" }
       ],
-      "actionId": "triagecoughcontinue",
+      "actionId": "coughchestcontinue",
       "actionSlug": "tx.clinical_screen.under5.continue",
-      "feedbackId": "coughfeedback",
-      "otherId": "s_cough_other",
-      "noneId": "s_cough_none",
-      "requiresOther": true,
+      "feedbackId": "coughchestfeedback",
+      "noneId": "s_cough_chest_none",
+      "requiresOther": false,
+      "otherException": "This bounded one-observation question uses a Not sure answer; the final symptom question carries the open other-concern route.",
       "requiresExplicitNegative": true,
       "outcomes": ["positive", "other", "none"],
-      "renderFunction": "renderUnder5CoughGate",
+      "renderFunction": "renderUnder5CoughChestGate",
+      "browserCoverage": true
+    },
+    {
+      "id": "under5.followup.cough_sound",
+      "featureId": "u5_triage",
+      "entry": { "kind": "under5_urgent", "subject": "child_under5", "view": "cough_sound" },
+      "riskTier": "clinical_safety",
+      "templateId": "T3",
+      "renderer": "shared_single_choice",
+      "introSlug": "tx.cough.sound.title",
+      "groups": [
+        {
+          "id": "under5_cough_sound",
+          "legendSlug": "tx.cough.sound.question",
+          "optionIds": ["s_stridor_calm", "s_cough_sound_unsure", "s_cough_sound_none"]
+        }
+      ],
+      "options": [
+        { "id": "s_stridor_calm", "labelSlug": "tx.cough.sound.yes", "kind": "positive" },
+        { "id": "s_cough_sound_unsure", "labelSlug": "tx.cough.not_sure", "kind": "other" },
+        { "id": "s_cough_sound_none", "labelSlug": "tx.cough.sound.no", "kind": "none" }
+      ],
+      "actionId": "coughsoundcontinue",
+      "actionSlug": "tx.clinical_screen.under5.continue",
+      "feedbackId": "coughsoundfeedback",
+      "noneId": "s_cough_sound_none",
+      "requiresOther": false,
+      "otherException": "This bounded one-observation question uses a Not sure answer; the final symptom question carries the open other-concern route.",
+      "requiresExplicitNegative": true,
+      "outcomes": ["positive", "other", "none"],
+      "renderFunction": "renderUnder5CoughSoundGate",
       "browserCoverage": true
     },
     {
@@ -99,22 +130,21 @@
         {
           "id": "under5_diarrhoea_stool",
           "legendSlug": "tx.clinical_screen.under5.diarrhoea_stool_legend",
-          "optionIds": ["s_bloody_stool", "s_diarrhoea_stool_other", "s_diarrhoea_stool_none"]
+          "optionIds": ["s_bloody_stool", "s_diarrhoea_stool_none"]
         }
       ],
       "options": [
         { "id": "s_bloody_stool", "labelSlug": "tx.q_bloody_stool", "kind": "positive" },
-        { "id": "s_diarrhoea_stool_other", "labelSlug": "tx.danger_checklist.other", "kind": "other" },
         { "id": "s_diarrhoea_stool_none", "labelSlug": "tx.danger_checklist.none", "kind": "none" }
       ],
       "actionId": "triagediarrhoeastoolcontinue",
       "actionSlug": "tx.clinical_screen.under5.continue",
       "feedbackId": "diarrhoeastoolfeedback",
-      "otherId": "s_diarrhoea_stool_other",
       "noneId": "s_diarrhoea_stool_none",
-      "requiresOther": true,
+      "requiresOther": false,
+      "otherException": "This is a single bounded stool observation; an open other-concern answer appears in the final dehydration symptom question.",
       "requiresExplicitNegative": true,
-      "outcomes": ["positive", "other", "none"],
+      "outcomes": ["positive", "none"],
       "renderFunction": "renderUnder5DiarrhoeaStoolGate",
       "browserCoverage": true
     },

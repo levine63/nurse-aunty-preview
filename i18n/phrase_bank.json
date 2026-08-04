@@ -1353,12 +1353,31 @@
         "text": "बहुत नींद में है, शरीर ढीला है, या जगाना मुश्किल है"
       }
     },
-    "tx.chest_flipbook.title": {"en":{"text":"Watch one breath"},"fr":{"text":"Regardez une respiration"},"hi-IN":{"text":"एक सांस देखें"}},
-    "tx.chest_flipbook.instruction": {"en":{"text":"Watch the lower chest, between the ribs and belly. When the child breathes in, the chest and belly move out. If this lower chest pulls inward instead, choose this sign and get urgent care now."},"fr":{"text":"Regardez le bas de la poitrine, entre les côtes et le ventre. Quand l'enfant inspire, la poitrine et le ventre avancent. Si le bas de la poitrine se creuse au lieu de cela, choisissez ce signe et allez chercher des soins urgents maintenant."},"hi-IN":{"text":"पसलियों और पेट के बीच, छाती के निचले हिस्से को देखें। जब बच्चा सांस लेता है, छाती और पेट बाहर की ओर जाते हैं। अगर निचली छाती इसके बजाय अंदर खिंचती है, तो यह संकेत चुनें और तुरंत इलाज लें।"}},
+    "tx.chest_flipbook.title": {"en":{"text":"Watch the lower chest"},"fr":{"text":"Regardez le bas de la poitrine"},"hi-IN":{"text":"छाती के निचले हिस्से को देखें"}},
+    "tx.chest_flipbook.instruction": {"en":{"text":"When the child breathes in, the chest and belly move out. Look at the space between the ribs and belly."},"fr":{"text":"Quand l'enfant inspire, la poitrine et le ventre avancent. Regardez l'espace entre les côtes et le ventre."},"hi-IN":{"text":"जब बच्चा सांस लेता है, छाती और पेट बाहर की ओर जाते हैं। पसलियों और पेट के बीच की जगह देखें।"}},
     "tx.chest_flipbook.frame": {"en":{"text":"Picture {current} of {total}"},"fr":{"text":"Image {current} sur {total}"},"hi-IN":{"text":"तस्वीर {current} में से {total}"},"placeholder_vars":["current","total"]},
     "tx.chest_flipbook.play": {"en":{"text":"Play example"},"fr":{"text":"Lire l'exemple"},"hi-IN":{"text":"उदाहरण चलाएँ"}},
     "tx.chest_flipbook.pause": {"en":{"text":"Pause example"},"fr":{"text":"Mettre l'exemple en pause"},"hi-IN":{"text":"उदाहरण रोकें"}},
     "tx.chest_flipbook.note": {"en":{"text":"These pictures show one example. They are not a test."},"fr":{"text":"Ces images montrent un exemple. Elles ne constituent pas un test."},"hi-IN":{"text":"ये तस्वीरें केवल एक उदाहरण दिखाती हैं। ये कोई जाँच नहीं हैं।"}},
+    "tx.chest_flipbook.frame_normal": {"en":{"text":"Normal breathing"},"fr":{"text":"Respiration normale"},"hi-IN":{"text":"सामान्य सांस"}},
+    "tx.chest_flipbook.frame_in": {"en":{"text":"Lower chest pulling in"},"fr":{"text":"Le bas de la poitrine se creuse"},"hi-IN":{"text":"छाती का निचला हिस्सा अंदर खिंचता है"}},
+    "tx.chest_flipbook.show_in": {"en":{"text":"Show pulling-in example"},"fr":{"text":"Montrer l'exemple de poitrine qui se creuse"},"hi-IN":{"text":"अंदर खिंचने का उदाहरण दिखाएँ"}},
+    "tx.chest_flipbook.show_out": {"en":{"text":"Show normal breathing"},"fr":{"text":"Montrer la respiration normale"},"hi-IN":{"text":"सामान्य सांस दिखाएँ"}},
+    "tx.cough.chest.title": {"en":{"text":"Watch breathing"},"fr":{"text":"Regardez la respiration"},"hi-IN":{"text":"सांस को देखें"}},
+    "tx.cough.chest.question": {"en":{"text":"When the child breathes in, does the lower chest pull inward?"},"fr":{"text":"Quand l'enfant inspire, le bas de la poitrine se creuse-t-il ?"},"hi-IN":{"text":"जब बच्चा सांस लेता है, तो क्या छाती का निचला हिस्सा अंदर खिंचता है?"}},
+    "tx.cough.chest.yes": {"en":{"text":"Yes, the lower chest pulls in"},"fr":{"text":"Oui, le bas de la poitrine se creuse"},"hi-IN":{"text":"हाँ, छाती का निचला हिस्सा अंदर खिंचता है"}},
+    "tx.cough.chest.no": {"en":{"text":"No, it does not pull in"},"fr":{"text":"Non, il ne se creuse pas"},"hi-IN":{"text":"नहीं, यह अंदर नहीं खिंचता"}},
+    "tx.cough.sound.title": {"en":{"text":"Listen to the child breathe"},"fr":{"text":"Écoutez l'enfant respirer"},"hi-IN":{"text":"बच्चे की सांस सुनें"}},
+    "tx.cough.sound.question": {"en":{"text":"When the child breathes in at rest, do you hear a harsh sound?"},"fr":{"text":"Quand l'enfant inspire au repos, entendez-vous un son rauque ?"},"hi-IN":{"text":"जब बच्चा आराम में सांस लेता है, तो क्या आप कर्कश आवाज़ सुनते हैं?"}},
+    "tx.cough.sound.yes": {"en":{"text":"Yes, I hear a harsh sound"},"fr":{"text":"Oui, j'entends un son rauque"},"hi-IN":{"text":"हाँ, मुझे कर्कश आवाज़ सुनाई देती है"}},
+    "tx.cough.sound.no": {"en":{"text":"No, I do not hear a harsh sound"},"fr":{"text":"Non, je n'entends pas de son rauque"},"hi-IN":{"text":"नहीं, मुझे कर्कश आवाज़ नहीं सुनाई देती"}},
+    "tx.cough.not_sure": {"en":{"text":"Not sure / another breathing worry"},"fr":{"text":"Pas sûr / autre inquiétude sur la respiration"},"hi-IN":{"text":"पक्का नहीं / सांस की दूसरी चिंता"}},
+    "tx.cough.answer_required": {"en":{"text":"Choose one answer to continue."},"fr":{"text":"Choisissez une réponse pour continuer."},"hi-IN":{"text":"आगे बढ़ने के लिए एक उत्तर चुनें।"}},
+    "tx.diarrhoea_duration.title": {"en":{"text":"Days with diarrhoea"},"fr":{"text":"Jours de diarrhée"},"hi-IN":{"text":"दस्त के दिन"}},
+    "tx.diarrhoea_duration.not_sure": {"en":{"text":"Not sure"},"fr":{"text":"Pas sûr"},"hi-IN":{"text":"पक्का नहीं"}},
+    "tx.diarrhoea_duration.answer_required": {"en":{"text":"Enter the number of days or choose Not sure."},"fr":{"text":"Entrez le nombre de jours ou choisissez Pas sûr."},"hi-IN":{"text":"दिनों की संख्या लिखें या पक्का नहीं चुनें।"}},
+    "tx.clinical.show_me": {"en":{"text":"Show me"},"fr":{"text":"Montrez-moi"},"hi-IN":{"text":"मुझे दिखाएँ"}},
+    "tx.stridor_sound.hint_short": {"en":{"text":"Listen to an example of a harsh sound when breathing in."},"fr":{"text":"Écoutez un exemple de son rauque pendant l'inspiration."},"hi-IN":{"text":"सांस लेते समय कर्कश आवाज़ का एक उदाहरण सुनें।"}},
     "tx.chest_flipbook.frame_out_alt": {"en":{"text":"Child’s chest and belly moving out as the child breathes in."},"fr":{"text":"La poitrine et le ventre de l'enfant avancent pendant l'inspiration."},"hi-IN":{"text":"बच्चे के सांस लेते समय छाती और पेट बाहर की ओर जाते हैं।"}},
     "tx.chest_flipbook.frame_in_alt": {"en":{"text":"Child’s lower chest pulling inward while the child breathes in."},"fr":{"text":"Le bas de la poitrine de l'enfant se creuse pendant l'inspiration."},"hi-IN":{"text":"बच्चे के सांस लेते समय छाती का निचला हिस्सा अंदर खिंचता है।"}},
     "tx.q_chest_indrawing": {
@@ -1402,7 +1421,7 @@
       "hi-IN": { "text": "आवाज़ बंद करें" }
     },
     "tx.stridor_sound.hint": {
-      "en": { "text": "This is one example sound. It is not a test. If you are worried about breathing, seek urgent care." },
+      "en": { "text": "Listen to an example of a harsh sound when breathing in." },
       "bn-BD": { "text": "" },
       "fr": { "text": "Ceci est un seul exemple de son. Ce n'est pas un test. Si vous vous inquiétez pour la respiration, cherchez des soins urgents." },
       "hi-IN": { "text": "यह आवाज़ का केवल एक उदाहरण है। यह जांच नहीं है। अगर आप सांस लेने को लेकर चिंतित हैं, तो तुरंत देखभाल लें।" }
@@ -9065,6 +9084,9 @@
       "fr": {
         "text": "Continuer"
       },
+      "hi-IN": {
+        "text": "आगे बढ़ें"
+      },
       "bn-BD": {
         "text": ""
       }
@@ -10432,8 +10454,8 @@
         "text": ""
       }
     },
-    "tx.triage.chrome.title": {"en":{"text":"Under-5 sick-child triage"},"fr":{"text":"Évaluation d’un enfant malade de moins de 5 ans"},"hi-IN":{"text":"5 वर्ष से कम बच्चे की बीमारी जाँच"}},
-    "tx.triage.chrome.intro": {"en":{"text":"Danger signs first, then the main complaints. Follow-up questions appear only when relevant."},"fr":{"text":"Vérifiez d’abord les signes de danger, puis les principaux problèmes. Les questions suivantes n’apparaissent que si elles sont utiles."},"hi-IN":{"text":"पहले खतरे के संकेत देखें, फिर मुख्य समस्याएँ। आगे के प्रश्न केवल जरूरत होने पर दिखेंगे।"}},
+    "tx.triage.chrome.title": {"en":{"text":"Child health check"},"fr":{"text":"Vérification de la santé de l’enfant"},"hi-IN":{"text":"बच्चे की स्वास्थ्य जाँच"}},
+    "tx.triage.chrome.intro": {"en":{"text":"Answer one step at a time."},"fr":{"text":"Répondez à une étape à la fois."},"hi-IN":{"text":"एक बार में एक चरण का उत्तर दें।"}},
     "tx.triage.chrome.child_legend": {"en":{"text":"Child"},"fr":{"text":"Enfant"},"hi-IN":{"text":"बच्चा"}},
     "tx.triage.chrome.who_sick": {"en":{"text":"Who is sick?"},"fr":{"text":"Qui est malade ?"},"hi-IN":{"text":"कौन बीमार है?"}},
     "tx.triage.chrome.child_select_aria": {"en":{"text":"Child for sick-child check"},"fr":{"text":"Enfant pour la vérification d’un enfant malade"},"hi-IN":{"text":"बीमार बच्चे की जाँच के लिए बच्चा"}},
@@ -10442,16 +10464,16 @@
     "tx.triage.chrome.general_danger_heading": {"en":{"text":"General danger signs"},"fr":{"text":"Signes généraux de danger"},"hi-IN":{"text":"सामान्य खतरे के संकेत"}},
     "tx.triage.chrome.general_danger_instruction": {"en":{"text":"If any danger sign is happening now, check it. If none are happening, you must check \"No danger signs\" before continuing."},"fr":{"text":"Si un signe de danger est présent maintenant, cochez-le. S’il n’y en a aucun, cochez « Aucun signe de danger » avant de continuer."},"hi-IN":{"text":"यदि अभी कोई खतरे का संकेत है, उसे चुनें। यदि कोई नहीं है, तो आगे बढ़ने से पहले “कोई खतरे का संकेत नहीं” चुनें।"}},
     "tx.triage.chrome.complaint_legend": {"en":{"text":"Is the child sick with..."},"fr":{"text":"L’enfant a-t-il..."},"hi-IN":{"text":"क्या बच्चे को यह समस्या है..."}},
-    "tx.triage.chrome.cough_legend": {"en":{"text":"Because of cough - also check"},"fr":{"text":"En cas de toux, vérifiez aussi"},"hi-IN":{"text":"खाँसी के कारण यह भी देखें"}},
+    "tx.triage.chrome.cough_legend": {"en":{"text":"Check the child's breathing"},"fr":{"text":"Vérifiez la respiration de l'enfant"},"hi-IN":{"text":"बच्चे की सांस जाँचें"}},
     "tx.triage.chrome.breathing_rate_legend": {"en":{"text":"Breathing rate (cough is present)"},"fr":{"text":"Fréquence respiratoire (toux présente)"},"hi-IN":{"text":"साँसों की गिनती (खाँसी है)"}},
     "tx.triage.chrome.start_count": {"en":{"text":"Start 60-second count"},"fr":{"text":"Commencer le comptage de 60 secondes"},"hi-IN":{"text":"60 सेकंड की गिनती शुरू करें"}},
     "tx.triage.chrome.time_again": {"en":{"text":"Time again"},"fr":{"text":"Chronométrer à nouveau"},"hi-IN":{"text":"फिर से समय लें"}},
     "tx.triage.chrome.cancel": {"en":{"text":"Cancel"},"fr":{"text":"Annuler"},"hi-IN":{"text":"रद्द करें"}},
     "tx.triage.chrome.not_measured": {"en":{"text":"not measured. When counting starts, tap once for each breath you see."},"fr":{"text":"non mesuré. Quand le comptage commence, touchez une fois pour chaque respiration observée."},"hi-IN":{"text":"मापा नहीं गया। गिनती शुरू होने पर, दिखाई देने वाली हर साँस के लिए एक बार दबाएँ।"}},
     "tx.triage.chrome.tap_instruction": {"en":{"text":"Tap once each time the child breathes in or the chest rises."},"fr":{"text":"Touchez une fois chaque fois que l’enfant inspire ou que sa poitrine se soulève."},"hi-IN":{"text":"हर बार जब बच्चा साँस ले या छाती उठे, एक बार दबाएँ।"}},
-    "tx.triage.chrome.diarrhoea_legend": {"en":{"text":"Because of diarrhoea - also tell us"},"fr":{"text":"En cas de diarrhée, dites-nous aussi"},"hi-IN":{"text":"दस्त के कारण यह भी बताएँ"}},
+    "tx.triage.chrome.diarrhoea_legend": {"en":{"text":"Check diarrhoea"},"fr":{"text":"Vérifiez la diarrhée"},"hi-IN":{"text":"दस्त जाँचें"}},
     "tx.triage.chrome.diarrhoea_days": {"en":{"text":"How many days has the child had loose or watery stools?"},"fr":{"text":"Depuis combien de jours l’enfant a-t-il des selles molles ou liquides ?"},"hi-IN":{"text":"बच्चे को पतला या पानी जैसा मल कितने दिनों से है?"}},
-    "tx.triage.chrome.leave_blank": {"en":{"text":"Leave blank if you are not sure"},"fr":{"text":"Laissez vide si vous n’êtes pas sûr"},"hi-IN":{"text":"पक्का न हो तो खाली छोड़ें"}},
+    "tx.triage.chrome.leave_blank": {"en":{"text":"Enter the number of days"},"fr":{"text":"Entrez le nombre de jours"},"hi-IN":{"text":"दिनों की संख्या लिखें"}},
     "tx.triage.chrome.fever_legend": {"en":{"text":"Because of fever - also tell us"},"fr":{"text":"En cas de fièvre, dites-nous aussi"},"hi-IN":{"text":"बुखार के कारण यह भी बताएँ"}},
     "tx.triage.chrome.fever_days": {"en":{"text":"How many days has the fever or unusually hot feeling lasted?"},"fr":{"text":"Depuis combien de jours la fièvre ou la sensation de chaleur inhabituelle dure-t-elle ?"},"hi-IN":{"text":"बुखार या असामान्य गर्मी कितने दिनों से है?"}},
     "tx.triage.chrome.thermometer_not_required": {"en":{"text":"A thermometer or malaria test is not required. Do not delay urgent care to take a reading or get a test."},"fr":{"text":"Un thermomètre ou un test du paludisme n’est pas nécessaire. Ne retardez pas les soins urgents pour prendre une mesure ou faire un test."},"hi-IN":{"text":"थर्मामीटर या मलेरिया जाँच जरूरी नहीं है। माप लेने या जाँच कराने के लिए तुरंत देखभाल में देर न करें।"}},

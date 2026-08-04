@@ -162,10 +162,13 @@
   .questionexamples { margin:8px 0; }
   .questionexamples > summary { min-height:48px; display:flex; align-items:center; color:var(--accent); font-weight:800; cursor:pointer; }
   .questionexamples .questionasset { margin-left:0; }
-  .breath-flipbook { margin:10px 0; max-width:330px; border:2px solid #b3261e; border-radius:12px; background:#fff8f6; padding:10px; }
-  .breath-flipbook h4 { margin:0 0 6px; font-size:19px; color:#4a1715; }
-  .breath-flipbook p { margin:6px 0; font-size:17px; line-height:1.4; color:#35231f; }
-  .breath-flipbook .breath-frame { display:block; width:100%; height:240px; object-fit:cover; object-position:center 48%; border-radius:8px; background:#fff; }
+  .sign-example { margin:4px 0 8px 32px; }
+  .sign-example summary { cursor:pointer; color:var(--accent); font-weight:750; min-height:40px; display:flex; align-items:center; }
+  .sign-example img { display:block; width:min(78vw, 300px); max-height:240px; object-fit:contain; border:1px solid #d8e1dd; border-radius:8px; background:#fff; }
+  .breath-flipbook { margin:8px 0; max-width:330px; border:2px solid #b3261e; border-radius:12px; background:#fff8f6; padding:8px; }
+  .breath-flipbook h4 { margin:0 0 4px; font-size:18px; color:#4a1715; }
+  .breath-flipbook p { margin:4px 0; font-size:16px; line-height:1.3; color:#35231f; }
+  .breath-flipbook .breath-frame { display:block; width:100%; height:150px; object-fit:cover; object-position:center 48%; border-radius:8px; background:#fff; }
   .breath-flipbook .breath-frame[hidden] { display:none; }
   .breath-flipbook .breath-frame-label { display:block; margin-top:6px; font-size:16px; font-weight:750; color:#5f574d; }
   .breath-flipbook .breath-controls { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
@@ -431,9 +434,6 @@
   </section>
 
   <section id="triagepanel" class="hidden" tabindex="-1" aria-live="polite">
-  <h2 data-i18n="tx.triage.chrome.title">Under-5 sick-child triage</h2>
-  <div class="sub" data-i18n="tx.triage.chrome.intro">Danger signs first, then the main complaints. Follow-up questions appear only when relevant.</div>
-
   <fieldset id="triagechildgroup">
     <legend data-i18n="tx.triage.chrome.child_legend">Child</legend>
     <div class="field"><label for="triagechildselect" data-i18n="tx.triage.chrome.who_sick">Who is sick?</label><select id="triagechildselect" data-i18n-aria-label="tx.triage.chrome.child_select_aria" aria-label="Child for sick-child check"><option value="" data-i18n="tx.triage.chrome.add_unknown_child">Add/unknown child</option></select></div>
@@ -453,7 +453,7 @@
   </fieldset>
 
   <fieldset id="coughgroup" class="hidden">
-    <legend data-i18n="tx.triage.chrome.cough_legend">Because of cough - also check</legend>
+    <legend data-i18n="tx.triage.chrome.cough_legend">Check the child's breathing</legend>
     <div id="coughsigns"></div>
   </fieldset>
 
@@ -472,11 +472,9 @@
   </fieldset>
 
   <fieldset id="diargroup" class="hidden">
-    <legend data-i18n="tx.triage.chrome.diarrhoea_legend">Because of diarrhoea - also tell us</legend>
-    <div id="diarrhoeastoolfields">
-      <div class="field"><label for="diarrhoeadays" data-i18n="tx.triage.chrome.diarrhoea_days">How many days has the child had loose or watery stools?</label><input type="number" id="diarrhoeadays" min="0" max="60" inputmode="numeric" data-i18n-placeholder="tx.triage.chrome.leave_blank" placeholder="Leave blank if you are not sure" /></div>
-      <div id="diarrhoeastoolsigns"></div>
-    </div>
+    <legend data-i18n="tx.triage.chrome.diarrhoea_legend">Check diarrhoea</legend>
+    <div id="diarrhoeadurationfields"><div class="field"><label for="diarrhoeadays" data-i18n="tx.triage.chrome.diarrhoea_days">How many days has the child had loose or watery stools?</label><input type="number" id="diarrhoeadays" min="0" max="60" inputmode="numeric" data-i18n-placeholder="tx.triage.chrome.leave_blank" placeholder="Enter the number of days" /></div><div class="slidecontrols wrap-controls"><button class="ghost" id="diarrhoeadaysnotsure" type="button" data-i18n="tx.diarrhoea_duration.not_sure">Not sure</button><button id="triagediarrhoeadayscontinue" type="button" disabled data-i18n="tx.clinical_screen.under5.continue">Continue</button></div><p class="checklist-feedback" id="diarrhoeadaysfeedback" aria-live="polite"></p></div>
+    <div id="diarrhoeastoolfields" class="hidden"><div id="diarrhoeastoolsigns"></div></div>
     <div id="diarrhoeadehydrationsigns" class="hidden"></div>
   </fieldset>
 
