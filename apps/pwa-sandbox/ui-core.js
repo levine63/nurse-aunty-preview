@@ -324,9 +324,8 @@ export function mountUI(engine) {
     return text;
   }
   function localizeCaregiverChrome() {
-    ["triagepanel", "appnav", "screenbar"].forEach(function (id) {
-      var root = $(id);
-      if (!root) return;
+    [document.body].forEach(function (root) {
+      if (!root || !root.querySelectorAll) return;
       root.querySelectorAll("[data-i18n]").forEach(function (node) {
         node.textContent = tx(node.getAttribute("data-i18n"), node.textContent);
       });
@@ -335,6 +334,9 @@ export function mountUI(engine) {
       });
       root.querySelectorAll("[data-i18n-aria-label]").forEach(function (node) {
         node.setAttribute("aria-label", tx(node.getAttribute("data-i18n-aria-label"), node.getAttribute("aria-label") || ""));
+      });
+      root.querySelectorAll("[data-i18n-title]").forEach(function (node) {
+        node.setAttribute("title", tx(node.getAttribute("data-i18n-title"), node.getAttribute("title") || ""));
       });
     });
   }
@@ -1025,13 +1027,13 @@ export function mountUI(engine) {
   var activeShellScreen = "home";
   var activeShellTitle = "";
   function shellScreenLabel() {
-    if (activeShellScreen === "people") return "People";
-    if (activeShellScreen === "learn") return "Learn and practice";
-    if (activeShellScreen === "tools") return "Tools";
-    if (activeShellScreen === "urgent-who") return "Something is wrong";
+    if (activeShellScreen === "people") return tx("tx.shell.nav_people", "People");
+    if (activeShellScreen === "learn") return tx("tx.shell.learn_and_practice", "Learn and practice");
+    if (activeShellScreen === "tools") return tx("tx.shell.nav_tools", "Tools");
+    if (activeShellScreen === "urgent-who") return tx("tx.shell.something_wrong", "Something is wrong");
     if (activeShellScreen === "urgent-check") return under5StageTitle();
-    if (activeShellScreen === "work") return activeShellTitle || ($("slidetitle") && $("slidetitle").textContent ? $("slidetitle").textContent : "Activity");
-    return "Today";
+    if (activeShellScreen === "work") return activeShellTitle || ($("slidetitle") && $("slidetitle").textContent ? $("slidetitle").textContent : tx("tx.shell.activity", "Activity"));
+    return tx("tx.shell.today", "Today");
   }
   function triageProgressHtml() {
     if (activeShellScreen !== "urgent-check") return "";
@@ -4927,15 +4929,15 @@ export function mountUI(engine) {
   });
   var howToStep = 0;
   var howToSlides = [
-    { title: tx("tx.howto_listen_title", "Hear this screen"), text: "Tap Listen to hear the important words and choices. A yellow outline shows what the app is reading. Tap Stop at any time." },
-    { title: tx("tx.howto_questions_title", "Answer one step at a time"), text: tx("tx.multi_select_instruction", "Choose every item that is true. You can choose more than one.") },
-    { title: tx("tx.howto_lists_title", "Choose all that apply"), text: tx("tx.multi_select_instruction", "Choose every item that is true. You can choose more than one.") }
+    { titleSlug: "tx.howto.hear_title", titleFallback: "Hear this screen", textSlug: "tx.howto.hear_body", textFallback: "Tap Listen to hear the important words and choices. A yellow outline shows what the app is reading. Tap Stop at any time." },
+    { titleSlug: "tx.howto_questions_title", titleFallback: "Answer one step at a time", textSlug: "tx.multi_select_instruction", textFallback: "Choose every item that is true. You can choose more than one." },
+    { titleSlug: "tx.howto_lists_title", titleFallback: "Choose all that apply", textSlug: "tx.multi_select_instruction", textFallback: "Choose every item that is true. You can choose more than one." }
   ];
   function renderHowTo() {
     var slide = howToSlides[howToStep];
-    $("howtoprogress").textContent = "Step " + (howToStep + 1) + " of " + howToSlides.length;
-    $("howtotitle").textContent = slide.title;
-    $("howtotext").textContent = slide.text;
+    $("howtoprogress").textContent = tx("tx.howto.step", "Step {current} of {total}", { current: howToStep + 1, total: howToSlides.length });
+    $("howtotitle").textContent = tx(slide.titleSlug, slide.titleFallback);
+    $("howtotext").textContent = tx(slide.textSlug, slide.textFallback);
     $("howtoprev").disabled = howToStep === 0;
     $("howtonext").disabled = howToStep === howToSlides.length - 1;
   }
@@ -5002,16 +5004,19 @@ export function mountUI(engine) {
     var locale = $("preflanguage") ? $("preflanguage").value : "en";
     var languageNames = { en: "English", fr: "Fran\u00e7ais", "hi-IN": "\u0939\u093f\u0928\u094d\u0926\u0940 (\u092e\u0938\u094c\u0926\u093e)", "bn-BD": "Bangla pending review" };
     var lang = languageNames[locale] || "English";
-    var privacy = $("prefprivacy") && $("prefprivacy").checked ? "extra privacy on" : "standard prototype mode";
-    var generic = $("prefgeneric") && $("prefgeneric").checked ? "generic reminders" : "specific reminder wording";
-    var quiet = $("prefquiet") && $("prefquiet").value ? $("prefquiet").value : "not set";
-    $("prefsummary").textContent = "Language: " + lang + ". Privacy: " + privacy + ". Reminders: " + generic + ". Quiet starts: " + quiet + ".";
+    var privacy = $("prefprivacy") && $("prefprivacy").checked ? tx("tx.prefs.privacy_extra", "extra privacy on") : tx("tx.prefs.privacy_standard", "standard prototype mode");
+    var generic = $("prefgeneric") && $("prefgeneric").checked ? tx("tx.prefs.reminders_generic", "generic reminders") : tx("tx.prefs.reminders_specific", "specific reminder wording");
+    var quiet = $("prefquiet") && $("prefquiet").value ? $("prefquiet").value : tx("tx.prefs.not_set", "not set");
+    $("prefsummary").textContent = tx("tx.prefs.summary", "Language: {language}. Privacy: {privacy}. Reminders: {reminders}. Quiet starts: {quiet}.", { language: lang, privacy: privacy, reminders: generic, quiet: quiet });
   }
   if ($("preflanguage")) $("preflanguage").addEventListener("change", function () {
     var locale = $("preflanguage").value;
     if (engine.setLocale) engine.setLocale(locale);
     if (document.documentElement) document.documentElement.lang = locale;
     localizeCaregiverChrome();
+    renderHowTo();
+    updatePreferenceSummary();
+    applyShellVisibility();
     refreshVisibleUnder5TriageForLocale();
     $("status").textContent = tx("tx.language.changed", "Language changed. This screen and newly opened activities use the selected language when a draft is available.");
   });

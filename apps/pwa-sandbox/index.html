@@ -257,10 +257,10 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="banner"><b>Prototype.</b> Synthetic data only. Not for medical care.</div>
+  <div class="banner" data-i18n="tx.shell.prototype_banner">Prototype. Synthetic data only. Not for medical care.</div>
   <h1>NurseAunty&trade;</h1>
-  <div class="sub">Family health actions: check a problem, learn a step, set a reminder, or track a habit.</div>
-  <p class="status" id="status">Loading engine...</p>
+  <div class="sub" data-i18n="tx.shell.home_tagline">Keep your family healthy with NurseAunty in your pocket.</div>
+  <p class="status" id="status" data-i18n="tx.shell.loading">Loading app...</p>
   <nav class="appnav" id="appnav" data-i18n-aria-label="tx.shell.primary_navigation" aria-label="Primary">
     <button class="navitem active" id="navhome" data-screen="home" type="button"><span class="navicon" aria-hidden="true">H</span><span data-i18n="tx.shell.nav_home">Home</span></button>
     <button class="navitem" id="navpeople" data-screen="people" type="button"><span class="navicon" aria-hidden="true">P</span><span data-i18n="tx.shell.nav_people">People</span></button>
@@ -271,10 +271,10 @@
   <main class="appmain" id="appmain">
 
   <div class="profilebar">
-    <span class="sr-only">Open Settings to change language, quiet hours, privacy, or Demo Mode.</span>
+    <span class="sr-only" data-i18n="tx.shell.settings_hint">Open Settings to change language, quiet hours, privacy, or Demo Mode.</span>
     <span>
-      <button class="ghost" id="showprefs" type="button" aria-label="Settings and local preferences" title="Settings and local preferences">Settings</button>
-      <button class="ghost" id="howtobutton" type="button">How to use</button>
+      <button class="ghost" id="showprefs" type="button" data-i18n="tx.shell.settings" data-i18n-aria-label="tx.shell.settings_aria" data-i18n-title="tx.shell.settings_aria" aria-label="Settings and local preferences" title="Settings and local preferences">Settings</button>
+      <button class="ghost" id="howtobutton" type="button" data-i18n="tx.shell.how_to_use">How to use</button>
       <button class="ghost listen-button" id="listenbutton" type="button" aria-pressed="false"><svg class="listen-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3zm12.5 3a3.5 3.5 0 0 0-2-3.16v6.32A3.5 3.5 0 0 0 15.5 12zm0-7.1v2.06a6 6 0 0 1 0 10.08v2.06a8 8 0 0 0 0-14.2z"/></svg><span id="listenlabel">Listen</span></button>
     </span>
   </div>
@@ -284,21 +284,21 @@
     <div class="progressstrip" id="screenprogress" data-i18n-aria-label="tx.shell.progress" aria-label="Progress"></div>
   </div>
 
-  <section class="today-panel" id="todaypanel" aria-label="Today">
+  <section class="today-panel" id="todaypanel" data-i18n-aria-label="tx.shell.today" aria-label="Today">
     <div class="today-main">
       <div>
-        <strong>Activities today: Toothbrush timer!</strong>
-        <span>Start the two-minute brushing coach and mark the star chart.</span>
+        <strong data-i18n="tx.home.brushing_title">Activities today: Toothbrush timer!</strong>
+        <span data-i18n="tx.home.brushing_body">Start the two-minute brushing coach and mark the star chart.</span>
       </div>
-      <button id="todaybrush" type="button">Open timer</button>
+      <button id="todaybrush" type="button" data-i18n="tx.home.open_timer">Open timer</button>
     </div>
     <div class="home-flow" aria-labelledby="homeflowtitle">
-      <h2 id="homeflowtitle">What do you need?</h2>
-      <span>Choose one path. The app will show only the next useful choices.</span>
+      <h2 id="homeflowtitle" data-i18n="tx.home.what_need">What do you need?</h2>
+      <span data-i18n="tx.home.choose_path">Choose one path. The app will show only the next useful choices.</span>
       <div class="home-actions">
-        <button class="home-action" id="homecare" type="button"><strong>Care for someone</strong><span>Choose a person, then what they need.</span></button>
-        <button class="home-action" id="homelearn" type="button"><strong>Learn something</strong><span>Choose one kind of lesson.</span></button>
-        <button class="home-action" id="hometools" type="button"><strong>Use a tool</strong><span>Choose a timer, reminder, or tracker.</span></button>
+        <button class="home-action" id="homecare" type="button"><strong data-i18n="tx.home.care_title">Care for someone</strong><span data-i18n="tx.home.care_body">Choose a person, then what they need.</span></button>
+        <button class="home-action" id="homelearn" type="button"><strong data-i18n="tx.home.learn_title">Learn something</strong><span data-i18n="tx.home.learn_body">Choose one kind of lesson.</span></button>
+        <button class="home-action" id="hometools" type="button"><strong data-i18n="tx.home.tools_title">Use a tool</strong><span data-i18n="tx.home.tools_body">Choose a timer, reminder, or tracker.</span></button>
       </div>
     </div>
   </section>
@@ -306,23 +306,23 @@
   <section class="prefs-panel hidden" id="localprefs">
     <div class="prefs-head">
       <div>
-        <strong>Local preferences</strong>
-        <span>Choose language, privacy, and quiet hours. Nothing here stores real health data.</span>
+        <strong data-i18n="tx.prefs.title">Local preferences</strong>
+        <span data-i18n="tx.prefs.body">Choose language, privacy, and quiet hours. Nothing here stores real health data.</span>
       </div>
-      <button class="ghost" id="closeprefs" type="button">Done</button>
+      <button class="ghost" id="closeprefs" type="button" data-i18n="tx.shell.done">Done</button>
     </div>
     <div class="prefs-grid">
-      <label>Language
+      <label><span data-i18n="tx.prefs.language">Language</span>
         <select id="preflanguage"><option value="en">English</option><option value="fr">Fran&ccedil;ais</option><option value="hi-IN">&#2361;&#2367;&#2344;&#2381;&#2342;&#2368; (&#2350;&#2360;&#2380;&#2342;&#2366;)</option><option value="bn-BD">Bangla (pending)</option></select>
       </label>
-      <label>Quiet starts
+      <label><span data-i18n="tx.prefs.quiet_starts">Quiet starts</span>
         <input id="prefquiet" type="time" value="21:00" />
       </label>
     </div>
     <div class="prefs-checks">
-      <label><input id="prefprivacy" type="checkbox" /> Extra privacy on shared phone</label>
-      <label><input id="prefgeneric" type="checkbox" checked /> Use generic reminder text</label>
-      <label><input id="demomodeon" type="checkbox" /> Demo shortcuts</label>
+      <label><input id="prefprivacy" type="checkbox" /> <span data-i18n="tx.prefs.shared_phone_privacy">Extra privacy on shared phone</span></label>
+      <label><input id="prefgeneric" type="checkbox" checked /> <span data-i18n="tx.prefs.generic_reminder">Use generic reminder text</span></label>
+      <label><input id="demomodeon" type="checkbox" /> <span data-i18n="tx.prefs.demo_shortcuts">Demo shortcuts</span></label>
     </div>
     <details class="reviewer-settings hidden" id="reviewersettings">
       <summary>Reviewer testing controls</summary>
@@ -346,19 +346,19 @@
   </section>
 
   <section class="howto-panel hidden" id="howtopanel" aria-live="polite" aria-labelledby="howtotitle">
-    <div class="screenlabel" id="howtoprogress">Step 1 of 3</div>
-    <h2 id="howtotitle">Hear this screen</h2>
-    <p id="howtotext">Tap Listen to hear the important words and choices. A yellow outline shows what the app is reading. Tap Stop at any time.</p>
-    <div class="howto-actions"><button class="ghost" id="howtoprev" type="button">Back</button><button id="howtonext" type="button">Next</button><button class="ghost" id="howtodone" type="button">Done</button></div>
+    <div class="screenlabel" id="howtoprogress" data-i18n-dynamic="tx.howto.step">Step 1 of 3</div>
+    <h2 id="howtotitle" data-i18n-dynamic="tx.howto.hear_title">Hear this screen</h2>
+    <p id="howtotext" data-i18n-dynamic="tx.howto.hear_body">Tap Listen to hear the important words and choices. A yellow outline shows what the app is reading. Tap Stop at any time.</p>
+    <div class="howto-actions"><button class="ghost" id="howtoprev" type="button" data-i18n="tx.shell.back">Back</button><button id="howtonext" type="button" data-i18n="tx.shell.next">Next</button><button class="ghost" id="howtodone" type="button" data-i18n="tx.shell.done">Done</button></div>
   </section>
 
   <section class="demo-panel hidden" id="demomode">
     <div class="demo-head">
       <div>
-        <strong>Demo Mode</strong>
-        <span>Five tested synthetic flows. Prototype only; not for care.</span>
+        <strong data-i18n="tx.demo.title">Demo Mode</strong>
+        <span data-i18n="tx.demo.body">Five tested synthetic flows. Prototype only; not for care.</span>
       </div>
-      <button class="ghost" id="resetdemo" type="button">Reset</button>
+      <button class="ghost" id="resetdemo" type="button" data-i18n="tx.shell.reset">Reset</button>
     </div>
     <div class="demo-actions" id="demoactions"></div>
   </section>
