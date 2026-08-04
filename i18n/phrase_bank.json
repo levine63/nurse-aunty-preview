@@ -10240,6 +10240,20 @@
         "text": ""
       }
     },
+    "tx.bf.assistant.play_from_current": {
+      "en": {
+        "text": "Play from this tip ({count} tips)"
+      },
+      "fr": {
+        "text": "Écouter à partir de ce conseil ({count} conseils)"
+      },
+      "hi-IN": {
+        "text": "इस सुझाव से सुनें ({count} सुझाव)"
+      },
+      "bn-BD": {
+        "text": ""
+      }
+    },
     "tx.bf.progress.baby_intro": {
       "en": {
         "text": "First check the baby. Choose every sign you see, or choose Something else worries me or None of these."

@@ -12,14 +12,14 @@
         {
           "id": "wash",
           "bodySlug": "tx.seq_ors_step1",
-          "imageAsset": "img.generated.ors_1l_mix_instruction_v2",
+          "imageAsset": "img.generated.ors_wash_hands_v1",
           "imageDesc": "Caregiver washing hands beside a clean cup and clean water.",
           "note": "Memory profile: 3-frame cache keeps previous/current/next only."
         },
         {
           "id": "choose_container",
           "bodySlug": "tx.seq_ors_step_choose_container",
-          "imageAsset": "img.generated.ors_1l_mix_instruction_v2",
+          "imageAsset": "img.generated.ors_choose_container_v1",
           "imageDesc": "Caregiver choosing the actual household container before measuring water for ORS.",
           "note": "Choose one container before measuring. Memory profile: 3-frame cache keeps previous/current/next only."
         },
@@ -47,7 +47,7 @@
         {
           "id": "use_same_day",
           "bodySlug": "tx.seq_ors_step4",
-          "imageAsset": "img.generated.ors_1l_mix_instruction_v2",
+          "imageAsset": "img.generated.ors_cover_same_day_v1",
           "imageDesc": "Prepared ORS kept covered and used the same day, with old ORS discarded.",
           "note": "Memory profile: 3-frame cache keeps previous/current/next only."
         }

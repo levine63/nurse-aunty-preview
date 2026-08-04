@@ -2719,6 +2719,69 @@
     },
     {
       "featureIds": [
+        "ors_slideshow"
+      ],
+      "module": "ORS/Diarrhea/Zinc",
+      "assetType": "custom_generated_png",
+      "sourceType": "codex_generated_png_draft",
+      "license": "Codex-generated PNG draft; internal prototype only until clinical, localization, rights, and local dignity review.",
+      "costUsd": 0,
+      "generationSoftware": "Codex built-in image generation",
+      "regionFocus": "culturally neutral North India prototype draft",
+      "clinicalReviewStatus": "ORS/Zinc Review Needed",
+      "localReviewStatus": "Product/Local Review Needed",
+      "approvalStatus": "CODEX Decision - needs approval",
+      "date_accessed_or_captured": "2026-08-03",
+      "assetId": "img.generated.ors_wash_hands_v1",
+      "targetPath": "assets/generated/generated_ors_wash_hands_v1.png",
+      "altText": "Caregiver washing both hands with soap and clean running water beside an empty clean jug and cup before preparing ORS.",
+      "source": "Built-in Codex image generation tool from a bounded low-literacy instruction prompt: wash both hands with soap and clean water before ORS preparation; no sachet, powder, measuring, or drink action shown; generated 2026-08-03.",
+      "displayPriority": 102
+    },
+    {
+      "featureIds": [
+        "ors_slideshow"
+      ],
+      "module": "ORS/Diarrhea/Zinc",
+      "assetType": "custom_generated_png",
+      "sourceType": "codex_generated_png_draft",
+      "license": "Codex-generated PNG draft; internal prototype only until clinical, localization, rights, and local dignity review.",
+      "costUsd": 0,
+      "generationSoftware": "Codex built-in image generation",
+      "regionFocus": "culturally neutral North India prototype draft",
+      "clinicalReviewStatus": "ORS/Zinc Review Needed",
+      "localReviewStatus": "Product/Local Review Needed",
+      "approvalStatus": "CODEX Decision - needs approval",
+      "date_accessed_or_captured": "2026-08-03",
+      "assetId": "img.generated.ors_choose_container_v1",
+      "targetPath": "assets/generated/generated_ors_choose_container_v1.png",
+      "altText": "Caregiver selecting one empty household container from a small cup, handled mug, and larger clear bottle before measuring ORS water.",
+      "source": "Built-in Codex image generation tool from a bounded low-literacy instruction prompt: choose one clean household container before ORS measurement; no water, sachet, powder, drink, or measurement marks shown; generated 2026-08-03.",
+      "displayPriority": 102
+    },
+    {
+      "featureIds": [
+        "ors_slideshow"
+      ],
+      "module": "ORS/Diarrhea/Zinc",
+      "assetType": "custom_generated_png",
+      "sourceType": "codex_generated_png_draft",
+      "license": "Codex-generated PNG draft; internal prototype only until clinical, localization, rights, and local dignity review.",
+      "costUsd": 0,
+      "generationSoftware": "Codex built-in image generation",
+      "regionFocus": "culturally neutral North India prototype draft",
+      "clinicalReviewStatus": "ORS/Zinc Review Needed",
+      "localReviewStatus": "Product/Local Review Needed",
+      "approvalStatus": "CODEX Decision - needs approval",
+      "date_accessed_or_captured": "2026-08-03",
+      "assetId": "img.generated.ors_cover_same_day_v1",
+      "targetPath": "assets/generated/generated_ors_cover_same_day_v1.png",
+      "altText": "Caregiver placing a clean lid on a plain prepared-drink jug while setting an old empty cup aside to be washed.",
+      "source": "Built-in Codex image generation tool from a bounded low-literacy instruction prompt: keep fresh prepared ORS covered and set old leftovers aside for disposal; no sachet, powder, mixing, measuring, feeding, or text shown; generated 2026-08-03.",
+      "displayPriority": 102
+    },
+    {
+      "featureIds": [
         "ors_voucher",
         "zinc_tracker"
       ],

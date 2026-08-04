@@ -1070,7 +1070,7 @@ export function mountUI(engine) {
     });
   }
   function showCatalogScreen(screen, nextMode, nextSelected) {
-    cancelPrototypeSpeech();
+    stopReadAloudForContextChange("Read-aloud stopped because the screen changed.");
     activeShellScreen = screen || "people";
     if (nextMode) mode = nextMode;
     if (nextSelected) selected = nextSelected;
@@ -1085,7 +1085,7 @@ export function mountUI(engine) {
     moveToNextStep("catalogshell");
   }
   function showPanel(id) {
-    cancelPrototypeSpeech();
+    stopReadAloudForContextChange("Read-aloud stopped because the screen changed.");
     if ($("slideshow") && $("slideshow").setAttribute) $("slideshow").setAttribute("data-screen-id", "");
     if (id === "slideshow" && $("slideimage")) $("slideimage").classList.remove("hidden");
     if (id === "slideshow") activeShellScreen = "work";
@@ -1481,6 +1481,9 @@ export function mountUI(engine) {
   }
   var currentPrototypeSpeechText = "";
   var prototypeSpeechPaused = false;
+  // Every context change gets a new generation.  Browser speech callbacks can arrive after
+  // cancel(), so handlers must prove they still belong to the visible screen before updating it.
+  var prototypeSpeechGeneration = 0;
   var guidedSpeechItems = [];
   var guidedSpeechIndex = 0;
   var guidedSpeechActive = false;
@@ -1529,8 +1532,15 @@ export function mountUI(engine) {
     if (!Utterance || !window.speechSynthesis) { stopGuidedReading("Read-aloud is unavailable in this browser."); return; }
     var utterance = new Utterance((el.textContent || "").replace(/\s+/g, " ").trim());
     utterance.lang = "en";
-    utterance.onend = speakNextGuidedItem;
-    utterance.onerror = function () { stopGuidedReading("Read-aloud error. The text remains visible."); };
+    var speechGeneration = prototypeSpeechGeneration;
+    utterance.onend = function () {
+      if (!guidedSpeechActive || speechGeneration !== prototypeSpeechGeneration) return;
+      speakNextGuidedItem();
+    };
+    utterance.onerror = function () {
+      if (!guidedSpeechActive || speechGeneration !== prototypeSpeechGeneration) return;
+      stopGuidedReading("Read-aloud error. The text remains visible.");
+    };
     window.speechSynthesis.speak(utterance);
     setReadAloudStatus("Reading the highlighted item.");
   }
@@ -1553,6 +1563,7 @@ export function mountUI(engine) {
     if (button) button.textContent = label;
   }
   function cancelPrototypeSpeech(message) {
+    prototypeSpeechGeneration += 1;
     if (typeof window !== "undefined" && window.speechSynthesis && window.speechSynthesis.cancel) {
       try { window.speechSynthesis.cancel(); } catch (e) { return false; }
     }
@@ -1560,6 +1571,14 @@ export function mountUI(engine) {
     setGlobalReadAloudPauseLabel("Pause");
     if (message) setReadAloudStatus(message);
     return true;
+  }
+  function stopReadAloudForContextChange(message) {
+    guidedSpeechActive = false;
+    guidedSpeechItems = [];
+    guidedSpeechIndex = 0;
+    clearGuidedSpeechHighlight();
+    cancelPrototypeSpeech(message || "Read-aloud stopped because the screen changed.");
+    updateGuidedListenButton();
   }
   function selectPreferredSpeechVoice() {
     if (typeof window === "undefined" || !window.speechSynthesis || !window.speechSynthesis.getVoices) return null;
@@ -1582,15 +1601,32 @@ export function mountUI(engine) {
       setReadAloudStatus("Read-aloud ready; browser speech synthesis is unavailable here.");
       return false;
     }
+    // A screen-level reading request supersedes any guided item sequence.
+    guidedSpeechActive = false;
+    guidedSpeechItems = [];
+    guidedSpeechIndex = 0;
+    clearGuidedSpeechHighlight();
+    updateGuidedListenButton();
     cancelPrototypeSpeech();
     currentPrototypeSpeechText = text;
     var utterance = new Utterance(text);
+    var speechGeneration = prototypeSpeechGeneration;
     utterance.lang = "en";
     var preferredVoice = selectPreferredSpeechVoice();
     if (preferredVoice) utterance.voice = preferredVoice;
     utterance.pitch = 1.05;
-    utterance.onend = function () { prototypeSpeechPaused = false; setGlobalReadAloudPauseLabel("Pause"); setReadAloudStatus("Read-aloud complete."); };
-    utterance.onerror = function () { prototypeSpeechPaused = false; setGlobalReadAloudPauseLabel("Pause"); setReadAloudStatus("Read-aloud error; show the text and try again."); };
+    utterance.onend = function () {
+      if (speechGeneration !== prototypeSpeechGeneration) return;
+      prototypeSpeechPaused = false;
+      setGlobalReadAloudPauseLabel("Pause");
+      setReadAloudStatus("Read-aloud complete.");
+    };
+    utterance.onerror = function () {
+      if (speechGeneration !== prototypeSpeechGeneration) return;
+      prototypeSpeechPaused = false;
+      setGlobalReadAloudPauseLabel("Pause");
+      setReadAloudStatus("Read-aloud error; show the text and try again.");
+    };
     window.speechSynthesis.speak(utterance);
     prototypeSpeechPaused = false;
     setGlobalReadAloudPauseLabel("Pause");
@@ -2152,6 +2188,19 @@ export function mountUI(engine) {
     renderSlide();
     showPanel("slideshow");
   }
+  function changeSlide(nextIndex) {
+    if (!activeSlides.length) return false;
+    var boundedIndex = Math.max(0, Math.min(activeSlides.length - 1, nextIndex));
+    if (boundedIndex === slideIndex) return false;
+    stopReadAloudForContextChange("Read-aloud stopped because the frame changed.");
+    slideIndex = boundedIndex;
+    renderSlide();
+    return true;
+  }
+  function moveSlide(delta) {
+    if (!activeSlides.length) return false;
+    return changeSlide((slideIndex + delta + activeSlides.length) % activeSlides.length);
+  }
   function renderSlide() {
     var slide = activeSlides[slideIndex] || {};
     $("slidetitle").textContent = slide.titleSlug ? t(slide.titleSlug) : (slide.title || "");
@@ -2215,7 +2264,8 @@ export function mountUI(engine) {
     for (var i = 0; i < choices.length; i++) choices[i].addEventListener("click", function () {
       orsDeckContainerId = this.dataset.containerId || "";
       if (advanceAfterChoice) {
-        slideIndex = Math.min(activeSlides.length - 1, slideIndex + 1);
+        changeSlide(Math.min(activeSlides.length - 1, slideIndex + 1));
+        return;
       }
       renderSlide();
     });
@@ -3286,9 +3336,9 @@ export function mountUI(engine) {
     if (play && !play.dataset.bound) { play.dataset.bound = "bf"; play.addEventListener("click", function () { var currentScripts = breastfeedingScripts(); $("slidetext").textContent = currentScripts[breastfeedingStep]; playPrototypeSpeech(currentScripts[breastfeedingStep]); }); }
     if (pause && !pause.dataset.bound) { pause.dataset.bound = "bf"; pause.addEventListener("click", pausePrototypeSpeech); }
     if (stop && !stop.dataset.bound) { stop.dataset.bound = "bf"; stop.addEventListener("click", stopPrototypeSpeech); }
-    if (prev && !prev.dataset.bound) { prev.dataset.bound = "bf"; prev.addEventListener("click", function () { cancelPrototypeSpeech("Read-aloud stopped."); renderBreastfeedingHelper(breastfeedingStep - 1); }); }
-    if (next && !next.dataset.bound) { next.dataset.bound = "bf"; next.addEventListener("click", function () { cancelPrototypeSpeech("Read-aloud stopped."); renderBreastfeedingHelper(breastfeedingStep + 1); }); }
-    if (help && !help.dataset.bound) { help.dataset.bound = "bf"; help.addEventListener("click", function () { cancelPrototypeSpeech("Read-aloud stopped."); $("slidetext").textContent = tx("tx.tool_breastfeeding_audio.urgent", "Ask a trusted health worker or clinic for help now if the baby is feeding poorly, cannot be woken to feed, has trouble breathing, has fever or cold skin, or if the caregiver has severe breast pain/redness, feels unsafe, or feels overwhelmed. Do not wait for this audio helper."); }); }
+    if (prev && !prev.dataset.bound) { prev.dataset.bound = "bf"; prev.addEventListener("click", function () { stopReadAloudForContextChange("Read-aloud stopped because the tip changed."); renderBreastfeedingHelper(breastfeedingStep - 1); }); }
+    if (next && !next.dataset.bound) { next.dataset.bound = "bf"; next.addEventListener("click", function () { stopReadAloudForContextChange("Read-aloud stopped because the tip changed."); renderBreastfeedingHelper(breastfeedingStep + 1); }); }
+    if (help && !help.dataset.bound) { help.dataset.bound = "bf"; help.addEventListener("click", function () { stopReadAloudForContextChange("Read-aloud stopped because the screen changed."); $("slidetext").textContent = tx("tx.tool_breastfeeding_audio.urgent", "Ask a trusted health worker or clinic for help now if the baby is feeding poorly, cannot be woken to feed, has trouble breathing, has fever or cold skin, or if the caregiver has severe breast pain/redness, feels unsafe, or feels overwhelmed. Do not wait for this audio helper."); }); }
   }
   function showBreastfeedingHelper() {
     activeSlides = [];
@@ -3305,17 +3355,18 @@ export function mountUI(engine) {
     $("slidetext").textContent = scripts[breastfeedingStep];
     renderBreastfeedingTipVisual(breastfeedingStep, "breastfeeding_aid_triage", "New mother and newborn with breastfeeding support.");
     var nextLabel = breastfeedingStep === scripts.length - 1 ? tx("tx.bf.assistant.back_to_first", "Back to tip 1") : tx("tx.bf.assistant.next_tip", "Next tip");
+    var remainingTips = scripts.length - breastfeedingStep;
     $("slidecache").innerHTML = reviewDetailsHtml("breastfeeding_aid_triage", "Breastfeeding assistant mode. Practical read-aloud support shares content with the breastfeeding triage module and keeps urgent checks one tap away.") +
-      '<div class="slidecontrols wrap-controls"><button id="bfassistplay" type="button">' + esc(tx("tx.bf.assistant.play_tip", "Play this tip")) + '</button><button id="bfassistplayall" type="button">' + esc(tx("tx.bf.assistant.play_all", "Play all 4 tips")) + '</button><button class="ghost" id="bfassistpause" type="button">Pause</button><button class="ghost" id="bfassiststop" type="button">Stop</button><button class="ghost" id="bfassistprev" type="button"' + (breastfeedingStep === 0 ? " disabled" : "") + '>Previous tip</button><button class="ghost" id="bfassistnext" type="button">' + esc(nextLabel) + '</button><button class="dangerdoor" id="bfassisturgent" type="button">Check urgent signs</button><span id="audiostatus" class="muted">Read-aloud idle.</span></div>';
+      '<div class="slidecontrols wrap-controls"><button id="bfassistplay" type="button">' + esc(tx("tx.bf.assistant.play_tip", "Play this tip")) + '</button><button id="bfassistplayall" type="button">' + esc(tx("tx.bf.assistant.play_from_current", "Play from this tip ({count} tips)", { count: remainingTips })) + '</button><button class="ghost" id="bfassistpause" type="button">Pause</button><button class="ghost" id="bfassiststop" type="button">Stop</button><button class="ghost" id="bfassistprev" type="button"' + (breastfeedingStep === 0 ? " disabled" : "") + '>Previous tip</button><button class="ghost" id="bfassistnext" type="button">' + esc(nextLabel) + '</button><button class="dangerdoor" id="bfassisturgent" type="button">Check urgent signs</button><span id="audiostatus" class="muted">Read-aloud idle.</span></div>';
     setReadAloudStatus("Read-aloud idle.");
     var play = $("bfassistplay"), playAll = $("bfassistplayall"), pause = $("bfassistpause"), stop = $("bfassiststop"), prev = $("bfassistprev"), next = $("bfassistnext"), urgent = $("bfassisturgent");
     if (play && !play.dataset.bound) { play.dataset.bound = "bfassist"; play.addEventListener("click", function () { var currentScripts = breastfeedingScripts(); $("slidetext").textContent = currentScripts[breastfeedingStep]; playPrototypeSpeech(currentScripts[breastfeedingStep]); }); }
-    if (playAll && !playAll.dataset.bound) { playAll.dataset.bound = "bfassist"; playAll.addEventListener("click", function () { playPrototypeSpeech(breastfeedingScripts().join(" ")); }); }
+    if (playAll && !playAll.dataset.bound) { playAll.dataset.bound = "bfassist"; playAll.addEventListener("click", function () { playPrototypeSpeech(breastfeedingScripts().slice(breastfeedingStep).join(" ")); }); }
     if (pause && !pause.dataset.bound) { pause.dataset.bound = "bfassist"; pause.addEventListener("click", pausePrototypeSpeech); }
     if (stop && !stop.dataset.bound) { stop.dataset.bound = "bfassist"; stop.addEventListener("click", stopPrototypeSpeech); }
-    if (prev && !prev.dataset.bound) { prev.dataset.bound = "bfassist"; prev.addEventListener("click", function () { cancelPrototypeSpeech("Read-aloud stopped."); renderBreastfeedingAssistant(breastfeedingStep - 1); }); }
-    if (next && !next.dataset.bound) { next.dataset.bound = "bfassist"; next.addEventListener("click", function () { cancelPrototypeSpeech("Read-aloud stopped."); renderBreastfeedingAssistant(breastfeedingStep + 1); }); }
-    if (urgent && !urgent.dataset.bound) { urgent.dataset.bound = "bfassist"; urgent.addEventListener("click", function () { cancelPrototypeSpeech("Read-aloud stopped."); showBreastfeedingAidTriage("triage"); }); }
+    if (prev && !prev.dataset.bound) { prev.dataset.bound = "bfassist"; prev.addEventListener("click", function () { stopReadAloudForContextChange("Read-aloud stopped because the tip changed."); renderBreastfeedingAssistant(breastfeedingStep - 1); }); }
+    if (next && !next.dataset.bound) { next.dataset.bound = "bfassist"; next.addEventListener("click", function () { stopReadAloudForContextChange("Read-aloud stopped because the tip changed."); renderBreastfeedingAssistant(breastfeedingStep + 1); }); }
+    if (urgent && !urgent.dataset.bound) { urgent.dataset.bound = "bfassist"; urgent.addEventListener("click", function () { stopReadAloudForContextChange("Read-aloud stopped because the screen changed."); showBreastfeedingAidTriage("triage"); }); }
   }
   function showBreastfeedingAssistant() {
     activeSlides = [];
@@ -5000,8 +5051,8 @@ export function mountUI(engine) {
   if ($("sliderestartaudio")) $("sliderestartaudio").addEventListener("click", function () {
     restartPrototypeSpeech(currentScreenReadAloudText());
   });
-  if ($("slideprev")) $("slideprev").addEventListener("click", function () { if (activeSlides.length) { slideIndex = (slideIndex + activeSlides.length - 1) % activeSlides.length; renderSlide(); } });
-  if ($("slidenext")) $("slidenext").addEventListener("click", function () { if (activeSlides.length) { slideIndex = (slideIndex + 1) % activeSlides.length; renderSlide(); } });
+  if ($("slideprev")) $("slideprev").addEventListener("click", function () { moveSlide(-1); });
+  if ($("slidenext")) $("slidenext").addEventListener("click", function () { moveSlide(1); });
   if (typeof globalThis !== "undefined") {
     globalThis.__MAMMA_CLINICAL_SCREENS = clinicalScreens;
     globalThis.__openClinicalSurfaceForQA = function (surfaceId) {
