@@ -10495,7 +10495,7 @@
     "tx.triage.chrome.stage_result": {"en":{"text":"what to do"},"fr":{"text":"quoi faire"},"hi-IN":{"text":"क्या करना है"}},
     "tx.triage.chrome.stage_urgent": {"en":{"text":"urgent check"},"fr":{"text":"vérification urgente"},"hi-IN":{"text":"तुरंत जाँच"}},
     "tx.shell.prototype_banner": {"en":{"text":"Prototype. Synthetic data only. Not for medical care."},"fr":{"text":"Prototype. Données fictives seulement. Ne pas utiliser pour des soins médicaux."},"hi-IN":{"text":"प्रोटोटाइप। केवल काल्पनिक डेटा। चिकित्सा देखभाल के लिए नहीं।"}},
-    "tx.shell.home_tagline": {"en":{"text":"Keep your family healthy with NurseAunty in your pocket."},"fr":{"text":"Gardez votre famille en bonne santé avec NurseAunty dans votre poche."},"hi-IN":{"text":"NurseAunty को अपनी जेब में रखकर अपने परिवार को स्वस्थ रखें।"}},
+    "tx.shell.home_tagline": {"en":{"text":"Your Nurse Aunty, in your pocket."},"fr":{"text":"Votre NurseAunty dans votre poche."},"hi-IN":{"text":"आपकी NurseAunty, आपकी जेब में।"}},
     "tx.shell.loading": {"en":{"text":"Loading app..."},"fr":{"text":"Chargement de l'application..."},"hi-IN":{"text":"ऐप खुल रहा है..."}},
     "tx.shell.settings_hint": {"en":{"text":"Open Settings to change language, quiet hours, privacy, or Demo Mode."},"fr":{"text":"Ouvrez Paramètres pour changer la langue, les heures calmes, la confidentialité ou le mode Démo."},"hi-IN":{"text":"भाषा, शांत समय, गोपनीयता या डेमो मोड बदलने के लिए सेटिंग्स खोलें।"}},
     "tx.shell.settings": {"en":{"text":"Settings"},"fr":{"text":"Paramètres"},"hi-IN":{"text":"सेटिंग्स"}},
