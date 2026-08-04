@@ -733,6 +733,25 @@
         "text": "तुरंत प्रसूति देखभाल"
       }
     },
+    "tx.result.show_why": {
+      "en": { "text": "Show me why" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Voir pourquoi" },
+      "hi-IN": { "text": "कारण देखें" }
+    },
+    "tx.result.your_answers": {
+      "en": { "text": "What you told us" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Ce que vous nous avez dit" },
+      "hi-IN": { "text": "आपने हमें क्या बताया" }
+    },
+    "tx.result.diarrhoea_days": {
+      "en": { "text": "Diarrhoea for {days} days" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Diarrhée depuis {days} jours" },
+      "hi-IN": { "text": "{days} दिनों से दस्त" },
+      "placeholder_vars": ["days"]
+    },
     "tx.result.because_checked": {
       "en": {
         "text": "Because you checked"
@@ -8059,6 +8078,18 @@
         "text": "इनमें से कोई भी चयनित नहीं। देखते रहें और यदि कुछ भी बदलता है या आप चिंतित रहते हैं तो ध्यान रखें। यह स्क्रीन यह तय नहीं करती कि सब कुछ सुरक्षित है।"
       }
     },
+    "tx.nav.back_to_questions": {
+      "en": { "text": "Back to questions" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Retour aux questions" },
+      "hi-IN": { "text": "प्रश्नों पर वापस" }
+    },
+    "tx.nav.back_to_advice": {
+      "en": { "text": "Back to advice" },
+      "bn-BD": { "text": "" },
+      "fr": { "text": "Retour aux conseils" },
+      "hi-IN": { "text": "सलाह पर वापस" }
+    },
     "tx.nav.back_home": {
       "en": {
         "text": "Back to home screen"
@@ -10511,6 +10542,7 @@
     "tx.triage.chrome.progress_details": {"en":{"text":"Details"},"fr":{"text":"Détails"},"hi-IN":{"text":"विवरण"}},
     "tx.triage.chrome.progress_result": {"en":{"text":"Result"},"fr":{"text":"Résultat"},"hi-IN":{"text":"नतीजा"}},
     "tx.triage.chrome.child_default": {"en":{"text":"Child"},"fr":{"text":"Enfant"},"hi-IN":{"text":"बच्चा"}},
+    "tx.triage.chrome.child_check_subject": {"en":{"text":"Checking {name}"},"fr":{"text":"Pour {name}"},"hi-IN":{"text":"{name} की जाँच"},"placeholder_vars":["name"]},
     "tx.triage.chrome.child_check_stage": {"en":{"text":"{name} child check - {stage}"},"fr":{"text":"Vérification de l’enfant {name} - {stage}"},"hi-IN":{"text":"{name} के बच्चे की जाँच - {stage}"},"placeholder_vars":["name","stage"]},
     "tx.triage.chrome.stage_danger": {"en":{"text":"danger signs"},"fr":{"text":"signes de danger"},"hi-IN":{"text":"खतरे के संकेत"}},
     "tx.triage.chrome.stage_complaints": {"en":{"text":"main problem"},"fr":{"text":"problème principal"},"hi-IN":{"text":"मुख्य समस्या"}},

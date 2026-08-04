@@ -133,6 +133,7 @@ export function mountUI(engine) {
   var pncView = "acute", pncSelections = {}, pncAnsweredViews = {};
   var under5DangerGateUpdate = null;
   var under5Stage = "danger", under5BranchQueue = [], under5BranchIndex = 0;
+  var under5ResultMarkup = "", under5ResultShowsBreathing = false, under5ShowingSupport = false;
   // A duration is a required numeric field, not a checklist surface. Keep its stage
   // name in one constant so the registry's checklist-coverage audit remains exact.
   var DIARRHOEA_DURATION_STAGE = "diarrhoea_duration";
@@ -383,8 +384,8 @@ export function mountUI(engine) {
     return '<aside class="breath-flipbook" aria-label="' + esc(tx("tx.chest_flipbook.title", "Watch one breath")) + '">' +
       '<h4>' + esc(tx("tx.chest_flipbook.title", "Watch the lower chest")) + '</h4>' +
       '<p>' + esc(tx("tx.chest_flipbook.instruction", "When the child breathes in, the chest and belly move out. Look at the space between the ribs and belly.")) + '</p>' +
-      '<img class="breath-frame" id="chestflipframe1" src="' + esc(outward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_out_alt", "Child’s chest and belly moving out as the child breathes in.")) + '" data-asset-id="' + esc(outward.assetId) + '">' +
-      '<img class="breath-frame" id="chestflipframe2" src="' + esc(inward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_in_alt", "Child’s lower chest pulling inward while the child breathes in.")) + '" data-asset-id="' + esc(inward.assetId) + '" hidden>' +
+      '<img class="breath-frame" id="chestflipframe1" src="' + esc(outward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_out_alt", "Child's chest and belly moving out as the child breathes in.")) + '" data-asset-id="' + esc(outward.assetId) + '">' +
+      '<img class="breath-frame" id="chestflipframe2" src="' + esc(inward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_in_alt", "Child's lower chest pulling inward while the child breathes in.")) + '" data-asset-id="' + esc(inward.assetId) + '" hidden>' +
       '<span class="breath-frame-label" id="chestfliplabel" aria-live="polite">' + esc(tx("tx.chest_flipbook.frame_normal", "Normal breathing")) + '</span>' +
       '<div class="breath-controls"><button id="chestflipshowin" type="button">' + esc(tx("tx.chest_flipbook.show_in", "Show pulling-in example")) + '</button><button class="ghost" id="chestflipshowout" type="button">' + esc(tx("tx.chest_flipbook.show_out", "Show normal breathing")) + '</button></div></aside>';
   }
@@ -396,7 +397,7 @@ export function mountUI(engine) {
       '<div class="slidecontrols wrap-controls"><button id="stridorsoundplay" type="button" data-asset-id="' + esc(asset.assetId) + '">' + esc(tx("tx.stridor_sound.play", "Hear an example")) + '</button>' +
       '<button class="ghost" id="stridorsoundstop" type="button">' + esc(tx("tx.stridor_sound.stop", "Stop sound")) + '</button>' +
       '<span id="stridorsoundstatus" class="muted" aria-live="polite"></span></div>' +
-      '<details class="media-attribution"><summary>' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</summary><p>' + esc(tx("tx.stridor_sound.attribution_summary", "Sound: ‘Stridor NP OGG 2.ogg,’ Wikimedia Commons. Recording supplied by James Heilman, MD; processed by Natural Philo. CC BY-SA 3.0. No changes made.")) +
+      '<details class="media-attribution"><summary>' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</summary><p>' + esc(tx("tx.stridor_sound.attribution_summary", "Sound: 'Stridor NP OGG 2.ogg,' Wikimedia Commons. Recording supplied by James Heilman, MD; processed by Natural Philo. CC BY-SA 3.0. No changes made.")) +
       ' <a href="https://commons.wikimedia.org/wiki/File:Stridor_NP_OGG_2.ogg" target="_blank" rel="noopener noreferrer">' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</a></p></details></aside>';
   }
   function stopChestFlipbook() {
@@ -446,6 +447,12 @@ export function mountUI(engine) {
       return '<p><button class="ghost" id="backperson" type="button">' + esc(tx("tx.nav.back_to_person", "Back to {personName}", { personName: personById(activePersonId).name })) + "</button></p>";
     }
     return '<p><button class="ghost" id="backhome" type="button">' + esc(tx("tx.nav.back_home", "Back to home screen")) + '</button></p>';
+  }
+  function backToUnder5QuestionsHtml() {
+    return '<p><button class="ghost" id="backtounder5questions" type="button">' + esc(tx("tx.nav.back_to_questions", "Back to questions")) + '</button></p>';
+  }
+  function backToUnder5ResultHtml() {
+    return '<p><button class="ghost" id="backtounder5result" type="button">' + esc(tx("tx.nav.back_to_advice", "Back to advice")) + '</button></p>';
   }
   function careRouteNextAction(route, severity) {
     var urgent = severity === "emergency" || severity === "urgent_clinic";
@@ -597,11 +604,12 @@ export function mountUI(engine) {
     function update() {
       var answered = ids.some(function (id) { return !!($(id) && $(id).checked); });
       if (action) action.disabled = !answered;
-      if (feedback) {
-        feedback.textContent = answered
-          ? (opts.readySlug ? tx(opts.readySlug, opts.readyFallback) : opts.readyFallback || tx("tx.danger_checklist.answer_ready", "Answer recorded. You can show what to do."))
-          : (opts.requiredSlug ? tx(opts.requiredSlug, opts.requiredFallback) : opts.requiredFallback || tx("tx.danger_checklist.answer_required", "Choose every sign that is happening, or choose None of these."));
-      }
+      // The disabled primary action already shows that an answer is needed. Repeating a
+      // generic status after every selection adds noise and has repeatedly obscured the
+      // actual question. A caller may opt into a specific unanswered message when needed.
+      if (feedback) feedback.textContent = !answered && opts.showRequiredFeedback
+        ? (opts.requiredSlug ? tx(opts.requiredSlug, opts.requiredFallback) : opts.requiredFallback || tx("tx.danger_checklist.answer_required", "Choose every sign that is happening, or choose None of these."))
+        : "";
       return answered;
     }
     ids.forEach(function (id) {
@@ -685,7 +693,8 @@ export function mountUI(engine) {
       readySlug: opts.readySlug,
       readyFallback: opts.readyFallback,
       requiredSlug: opts.requiredSlug,
-      requiredFallback: opts.requiredFallback
+      requiredFallback: opts.requiredFallback,
+      showRequiredFeedback: opts.showRequiredFeedback === true
     });
     ids.forEach(function (id) {
       var box = $(id);
@@ -919,6 +928,19 @@ export function mountUI(engine) {
         if ($("out")) $("out").innerHTML = "";
         renderCatalog();
       });
+    }
+  }
+  function bindUnder5Back(scope) {
+    var root = scope || document;
+    var questions = root.querySelector ? root.querySelector("#backtounder5questions") : $("backtounder5questions");
+    if (questions && !questions.dataset.bound) {
+      questions.dataset.bound = "under5-questions";
+      questions.addEventListener("click", returnToPreviousUnder5Step);
+    }
+    var advice = root.querySelector ? root.querySelector("#backtounder5result") : $("backtounder5result");
+    if (advice && !advice.dataset.bound) {
+      advice.dataset.bound = "under5-result";
+      advice.addEventListener("click", restoreUnder5Result);
     }
   }
   function returnToActivePersonPage() {
@@ -2322,7 +2344,9 @@ export function mountUI(engine) {
   function orsContainerCardsHtml() {
     return '<div class="grid ors-container-grid">' + engine.orsContainers.filter(function (c) { return c.kind === "ors"; }).map(function (c) {
       var selectedClass = c.id === orsDeckContainerId ? " selected" : "";
-      return '<button class="card ors-container-choice' + selectedClass + '" data-container-id="' + esc(c.id) + '" type="button">' + containerVisual(c) + '<strong>' + esc(localizedContainerLabel(c)) + '</strong><div class="vol">' + esc(c.volumeMl) + " mL</div></button>";
+      var label = localizedContainerLabel(c);
+      var volume = String(c.volumeMl) + " mL";
+      return '<button class="card ors-container-choice' + selectedClass + '" data-container-id="' + esc(c.id) + '" type="button">' + containerVisual(c) + '<strong>' + esc(label) + '</strong>' + (label.indexOf(volume) >= 0 ? "" : '<div class="vol">' + esc(volume) + "</div>") + "</button>";
     }).join("") + "</div>";
   }
   function renderOrsDeckStepControls(slide) {
@@ -5016,6 +5040,10 @@ export function mountUI(engine) {
     Array.prototype.forEach.call(groups, function (group) {
       if (!group.querySelectorAll || group.querySelectorAll('input[type="checkbox"]').length < 2) return;
       if (group.closest && group.closest(".clinical-checklist")) return;
+      // A staged wrapper (for example, diarrhoea) can contain later hidden clinical
+      // checklists. It is not itself a checklist and must not receive their generic
+      // multi-select instruction.
+      if (group.querySelector && group.querySelector(".clinical-checklist")) return;
       var nestedGroups = group.children ? Array.prototype.filter.call(group.children, function (child) {
         return child.matches && child.matches(".symptom-group, fieldset") &&
           child.querySelectorAll && child.querySelectorAll('input[type="checkbox"]').length >= 2;
@@ -5179,25 +5207,9 @@ export function mountUI(engine) {
   function under5StageTitle() {
     var person = personById(activePersonId);
     var name = person && person.subject === "child_under5" ? person.name : tx("tx.triage.chrome.child_default", "Child");
-    var labels = {
-      danger: tx("tx.triage.chrome.stage_danger", "danger signs"),
-      complaints: tx("tx.triage.chrome.stage_complaints", "main problem"),
-      cough_chest: tx("tx.cough.chest.title", "watch breathing"),
-      cough_sound: tx("tx.cough.sound.title", "listen to breathing"),
-      diarrhoea_duration: tx("tx.diarrhoea_duration.title", "days with diarrhoea"),
-      diarrhoea_stool: tx("tx.triage.chrome.stage_diarrhoea_stool", "diarrhoea and stool"),
-      diarrhoea_dehydration: tx("tx.triage.chrome.stage_diarrhoea_dehydration", "dehydration signs"),
-      fever_course: tx("tx.triage.chrome.stage_fever_course", "fever changes"),
-      fever_measurement: tx("tx.triage.chrome.stage_fever_measurement", "fever test or temperature"),
-      ear: tx("tx.triage.chrome.stage_ear", "ear signs"),
-      tooth_mouth: tx("tx.triage.chrome.stage_tooth_mouth", "tooth or mouth signs"),
-      measles: tx("tx.triage.chrome.stage_measles", "fever and rash signs"),
-      result: tx("tx.triage.chrome.stage_result", "what to do")
-    };
-    return tx("tx.triage.chrome.child_check_stage", "{name} child check - {stage}", {
-      name: name,
-      stage: labels[under5Stage] || tx("tx.triage.chrome.stage_urgent", "urgent check")
-    });
+    // The progress strip and question name the step. The shell keeps only the subject
+    // visible, rather than echoing the step two more times.
+    return tx("tx.triage.chrome.child_check_subject", "Checking {name}", { name: name });
   }
   function hideUnder5StageRegions() {
     [
@@ -5242,8 +5254,6 @@ export function mountUI(engine) {
     });
     under5DangerGateUpdate = bindClinicalChecklist("under5.general_danger", {
       options: dangerOptions,
-      readyFallback: tx("tx.triage.chrome.danger_ready", "Danger signs answered. Continue to see what to do."),
-      requiredFallback: tx("tx.triage.chrome.danger_required", "Answer this section first: check any danger sign, or check No danger signs if none are happening."),
       onChange: function () {
         if (activeShellScreen === "urgent-check") applyShellVisibility();
       }
@@ -5439,6 +5449,12 @@ export function mountUI(engine) {
   }
   function returnToPreviousUnder5Step() {
     if (under5Stage === "danger") { returnFromWork(); return; }
+    if (under5ShowingSupport) { restoreUnder5Result(); return; }
+    if (under5Stage === "result") {
+      if (under5BranchQueue.length && under5BranchQueue[under5BranchIndex]) showUnder5Stage(under5BranchQueue[under5BranchIndex]);
+      else showUnder5Stage("complaints");
+      return;
+    }
     if (under5Stage === "complaints") {
       under5Stage = "danger";
       hideUnder5StageRegions();
@@ -5504,6 +5520,39 @@ export function mountUI(engine) {
     if (showBreathing) $("rrsection").classList.remove("hidden");
     applyShellVisibility();
     moveToNextStep("out");
+  }
+  function bindUnder5ResultActions() {
+    var out = $("out");
+    bindUnder5Back(out);
+    var reassess = $("triagereassess");
+    if (reassess && !reassess.dataset.bound) {
+      reassess.dataset.bound = "under5-reassess";
+      reassess.addEventListener("click", finishUnder5Triage);
+    }
+    var openOrs = $("openorscard");
+    if (openOrs && !openOrs.dataset.bound) {
+      openOrs.dataset.bound = "under5-ors-card";
+      openOrs.addEventListener("click", function () {
+        under5ShowingSupport = true;
+        out.innerHTML = requestCardHtml() + backToUnder5ResultHtml();
+        bindUnder5Back(out);
+        bindRequestCardActions();
+        applyShellVisibility();
+        moveToNextStep("out");
+      });
+    }
+  }
+  function restoreUnder5Result() {
+    if (!under5ResultMarkup) { returnToPreviousUnder5Step(); return; }
+    under5ShowingSupport = false;
+    $("out").innerHTML = under5ResultMarkup;
+    showUnder5ResultStage(under5ResultShowsBreathing);
+    bindUnder5ResultActions();
+  }
+  function showResolvedUnder5Result(markup, showBreathing) {
+    under5ResultShowsBreathing = !!showBreathing;
+    under5ResultMarkup = markup + backToUnder5QuestionsHtml();
+    restoreUnder5Result();
   }
   function finishUnder5Triage() {
     var action = $("assess");
@@ -5761,10 +5810,22 @@ export function mountUI(engine) {
     }
     return concerns;
   }
+  function triageResultWhyHtml(r, inputs) {
+    var reasons = checkedInputLabels(inputs);
+    // The duration is the useful fact in a diarrhoea decision. Showing both "diarrhoea"
+    // and "diarrhoea for 11 days" is redundant, so use the more specific version.
+    if (String(r.classification || "").indexOf("diarrhoea") >= 0) {
+      reasons = reasons.filter(function (reason) { return reason !== "diarrhoea"; });
+      if (inputs.diarrhoea_days != null && Number(inputs.diarrhoea_days) > 0) {
+        reasons.push(tx("tx.result.diarrhoea_days", "Diarrhoea for {days} days", { days: inputs.diarrhoea_days }));
+      }
+    }
+    if (!reasons.length) return "";
+    return '<details class="result-why" data-result-why="true"><summary>' + esc(tx("tx.result.show_why", "Show me why")) + '</summary><p><strong>' + esc(tx("tx.result.your_answers", "What you told us")) + ':</strong> ' + esc(reasons.join(", ")) + ".</p></details>";
+  }
   function triageResultHtml(r, inputs, screenId) {
     var isHome = r.action === "HOME_CARE_ORS_ZINC" || r.action === "HOME_CARE_ADVICE";
-    var checked = checkedInputLabels(inputs);
-    var absent = absentSafetyLabels(inputs);
+    var whyHtml = triageResultWhyHtml(r, inputs);
     if (r.classification === "incomplete_assessment") {
       return resultActionCardHtml({
         kind: "refer",
@@ -5781,12 +5842,11 @@ export function mountUI(engine) {
         careRoute: "home_watch",
         screenId: screenId,
         title: tx("tx.u5.result.diarrhoea_no_dehydration.title", "Diarrhoea home-care check"),
-        bodyHtml: '<p><strong>' + esc(tx("tx.result.because_checked", "Because you checked")) + ':</strong> ' + esc(checked.join(", ") || "diarrhoea") + '; diarrhoea for ' + esc(inputs.diarrhoea_days) + ' day(s).</p><p><strong>' + esc(tx("tx.result.because_not_checked", "Because you did not check")) + ':</strong> ' + esc(absent.join(", ")) + '.</p>',
         paragraphs: [tx("tx.u5.result.diarrhoea_no_dehydration.plan", "Give fluids now. Open the ORS and zinc request card, then choose the container you will use to mix ORS. Keep watching for the danger signs below.")],
         nextAction: tx("tx.result.action_home_ors_watch", "Show the ORS and zinc request card, and watch for danger signs."),
         nextButtonId: "openorscard",
         nextButtonLabel: tx("tx.ors.request_card.open_button", "Open ORS request card"),
-        extraHtml: homeCareSafetyHtml("diarrhoea")
+        extraHtml: homeCareSafetyHtml("diarrhoea") + whyHtml
       });
     }
     if (r.classification === "diarrhoea_some_dehydration") {
@@ -5796,9 +5856,8 @@ export function mountUI(engine) {
         severity: r.severity,
         screenId: screenId,
         title: tx("tx.u5.result.diarrhoea_some_dehydration.title", "Diarrhoea dehydration concern"),
-        bodyHtml: '<p><strong>' + esc(tx("tx.result.because_checked", "Because you checked")) + ':</strong> ' + esc(checked.join(", ") || "diarrhoea") + '.</p><p><strong>' + esc(tx("tx.result.because_not_checked", "Because you did not check")) + ':</strong> ' + esc(absent.join(", ")) + '.</p>',
         paragraphs: [tx("tx.u5.result.diarrhoea_some_dehydration.plan", "Plan B is not a diagnosis. In this prototype, diarrhoea plus dehydration concern routes to clinic or CHW assessment for the local care pathway. Do not show the ORS/zinc request card from this finding."), t(r.slug)],
-        extraHtml: homeCareSafetyHtml("diarrhoea")
+        extraHtml: homeCareSafetyHtml("diarrhoea") + whyHtml
       });
     }
     var kind = r.classification.indexOf("cough") >= 0 ? "cough" : r.classification.indexOf("fever") >= 0 ? "fever" : "";
@@ -5821,9 +5880,8 @@ export function mountUI(engine) {
       severity: r.severity,
       screenId: screenId,
       title: tx(caregiverTitle[0], caregiverTitle[1]),
-      bodyHtml: '<p><strong>' + esc(tx("tx.result.because_checked", "Because you checked")) + ':</strong> ' + esc(checked.join(", ") || "no main complaint") + ".</p>",
       paragraphs: [t(r.slug)],
-      extraHtml: isHome ? homeCareSafetyHtml(kind) : ""
+      extraHtml: (isHome ? homeCareSafetyHtml(kind) : "") + whyHtml
     });
   }
   function orsSachetVolumeMl() {
@@ -5964,21 +6022,6 @@ export function mountUI(engine) {
     }
     var preds = Object.entries(r.predicates).filter(function (kv) { return kv[1]; }).map(function (kv) { return "p." + kv[0]; }).join(", ") || "(none true)";
     html += traceDetails("Prototype rule trace", "severity: " + r.severity + "   rule: " + r.firedRuleId + "   matched: " + r.matchedRules.join(",") + "\naction: " + r.action + "   pack: " + r.guidelineVersion + "\npredicates true: " + preds);
-    html += backHomeHtml();
-    out.innerHTML = html;
-    showUnder5ResultStage(journey.primary.source === "measure_breathing");
-    bindBackHome(out);
-    var reassess = $("triagereassess");
-    if (reassess && !reassess.dataset.bound) {
-      reassess.dataset.bound = "under5-reassess";
-      reassess.addEventListener("click", finishUnder5Triage);
-    }
-    var openOrs = $("openorscard");
-    if (openOrs) openOrs.addEventListener("click", function () {
-      out.innerHTML = requestCardHtml() + backHomeHtml();
-      bindBackHome(out);
-      bindRequestCardActions();
-      applyShellVisibility();
-    });
+    showResolvedUnder5Result(html, journey.primary.source === "measure_breathing");
   });
 }
