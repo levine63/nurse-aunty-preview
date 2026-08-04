@@ -162,6 +162,15 @@
   .questionexamples { margin:8px 0; }
   .questionexamples > summary { min-height:48px; display:flex; align-items:center; color:var(--accent); font-weight:800; cursor:pointer; }
   .questionexamples .questionasset { margin-left:0; }
+  .breath-flipbook { margin:10px 0; max-width:330px; border:2px solid #b3261e; border-radius:12px; background:#fff8f6; padding:10px; }
+  .breath-flipbook h4 { margin:0 0 6px; font-size:19px; color:#4a1715; }
+  .breath-flipbook p { margin:6px 0; font-size:17px; line-height:1.4; color:#35231f; }
+  .breath-flipbook .breath-frame { display:block; width:100%; height:240px; object-fit:cover; object-position:center 48%; border-radius:8px; background:#fff; }
+  .breath-flipbook .breath-frame[hidden] { display:none; }
+  .breath-flipbook .breath-frame-label { display:block; margin-top:6px; font-size:16px; font-weight:750; color:#5f574d; }
+  .breath-flipbook .breath-controls { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .breath-flipbook .breath-controls button { min-height:48px; }
+  @media (prefers-reduced-motion: reduce) { .breath-flipbook .breath-play { display:none; } }
   .visualasset { display:block; width:100%; max-height:210px; object-fit:contain; border-radius:8px; background:#fff; }
   .visualfallback { display:grid; place-items:center; min-height:150px; border-radius:10px; border:1px solid #cfd8d3; background:linear-gradient(135deg,#e9f4f1,#fff7dc); color:#30524b; padding:14px; text-align:center; font-size:14px; }
   .visualfallback strong { display:block; font-size:16px; margin-bottom:4px; color:#0b3d35; }

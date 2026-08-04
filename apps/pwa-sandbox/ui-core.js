@@ -348,6 +348,7 @@ export function mountUI(engine) {
     return '<div class="visualfallback" role="img" aria-label="' + esc(description || "Prototype illustration pending") + '"><strong>' + esc(tx("tx.visual.pending_title", "Prototype illustration pending")) + '</strong><span>' + esc(description || tx("tx.visual.pending_body", "A reviewed local image will replace this draft panel.")) + "</span></div>";
   }
   function questionAssetHtml(q) {
+    if (q && q.id === "chest_indrawing") return chestIndrawingFlipbookHtml();
     var asset = q && q.assetId ? assetById(q.assetId) : null;
     if (renderableAsset(asset)) {
       var image = '<img src="' + esc(asset.targetPath) + '" alt="' + esc(caregiverAlt(asset.altText)) + '" data-asset-id="' + esc(asset.assetId) + '" loading="lazy">';
@@ -362,6 +363,19 @@ export function mountUI(engine) {
       esc(tx("tx.clinical_screen.under5.picture_examples", "Show picture examples")) +
       "</summary>" + examples + "</details>";
   }
+  function chestIndrawingFlipbookHtml() {
+    var outward = assetById("img.user_supplied.chest_indrawing_breath_out_v2");
+    var inward = assetById("img.user_supplied.chest_indrawing_pulls_in_v2");
+    if (!renderableAsset(outward) || !renderableAsset(inward)) return "";
+    return '<aside class="breath-flipbook" aria-label="' + esc(tx("tx.chest_flipbook.title", "Watch one breath")) + '">' +
+      '<h4>' + esc(tx("tx.chest_flipbook.title", "Watch one breath")) + '</h4>' +
+      '<p>' + esc(tx("tx.chest_flipbook.instruction", "Watch the lower chest, between the ribs and belly. When the child breathes in, the chest and belly move out. If this lower chest pulls inward instead, choose this sign and get urgent care now.")) + '</p>' +
+      '<img class="breath-frame" id="chestflipframe1" src="' + esc(outward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_out_alt", "Child’s chest and belly moving out as the child breathes in.")) + '" data-asset-id="' + esc(outward.assetId) + '">' +
+      '<img class="breath-frame" id="chestflipframe2" src="' + esc(inward.targetPath) + '" alt="' + esc(tx("tx.chest_flipbook.frame_in_alt", "Child’s lower chest pulling inward while the child breathes in.")) + '" data-asset-id="' + esc(inward.assetId) + '" hidden>' +
+      '<span class="breath-frame-label" id="chestfliplabel" aria-live="polite">' + esc(tx("tx.chest_flipbook.frame", "Picture {current} of {total}", { current: 1, total: 2 })) + '</span>' +
+      '<div class="breath-controls"><button class="breath-play" id="chestflipplay" type="button">' + esc(tx("tx.chest_flipbook.play", "Play example")) + '</button><button class="ghost" id="chestflipstop" type="button">' + esc(tx("tx.chest_flipbook.pause", "Pause example")) + '</button></div>' +
+      '<p class="muted">' + esc(tx("tx.chest_flipbook.note", "These pictures show one example. They are not a test.")) + '</p></aside>';
+  }
   function stridorSoundExampleHtml() {
     var asset = assetById("audio.clinical.stridor_example_cc_by_sa_3");
     if (!asset || !asset.targetPath) return "";
@@ -372,6 +386,39 @@ export function mountUI(engine) {
       '<span id="stridorsoundstatus" class="muted" aria-live="polite"></span></div>' +
       '<details class="media-attribution"><summary>' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</summary><p>' + esc(tx("tx.stridor_sound.attribution_summary", "Sound: ‘Stridor NP OGG 2.ogg,’ Wikimedia Commons. Recording supplied by James Heilman, MD; processed by Natural Philo. CC BY-SA 3.0. No changes made.")) +
       ' <a href="https://commons.wikimedia.org/wiki/File:Stridor_NP_OGG_2.ogg" target="_blank" rel="noopener noreferrer">' + esc(tx("tx.stridor_sound.attribution_link", "View source and licence")) + '</a></p></details></aside>';
+  }
+  var chestFlipTimer = null;
+  function stopChestFlipbook() {
+    if (chestFlipTimer) clearInterval(chestFlipTimer);
+    chestFlipTimer = null;
+  }
+  function showChestFlipbookFrame(frame) {
+    var first = $("chestflipframe1"), second = $("chestflipframe2"), label = $("chestfliplabel");
+    if (!first || !second) { stopChestFlipbook(); return; }
+    first.hidden = frame !== 1;
+    second.hidden = frame !== 2;
+    if (label) label.textContent = tx("tx.chest_flipbook.frame", "Picture {current} of {total}", { current: frame, total: 2 });
+  }
+  function bindChestFlipbook() {
+    stopChestFlipbook();
+    showChestFlipbookFrame(1);
+    var play = $("chestflipplay"), pause = $("chestflipstop");
+    if (play && !play.dataset.bound) {
+      play.dataset.bound = "chest-flipbook";
+      play.addEventListener("click", function () {
+        stopChestFlipbook();
+        var frame = 1;
+        chestFlipTimer = setInterval(function () {
+          frame = frame === 1 ? 2 : 1;
+          showChestFlipbookFrame(frame);
+        }, 900);
+        if (chestFlipTimer && chestFlipTimer.unref) chestFlipTimer.unref();
+      });
+    }
+    if (pause && !pause.dataset.bound) {
+      pause.dataset.bound = "chest-flipbook";
+      pause.addEventListener("click", stopChestFlipbook);
+    }
   }
   function traceDetails(label, body) {
     return '<details class="trace"><summary>' + esc(label || "Prototype review details") + '</summary>' + esc(body || "") + "</details>";
@@ -5215,8 +5262,10 @@ export function mountUI(engine) {
   }
   function renderUnder5CoughGate() {
     renderUnder5RegistryGate("under5.followup.cough", "coughsigns", advanceUnder5Branch, {
-      afterFieldsHtml: questionExamplesHtml(COUGH_FU) + stridorSoundExampleHtml()
+      beforeFieldsHtml: chestIndrawingFlipbookHtml(),
+      afterFieldsHtml: stridorSoundExampleHtml()
     });
+    bindChestFlipbook();
     var play = $("stridorsoundplay");
     if (play && !play.dataset.bound) {
       play.dataset.bound = "stridor-example";
@@ -5272,6 +5321,7 @@ export function mountUI(engine) {
   }
   function showUnder5Stage(stage) {
     if (stage !== "cough") stopPrototypeMusicForContext("under5.followup.cough");
+    if (stage !== "cough") stopChestFlipbook();
     under5Stage = stage;
     hideUnder5StageRegions();
     if (stage === "danger") {

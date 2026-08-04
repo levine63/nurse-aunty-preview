@@ -1353,6 +1353,14 @@
         "text": "बहुत नींद में है, शरीर ढीला है, या जगाना मुश्किल है"
       }
     },
+    "tx.chest_flipbook.title": {"en":{"text":"Watch one breath"},"fr":{"text":"Regardez une respiration"},"hi-IN":{"text":"एक सांस देखें"}},
+    "tx.chest_flipbook.instruction": {"en":{"text":"Watch the lower chest, between the ribs and belly. When the child breathes in, the chest and belly move out. If this lower chest pulls inward instead, choose this sign and get urgent care now."},"fr":{"text":"Regardez le bas de la poitrine, entre les côtes et le ventre. Quand l'enfant inspire, la poitrine et le ventre avancent. Si le bas de la poitrine se creuse au lieu de cela, choisissez ce signe et allez chercher des soins urgents maintenant."},"hi-IN":{"text":"पसलियों और पेट के बीच, छाती के निचले हिस्से को देखें। जब बच्चा सांस लेता है, छाती और पेट बाहर की ओर जाते हैं। अगर निचली छाती इसके बजाय अंदर खिंचती है, तो यह संकेत चुनें और तुरंत इलाज लें।"}},
+    "tx.chest_flipbook.frame": {"en":{"text":"Picture {current} of {total}"},"fr":{"text":"Image {current} sur {total}"},"hi-IN":{"text":"तस्वीर {current} में से {total}"},"placeholder_vars":["current","total"]},
+    "tx.chest_flipbook.play": {"en":{"text":"Play example"},"fr":{"text":"Lire l'exemple"},"hi-IN":{"text":"उदाहरण चलाएँ"}},
+    "tx.chest_flipbook.pause": {"en":{"text":"Pause example"},"fr":{"text":"Mettre l'exemple en pause"},"hi-IN":{"text":"उदाहरण रोकें"}},
+    "tx.chest_flipbook.note": {"en":{"text":"These pictures show one example. They are not a test."},"fr":{"text":"Ces images montrent un exemple. Elles ne constituent pas un test."},"hi-IN":{"text":"ये तस्वीरें केवल एक उदाहरण दिखाती हैं। ये कोई जाँच नहीं हैं।"}},
+    "tx.chest_flipbook.frame_out_alt": {"en":{"text":"Child’s chest and belly moving out as the child breathes in."},"fr":{"text":"La poitrine et le ventre de l'enfant avancent pendant l'inspiration."},"hi-IN":{"text":"बच्चे के सांस लेते समय छाती और पेट बाहर की ओर जाते हैं।"}},
+    "tx.chest_flipbook.frame_in_alt": {"en":{"text":"Child’s lower chest pulling inward while the child breathes in."},"fr":{"text":"Le bas de la poitrine de l'enfant se creuse pendant l'inspiration."},"hi-IN":{"text":"बच्चे के सांस लेते समय छाती का निचला हिस्सा अंदर खिंचता है।"}},
     "tx.q_chest_indrawing": {
       "en": {
         "text": "The lower chest pulls IN when the child breathes in"
