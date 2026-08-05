@@ -962,6 +962,12 @@ export function mountUI(engine) {
     moveToNextStep("filtertitle");
   }
   function returnFromWork() {
+    // The person-needs page is itself a navigable screen.  It must return to the
+    // person picker, not redraw itself, when the caregiver presses the shell Back.
+    if (activeShellScreen === "people" && mode === "person-intent" && !selected) {
+      showCatalogScreen("people");
+      return;
+    }
     if (mode === "person-intent" && activePersonId && personById(activePersonId)) {
       returnToActivePersonPage();
       return;
@@ -1675,8 +1681,17 @@ export function mountUI(engine) {
     if (globalStatus) globalStatus.textContent = message;
   }
   function setGlobalReadAloudPauseLabel(label) {
-    var button = $("slidepauseaudio");
-    if (button) button.textContent = label;
+    ["slidepauseaudio", "bfpause", "bfassistpause"].forEach(function (id) {
+      var button = $(id);
+      if (button) button.textContent = label;
+    });
+  }
+  function updateReadAloudActionButtons() {
+    var reading = prototypeSpeechActive || prototypeSpeechPaused;
+    ["slidepauseaudio", "sliderestartaudio", "bfpause", "bfstop", "bfassistpause", "bfassiststop"].forEach(function (id) {
+      var button = $(id);
+      if (button) button.disabled = !reading;
+    });
   }
   function cancelPrototypeSpeech(message) {
     var wasActive = prototypeSpeechActive || prototypeSpeechPaused;
@@ -1687,6 +1702,7 @@ export function mountUI(engine) {
     prototypeSpeechPaused = false;
     prototypeSpeechActive = false;
     setGlobalReadAloudPauseLabel("Pause");
+    updateReadAloudActionButtons();
     if (message && wasActive) setReadAloudStatus(message);
     return true;
   }
@@ -1741,6 +1757,7 @@ export function mountUI(engine) {
       prototypeSpeechPaused = false;
       prototypeSpeechActive = false;
       setGlobalReadAloudPauseLabel("Pause");
+      updateReadAloudActionButtons();
       setReadAloudStatus("Read-aloud complete.");
     };
     utterance.onerror = function () {
@@ -1748,16 +1765,19 @@ export function mountUI(engine) {
       prototypeSpeechPaused = false;
       prototypeSpeechActive = false;
       setGlobalReadAloudPauseLabel("Pause");
+      updateReadAloudActionButtons();
       setReadAloudStatus("Read-aloud error; show the text and try again.");
     };
     window.speechSynthesis.speak(utterance);
     prototypeSpeechPaused = false;
     prototypeSpeechActive = true;
     setGlobalReadAloudPauseLabel("Pause");
+    updateReadAloudActionButtons();
     setReadAloudStatus("Read-aloud playing through browser speech synthesis.");
     return true;
   }
   function pausePrototypeSpeech() {
+    if (!prototypeSpeechActive && !prototypeSpeechPaused) return false;
     if (typeof window === "undefined" || !window.speechSynthesis || !window.speechSynthesis.pause) {
       setReadAloudStatus("Pause unavailable in this browser; the text remains visible.");
       return false;
@@ -1767,12 +1787,14 @@ export function mountUI(engine) {
         window.speechSynthesis.resume();
         prototypeSpeechPaused = false;
         setGlobalReadAloudPauseLabel("Pause");
+        updateReadAloudActionButtons();
         setReadAloudStatus("Read-aloud playing through browser speech synthesis.");
         return true;
       }
       window.speechSynthesis.pause();
       prototypeSpeechPaused = true;
       setGlobalReadAloudPauseLabel("Resume");
+      updateReadAloudActionButtons();
       setReadAloudStatus("Read-aloud paused.");
       return true;
     } catch (e) {
@@ -3480,8 +3502,9 @@ export function mountUI(engine) {
     var scripts = breastfeedingScripts();
     breastfeedingStep = ((typeof step === "number" ? step : breastfeedingStep) + scripts.length) % scripts.length;
     $("slidetext").textContent = scripts[breastfeedingStep];
-    $("slidecache").innerHTML = reviewDetailsHtml("breastfeeding_audio", "Breastfeeding audio helper. on demand read-aloud and help prompts.") + '<div class="slidecontrols wrap-controls"><button id="bfplay" type="button">Play</button><button class="ghost" id="bfpause" type="button">Pause</button><button class="ghost" id="bfstop" type="button">Stop</button><button class="ghost" id="bfprev" type="button">Previous tip</button><button class="ghost" id="bfnext" type="button">Next tip</button><button class="ghost" id="bfhelp" type="button">Need help now</button><span id="audiostatus" class="muted">Read-aloud idle.</span></div>';
+    $("slidecache").innerHTML = reviewDetailsHtml("breastfeeding_audio", "Breastfeeding audio helper. on demand read-aloud and help prompts.") + '<div class="slidecontrols wrap-controls"><button id="bfplay" type="button">Play</button><button class="ghost" id="bfpause" type="button" disabled>Pause</button><button class="ghost" id="bfstop" type="button" disabled>Stop</button><button class="ghost" id="bfprev" type="button">Previous tip</button><button class="ghost" id="bfnext" type="button">Next tip</button><button class="ghost" id="bfhelp" type="button">Need help now</button><span id="audiostatus" class="muted">Read-aloud idle.</span></div>';
     setReadAloudStatus("Read-aloud idle.");
+    updateReadAloudActionButtons();
     var play = $("bfplay"), pause = $("bfpause"), stop = $("bfstop"), prev = $("bfprev"), next = $("bfnext"), help = $("bfhelp");
     if (play && !play.dataset.bound) { play.dataset.bound = "bf"; play.addEventListener("click", function () { var currentScripts = breastfeedingScripts(); $("slidetext").textContent = currentScripts[breastfeedingStep]; playPrototypeSpeech(currentScripts[breastfeedingStep]); }); }
     if (pause && !pause.dataset.bound) { pause.dataset.bound = "bf"; pause.addEventListener("click", pausePrototypeSpeech); }
@@ -3507,8 +3530,9 @@ export function mountUI(engine) {
     var nextLabel = breastfeedingStep === scripts.length - 1 ? tx("tx.bf.assistant.back_to_first", "Back to tip 1") : tx("tx.bf.assistant.next_tip", "Next tip");
     var remainingTips = scripts.length - breastfeedingStep;
     $("slidecache").innerHTML = reviewDetailsHtml("breastfeeding_aid_triage", "Breastfeeding assistant mode. Practical read-aloud support shares content with the breastfeeding triage module and keeps urgent checks one tap away.") +
-      '<div class="slidecontrols wrap-controls"><button id="bfassistplay" type="button">' + esc(tx("tx.bf.assistant.play_tip", "Play this tip")) + '</button><button id="bfassistplayall" type="button">' + esc(tx("tx.bf.assistant.play_from_current", "Play from this tip ({count} tips)", { count: remainingTips })) + '</button><button class="ghost" id="bfassistpause" type="button">Pause</button><button class="ghost" id="bfassiststop" type="button">Stop</button><button class="ghost" id="bfassistprev" type="button"' + (breastfeedingStep === 0 ? " disabled" : "") + '>Previous tip</button><button class="ghost" id="bfassistnext" type="button">' + esc(nextLabel) + '</button><button class="dangerdoor" id="bfassisturgent" type="button">Check urgent signs</button><span id="audiostatus" class="muted">Read-aloud idle.</span></div>';
+      '<div class="slidecontrols wrap-controls"><button id="bfassistplay" type="button">' + esc(tx("tx.bf.assistant.play_tip", "Play this tip")) + '</button><button id="bfassistplayall" type="button">' + esc(tx("tx.bf.assistant.play_from_current", "Play from this tip ({count} tips)", { count: remainingTips })) + '</button><button class="ghost" id="bfassistpause" type="button" disabled>Pause</button><button class="ghost" id="bfassiststop" type="button" disabled>Stop</button><button class="ghost" id="bfassistprev" type="button"' + (breastfeedingStep === 0 ? " disabled" : "") + '>Previous tip</button><button class="ghost" id="bfassistnext" type="button">' + esc(nextLabel) + '</button><button class="dangerdoor" id="bfassisturgent" type="button">Check urgent signs</button><span id="audiostatus" class="muted">Read-aloud idle.</span></div>';
     setReadAloudStatus("Read-aloud idle.");
+    updateReadAloudActionButtons();
     var play = $("bfassistplay"), playAll = $("bfassistplayall"), pause = $("bfassistpause"), stop = $("bfassiststop"), prev = $("bfassistprev"), next = $("bfassistnext"), urgent = $("bfassisturgent");
     if (play && !play.dataset.bound) { play.dataset.bound = "bfassist"; play.addEventListener("click", function () { var currentScripts = breastfeedingScripts(); $("slidetext").textContent = currentScripts[breastfeedingStep]; playPrototypeSpeech(currentScripts[breastfeedingStep]); }); }
     if (playAll && !playAll.dataset.bound) { playAll.dataset.bound = "bfassist"; playAll.addEventListener("click", function () { playPrototypeSpeech(breastfeedingScripts().slice(breastfeedingStep).join(" ")); }); }
