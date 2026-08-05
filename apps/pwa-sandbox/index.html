@@ -122,11 +122,15 @@
   .sign { display: flex; align-items: center; gap: 10px; padding: 10px 0; min-height:48px; font-size: 15px; cursor: pointer; }
   .sign input { width: 20px; height: 20px; flex: 0 0 auto; }
   .rrbox { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  /* A button is live only when it can act now.  Every enabled action uses the same
+     filled treatment; unavailable actions are visibly muted.  Urgent care retains
+     red as a safety-specific live action, not as an availability exception. */
   button { min-width: 48px; min-height: 48px; font-size: 15px; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--accent); background: var(--accent); color: #fff; cursor: pointer; }
-  button.ghost { background: #fff; color: var(--accent); }
+  button.ghost:not(:disabled) { background: var(--accent); color: #fff; }
+  button:disabled, button.ghost:disabled { background:#e7ece9; border-color:#c8d1cc; color:#68746d; opacity:1; cursor:not-allowed; box-shadow:none; }
+button.tab.dangerdoor:not(:disabled), #showtriage:not(:disabled) { background:var(--warn); border-color:var(--warn); color:#fff; }
   button.tap { font-size: 20px; padding: 18px 22px; min-width: 160px; }
   #assess { width: 100%; font-size: 17px; padding: 14px; margin: 4px 0 16px; }
-  #assess:disabled { opacity:.5; cursor:default; }
   .result { border-radius: 12px; padding: 0; margin-bottom: 14px; border: 2px solid var(--line); background:#fff; overflow:hidden; }
   .result.refer { border-color: var(--warn); } .result.home { border-color: var(--ok); }
   .result-band { padding:10px 14px; color:#fff; font-weight:900; letter-spacing:0; font-size:16px; }
@@ -425,8 +429,8 @@
     <div class="slidecontrols wrap-controls">
       <button class="ghost" id="slidehome" type="button">Home</button>
       <button class="ghost" id="slideread" type="button">Read screen aloud</button>
-      <button class="ghost" id="slidepauseaudio" type="button">Pause</button>
-      <button class="ghost" id="sliderestartaudio" type="button">Restart</button>
+      <button class="ghost" id="slidepauseaudio" type="button" disabled>Pause</button>
+      <button class="ghost" id="sliderestartaudio" type="button" disabled>Restart</button>
       <button class="ghost" id="slideprev" type="button">Prev</button>
       <button id="slidenext" type="button">Next</button>
     </div>
