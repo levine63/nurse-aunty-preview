@@ -121,7 +121,7 @@ export function mountUI(engine) {
   var COUGH_FU = (childClinicalRegistry.followupsBySymptom.cough || [{ id: "chest_indrawing" }, { id: "stridor_calm" }]).map(function (q) { return { id: q.id, img: FOLLOWUP_IMAGES[q.id], assetId: FOLLOWUP_IMAGE_ASSETS[q.id] }; });
   var DIAR_FU = (childClinicalRegistry.followupsBySymptom.diarrhoea || [{ id: "bloody_stool" }, { id: "sunken_eyes" }, { id: "skin_pinch_slow" }, { id: "restless_irritable" }, { id: "drinks_eagerly" }]).map(function (q) { return { id: q.id, img: FOLLOWUP_IMAGES[q.id], assetId: FOLLOWUP_IMAGE_ASSETS[q.id] }; });
   var FEVER_MEASUREMENTS = childClinicalRegistry.measurementsBySymptom.fever || [{ id: "fever_days" }];
-  var mode = "subject", selected = "child_under5", activeSubject = "child_under5", activePersonId = null, dangerPersonId = null, search = "", hotspot = false, slideIndex = 0, activeSlides = [], orsDeckContainerId = "";
+  var mode = "subject", selected = "child_under5", activeSubject = "child_under5", activePersonId = null, dangerPersonId = null, search = "", hotspot = false, slideIndex = 0, activeSlides = [], orsDeckContainerId = "", careEntryStartsCheck = false;
   var FEATURE_PAGE_SIZE = 6, featureLimit = FEATURE_PAGE_SIZE;
   // Progress is a caregiver-confirmed prototype record, but it must never leak
   // between children who share a phone.  Keep the per-person key beside the
@@ -1161,12 +1161,12 @@ export function mountUI(engine) {
       nav.classList.toggle("active", on);
     });
   }
-  function showCatalogScreen(screen, nextMode, nextSelected) {
+  function showCatalogScreen(screen, nextMode, nextSelected, startCareCheck) {
     stopReadAloudForContextChange("Read-aloud stopped because the screen changed.");
     activeShellScreen = screen || "people";
     if (nextMode) mode = nextMode;
     if (nextSelected) selected = nextSelected;
-    if (screen === "people") { mode = "subject"; selected = ""; activeSubject = ""; activePersonId = null; dangerPersonId = null; }
+    if (screen === "people") { mode = "subject"; selected = ""; activeSubject = ""; activePersonId = null; dangerPersonId = null; careEntryStartsCheck = !!startCareCheck; }
     if (screen === "learn") { mode = "learn"; selected = ""; activePersonId = null; }
     if (screen === "tools") { mode = "type"; selected = ""; activePersonId = null; }
     featureLimit = FEATURE_PAGE_SIZE;
@@ -2012,12 +2012,24 @@ export function mountUI(engine) {
     }).join("");
     var list = $("peoplelist").querySelectorAll ? $("peoplelist").querySelectorAll(".person") : [];
     for (var i = 0; i < list.length; i++) list[i].addEventListener("click", function () {
+      var startCareCheck = careEntryStartsCheck;
+      // The home care door already states the caregiver's purpose.  Carry that
+      // intent through the person selection instead of asking the same question
+      // again.  My family still opens the full person-options view.
+      careEntryStartsCheck = false;
       mode = "person-intent";
       selected = "";
       activeSubject = this.dataset.subject;
       activePersonId = this.dataset.person || null;
       dangerPersonId = null;
       featureLimit = FEATURE_PAGE_SIZE;
+      if (startCareCheck) {
+        selected = "check";
+        if (openDeclaredPersonIntentDestination()) return;
+        // Only skip the second choice when a governed direct-care route exists.
+        // Other subjects keep their options rather than guessing a destination.
+        selected = "";
+      }
       renderCatalog();
       showPanel("catalog");
       moveToNextStep("filtertitle");
@@ -5032,7 +5044,7 @@ export function mountUI(engine) {
     applyShellVisibility();
   });
   if ($("todaybrush")) $("todaybrush").addEventListener("click", function () { openLaunch("dental.brushing", "Toothbrushing coach"); });
-  if ($("homecare")) $("homecare").addEventListener("click", function () { showCatalogScreen("people"); });
+  if ($("homecare")) $("homecare").addEventListener("click", function () { showCatalogScreen("people", null, null, true); });
   if ($("homelearn")) $("homelearn").addEventListener("click", function () { showCatalogScreen("learn"); });
   if ($("hometools")) $("hometools").addEventListener("click", function () { showCatalogScreen("tools"); });
   if ($("navhome")) $("navhome").addEventListener("click", goHome);

@@ -10611,7 +10611,7 @@
     "tx.home.what_need": {"en":{"text":"What do you need?"},"fr":{"text":"De quoi avez-vous besoin ?"},"hi-IN":{"text":"आपको क्या चाहिए?"}},
     "tx.home.choose_path": {"en":{"text":"Choose one path. The app will show only the next useful choices."},"fr":{"text":"Choisissez un chemin. L'application affichera seulement les choix utiles ensuite."},"hi-IN":{"text":"एक रास्ता चुनें। ऐप आगे केवल उपयोगी विकल्प दिखाएगा।"}},
     "tx.home.care_title": {"en":{"text":"Care for someone"},"fr":{"text":"S'occuper d'une personne"},"hi-IN":{"text":"किसी की देखभाल करें"}},
-    "tx.home.care_body": {"en":{"text":"Choose a person, then what they need."},"fr":{"text":"Choisissez une personne, puis ce dont elle a besoin."},"hi-IN":{"text":"एक व्यक्ति चुनें, फिर उसकी ज़रूरत चुनें।"}},
+    "tx.home.care_body": {"en":{"text":"Choose a person to start their health check."},"fr":{"text":"Choisissez une personne pour commencer son bilan de santé."},"hi-IN":{"text":"स्वास्थ्य जाँच शुरू करने के लिए एक व्यक्ति चुनें।"}},
     "tx.home.learn_title": {"en":{"text":"Learn something"},"fr":{"text":"Apprendre quelque chose"},"hi-IN":{"text":"कुछ सीखें"}},
     "tx.home.learn_body": {"en":{"text":"Choose one kind of lesson."},"fr":{"text":"Choisissez un type de leçon."},"hi-IN":{"text":"एक तरह का पाठ चुनें।"}},
     "tx.home.tools_title": {"en":{"text":"Use a tool"},"fr":{"text":"Utiliser un outil"},"hi-IN":{"text":"एक उपकरण इस्तेमाल करें"}},
