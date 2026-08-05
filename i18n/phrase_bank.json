@@ -908,7 +908,7 @@
     },
     "tx.ors.mix.marked_bottle": {
       "en": {
-        "text": "Use this option only if this bottle has a clear {sachetMl} mL mark. Fill exactly to that mark, add one full ORS sachet, and shake. If the line is missing or hard to see, do not guess; choose a correctly marked {sachetMl} mL container or ask a CHW, pharmacy, or clinic."
+        "text": "Look at the picture. Fill this 1.5 L bottle only to the clear {sachetMl} mL line - not to the top. Add one full ORS sachet and shake well. If you cannot see the line, choose a differently marked container or ask a CHW, pharmacy, or clinic."
       },
       "bn-BD": {
         "text": ""
@@ -918,10 +918,10 @@
       ],
       "_codex_decision": "Prototype ORS mixing instruction; local product and clinical review pending.",
       "fr": {
-        "text": "Choisissez cette option seulement si la bouteille porte un repère clair à {sachetMl} mL. Remplissez exactement jusqu'au repère, ajoutez un sachet entier de SRO et secouez. Si le repère manque ou se voit mal, ne devinez pas. Choisissez un récipient bien marqué de {sachetMl} mL ou demandez à un agent de santé, une pharmacie ou un centre de santé."
+        "text": "Regardez l'image. Remplissez cette bouteille de 1,5 L seulement jusqu'au trait clair de {sachetMl} mL - pas jusqu'en haut. Ajoutez un sachet entier de SRO et secouez bien. Si vous ne voyez pas le trait, choisissez un autre récipient marqué ou demandez à un agent de santé, une pharmacie ou un centre de santé."
       },
       "hi-IN": {
-        "text": "इस विकल्प का उपयोग केवल तभी करें जब इस बोतल पर स्पष्ट {sachetMl} mL चिह्न हो। ठीक उसी निशान तक भरें, एक पूरा ओआरएस पैकेट डालें और हिलाएं। यदि रेखा गायब है या देखने में कठिन है, तो अनुमान न लगाएं; सही ढंग से चिह्नित {sachetMl} एमएल कंटेनर चुनें या स्थानीय स्वास्थ्यकर्मी, फार्मेसी या क्लिनिक से पूछें।"
+        "text": "तस्वीर देखें। इस 1.5 L बोतल को केवल साफ {sachetMl} mL निशान तक भरें - ऊपर तक नहीं। एक पूरा ओआरएस पैकेट डालें और अच्छी तरह हिलाएं। यदि निशान नहीं दिखता, तो दूसरी चिन्हित बोतल चुनें या स्वास्थ्यकर्मी, फार्मेसी या क्लिनिक से पूछें।"
       }
     },
     "tx.ors.mix.small_container": {
@@ -961,6 +961,44 @@
       },
       "hi-IN": {
         "text": "इस कंटेनर में {volumeMl} mL है। एक पूर्ण ओआरएस पैकेट के लिए, इसे {fills} बार भरें ताकि {sachetMl} एमएल साफ पानी बन जाए, फिर पूरा पाउच डालें और हिलाएं। ध्यान से गिनें; यदि आप सटीक माप नहीं कर सकते हैं, तो स्थानीय स्वास्थ्यकर्मी, फार्मेसी या क्लिनिक से पूछें।"
+      }
+    },
+    "tx.ors.mix.partial_repeats": {
+      "en": {
+        "text": "This {container} holds {volumeMl} mL. For one full ORS sachet, fill it {fullFills} full times, then one more time to about {fraction}. That makes about {sachetMl} mL of clean water. Add one full sachet and stir well."
+      },
+      "bn-BD": {
+        "text": ""
+      },
+      "placeholder_vars": [
+        "container",
+        "volumeMl",
+        "fullFills",
+        "fraction",
+        "sachetMl"
+      ],
+      "_codex_decision": "Prototype ORS mixing instruction for a non-whole container measure; local product and clinical review pending.",
+      "fr": {
+        "text": "Ce récipient {container} contient {volumeMl} mL. Pour un sachet entier de SRO, remplissez-le {fullFills} fois complètement, puis une fois encore jusqu'à environ {fraction}. Vous aurez ainsi environ {sachetMl} mL d'eau propre. Ajoutez le sachet entier et mélangez bien."
+      },
+      "hi-IN": {
+        "text": "{container} में {volumeMl} mL आता है। एक पूरा ओआरएस पैकेट बनाने के लिए इसे {fullFills} बार पूरा भरें, फिर एक बार और लगभग {fraction} तक भरें। इससे लगभग {sachetMl} mL साफ पानी होगा। पूरा पैकेट डालकर अच्छी तरह मिलाएँ।"
+      }
+    },
+    "tx.ors.mix.one_third_full": {
+      "en": {
+        "text": "one-third full"
+      },
+      "bn-BD": {
+        "text": ""
+      },
+      "placeholder_vars": [],
+      "_codex_decision": "Prototype ORS measurement phrase; local product and clinical review pending.",
+      "fr": {
+        "text": "un tiers"
+      },
+      "hi-IN": {
+        "text": "एक-तिहाई तक"
       }
     },
     "tx.ors.mix.large_container": {

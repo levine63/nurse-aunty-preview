@@ -1,5 +1,5 @@
 {
-  "about": "MOH-editable household container catalog. To add a container: append a row with a unique id, volumeMl, per-locale labels, an iconPath, a treatment kind, and a phrase-bank slug (add the matching slug to i18n/phrase_bank.json). No IR or code change required. Updates are checksum-gated (see CONTRACTS.md Section: Config).",
+  "about": "MOH-editable household container catalog. To add a container: append a row with a unique id, volumeMl, per-locale labels, an iconPath, a treatment kind, a phrase-bank slug (add the matching slug to i18n/phrase_bank.json), and, when the volume needs a special mixing picture, an orsMeasurementVisualAssetId. No IR or code change required. Updates are checksum-gated (see CONTRACTS.md Section: Config).",
   "version": "containers-2026-07-01",
   "containers": [
     {
@@ -21,6 +21,7 @@
       "kind": "ors",
       "volumeMl": 300,
       "iconPath": "assets/generated/generated_ors_container_mug_300ml_v1.png",
+      "orsMeasurementVisualAssetId": "img.generated.ors_mug_300ml_measure_v1",
       "slug": "tx.ors_ceramic_mug",
       "labels": {
         "en": "Drinking mug (300 mL)",
@@ -35,6 +36,7 @@
       "kind": "ors",
       "volumeMl": 500,
       "iconPath": "assets/generated/generated_ors_container_bottle_500ml_v1.png",
+      "orsMeasurementVisualAssetId": "img.generated.ors_container_bottle_500ml_v1",
       "slug": "tx.ors_water_bottle_500",
       "labels": {
         "en": "Water bottle (500 mL)",
@@ -49,6 +51,7 @@
       "kind": "ors",
       "volumeMl": 1500,
       "iconPath": "assets/generated/generated_ors_container_bottle_1500ml_1l_line_v1.png",
+      "orsMeasurementVisualAssetId": "img.generated.ors_container_bottle_1500ml_1l_line_v1",
       "slug": "tx.ors_soda_bottle_1500",
       "labels": {
         "en": "Large bottle to line (1.5 L)",

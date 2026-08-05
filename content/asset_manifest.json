@@ -2247,6 +2247,27 @@
       "source": "Built-in Codex image generation tool from prompt: ORS sachet added to a marked 1 L bottle or jar, with a 200 mL mug shown as five fills equal one liter; generated 2026-07-17 after reviewer noted the prior ORS image looked like pouring into a drinking glass."
     },
     {
+      "assetId": "img.generated.ors_mug_300ml_measure_v1",
+      "featureIds": [
+        "ors_slideshow"
+      ],
+      "module": "ORS/Diarrhea/Zinc",
+      "assetType": "custom_generated_png",
+      "sourceType": "codex_generated_png_draft",
+      "source": "Built-in Codex image edit of img.generated.ors_1l_mix_instruction_v2: replaces its fixed five-cup sequence with three full 300 mL mugs plus one mug about one-third full, leading to a 1 L mark; generated 2026-08-04.",
+      "license": "Codex-generated PNG draft; internal prototype only until clinical, localization, rights, and local dignity review.",
+      "costUsd": 0,
+      "generationSoftware": "Codex built-in image generation",
+      "regionFocus": "Generic prototype draft",
+      "targetPath": "assets/generated/generated_ors_mug_300ml_measure_v1.png",
+      "altText": "Three full 300 mL mugs and one mug about one-third full, showing how to measure about one litre of clean water before adding a full ORS sachet.",
+      "clinicalReviewStatus": "ORS/Zinc Review Needed",
+      "localReviewStatus": "Local Container Review Needed",
+      "approvalStatus": "CODEX Decision - needs approval",
+      "date_accessed_or_captured": "2026-08-04",
+      "displayPriority": 101
+    },
+    {
       "assetType": "custom_generated_png",
       "sourceType": "codex_generated_png_draft",
       "license": "Codex-generated PNG draft; internal prototype only until clinical, localization, rights, and local dignity review.",

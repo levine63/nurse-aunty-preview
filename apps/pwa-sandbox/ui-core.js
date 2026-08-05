@@ -1190,14 +1190,28 @@ export function mountUI(engine) {
     else if (id === "catalog") moveToNextStep("catalogshell");
   }
   function updateSlideNavigation(visible) {
-    ["slideprev", "slidenext"].forEach(function (id) {
-      var button = $(id);
-      if (!button) return;
-      if (visible) button.classList.remove("hidden");
-      else button.classList.add("hidden");
-      button.disabled = !visible;
-      if (button.setAttribute) button.setAttribute("aria-hidden", visible ? "false" : "true");
-    });
+    var isDeck = !!visible && activeSlides.length > 1;
+    var prev = $("slideprev"), next = $("slidenext"), read = $("slideread");
+    if (prev) {
+      prev.classList.toggle("hidden", !isDeck);
+      prev.disabled = !isDeck || slideIndex === 0;
+      prev.classList.toggle("ghost", prev.disabled);
+      prev.setAttribute("aria-hidden", isDeck ? "false" : "true");
+    }
+    if (next) {
+      next.classList.toggle("hidden", !isDeck);
+      next.disabled = !isDeck || slideIndex === activeSlides.length - 1;
+      next.classList.toggle("ghost", next.disabled);
+      next.setAttribute("aria-hidden", isDeck ? "false" : "true");
+    }
+    // The listening control is live on any visible work screen. Deck pages need it
+    // too, but ordinary tools and checklists must not be accidentally disabled.
+    if (read) {
+      var readableWorkVisible = isDeck || !!($("slideshow") && !$("slideshow").classList.contains("hidden"));
+      read.disabled = !readableWorkVisible;
+      read.classList.toggle("ghost", !readableWorkVisible);
+      read.setAttribute("aria-disabled", readableWorkVisible ? "false" : "true");
+    }
   }
   function refocusActiveWorkPanel() {
     setTimeout(function () {
@@ -1582,6 +1596,7 @@ export function mountUI(engine) {
   }
   var currentPrototypeSpeechText = "";
   var prototypeSpeechPaused = false;
+  var prototypeSpeechActive = false;
   // Every context change gets a new generation.  Browser speech callbacks can arrive after
   // cancel(), so handlers must prove they still belong to the visible screen before updating it.
   var prototypeSpeechGeneration = 0;
@@ -1664,21 +1679,26 @@ export function mountUI(engine) {
     if (button) button.textContent = label;
   }
   function cancelPrototypeSpeech(message) {
+    var wasActive = prototypeSpeechActive || prototypeSpeechPaused;
     prototypeSpeechGeneration += 1;
     if (typeof window !== "undefined" && window.speechSynthesis && window.speechSynthesis.cancel) {
       try { window.speechSynthesis.cancel(); } catch (e) { return false; }
     }
     prototypeSpeechPaused = false;
+    prototypeSpeechActive = false;
     setGlobalReadAloudPauseLabel("Pause");
-    if (message) setReadAloudStatus(message);
+    if (message && wasActive) setReadAloudStatus(message);
     return true;
   }
   function stopReadAloudForContextChange(message) {
+    var wasReading = guidedSpeechActive || prototypeSpeechActive || prototypeSpeechPaused;
     guidedSpeechActive = false;
     guidedSpeechItems = [];
     guidedSpeechIndex = 0;
     clearGuidedSpeechHighlight();
-    cancelPrototypeSpeech(message || "Read-aloud stopped because the screen changed.");
+    // A changed page must stop active speech so words never describe the wrong page.
+    // Do not announce a stop when the caregiver was not listening.
+    cancelPrototypeSpeech(wasReading ? (message || "Read-aloud stopped.") : "");
     updateGuidedListenButton();
   }
   function selectPreferredSpeechVoice() {
@@ -1719,17 +1739,20 @@ export function mountUI(engine) {
     utterance.onend = function () {
       if (speechGeneration !== prototypeSpeechGeneration) return;
       prototypeSpeechPaused = false;
+      prototypeSpeechActive = false;
       setGlobalReadAloudPauseLabel("Pause");
       setReadAloudStatus("Read-aloud complete.");
     };
     utterance.onerror = function () {
       if (speechGeneration !== prototypeSpeechGeneration) return;
       prototypeSpeechPaused = false;
+      prototypeSpeechActive = false;
       setGlobalReadAloudPauseLabel("Pause");
       setReadAloudStatus("Read-aloud error; show the text and try again.");
     };
     window.speechSynthesis.speak(utterance);
     prototypeSpeechPaused = false;
+    prototypeSpeechActive = true;
     setGlobalReadAloudPauseLabel("Pause");
     setReadAloudStatus("Read-aloud playing through browser speech synthesis.");
     return true;
@@ -1758,7 +1781,11 @@ export function mountUI(engine) {
     }
   }
   function stopPrototypeSpeech() {
-    return cancelPrototypeSpeech("Read-aloud stopped.");
+    // An explicit Stop deserves confirmation even if a previous page change already
+    // ended the audio. Context changes, by contrast, stay quiet when nothing was playing.
+    var stopped = cancelPrototypeSpeech();
+    if (stopped) setReadAloudStatus("Read-aloud stopped.");
+    return stopped;
   }
   function restartPrototypeSpeech(text) {
     var nextText = (text || currentPrototypeSpeechText || "").replace(/\s+/g, " ").trim();
@@ -2293,22 +2320,24 @@ export function mountUI(engine) {
     if (!activeSlides.length) return false;
     var boundedIndex = Math.max(0, Math.min(activeSlides.length - 1, nextIndex));
     if (boundedIndex === slideIndex) return false;
-    stopReadAloudForContextChange("Read-aloud stopped because the frame changed.");
+    stopReadAloudForContextChange("Read-aloud stopped.");
     slideIndex = boundedIndex;
     renderSlide();
     return true;
   }
   function moveSlide(delta) {
     if (!activeSlides.length) return false;
-    return changeSlide((slideIndex + delta + activeSlides.length) % activeSlides.length);
+    return changeSlide(slideIndex + delta);
   }
   function renderSlide() {
     var slide = activeSlides[slideIndex] || {};
     $("slidetitle").textContent = slide.titleSlug ? t(slide.titleSlug) : (slide.title || "");
     activeShellTitle = $("slidetitle").textContent || activeShellTitle;
-    $("slideimage").innerHTML = renderVisual(slide.featureId, slide.img, slide.imageAsset);
+    $("slideimage").innerHTML = renderVisual(slide.featureId, slide.img, orsMeasureVisualAsset(slide));
     $("slidetext").textContent = slideText(slide);
-    $("slidecache").textContent = (slide.note || "") + " Current frame " + (slideIndex + 1) + " of " + activeSlides.length + ".";
+    // Deck metadata (cache profile, review state, authoring notes) never belongs in
+    // caregiver copy. Each step renderer supplies only the extra help that is useful now.
+    $("slidecache").innerHTML = "";
     renderOrsDeckStepControls(slide);
     renderStoryActions(slide.featureId);
     updateSlideNavigation(activeSlides.length > 1);
@@ -2323,10 +2352,16 @@ export function mountUI(engine) {
         bodySlug: step.bodySlug,
         img: step.imageDesc || step.imageAsset || "Image placeholder for this step.",
         imageAsset: step.imageAsset,
-        featureId: deck.featureId,
-        note: (step.note || "") + (deck.governanceStatus ? " " + deck.governanceStatus + "." : "")
+        featureId: deck.featureId
       };
     });
+  }
+  function orsMeasureVisualAsset(slide) {
+    if (!slide || slide.featureId !== "ors_slideshow" || slide.id !== "measure") return slide && slide.imageAsset;
+    var container = containerById(orsDeckContainerId);
+    // Container-specific pictures prevent a correct instruction being paired with a
+    // misleading number of cups. New containers can declare their own visual in config.
+    return (container && container.orsMeasurementVisualAssetId) || slide.imageAsset;
   }
   function slideText(slide) {
     if (slide.featureId !== "ors_slideshow") return slide.sourceName ? slide.sourceName + ": " + t(slide.bodySlug) : t(slide.bodySlug);
@@ -5899,6 +5934,19 @@ export function mountUI(engine) {
     }
     if (volumeMl > 0 && volumeMl < sachetMl && sachetMl % volumeMl === 0) {
       return tx("tx.ors.mix.measured_repeats", "This container holds {volumeMl} mL. For one full ORS sachet, fill it {fills} times to make {sachetMl} mL of clean water, then add the full sachet and stir. Count carefully; if you cannot measure exactly, ask a CHW, pharmacy, or clinic.", { volumeMl: volumeMl, fills: sachetMl / volumeMl, sachetMl: sachetMl });
+    }
+    if (volumeMl > 0 && volumeMl < sachetMl) {
+      var fullFills = Math.floor(sachetMl / volumeMl);
+      var remainder = (sachetMl / volumeMl) - fullFills;
+      if (fullFills > 0 && Math.abs(remainder - (1 / 3)) < 0.01) {
+        return tx("tx.ors.mix.partial_repeats", "This {container} holds {volumeMl} mL. For one full ORS sachet, fill it {fullFills} full times, then one more time to about {fraction}. That makes about {sachetMl} mL of clean water. Add one full sachet and stir well.", {
+          container: cleanLabel,
+          volumeMl: volumeMl,
+          fullFills: fullFills,
+          fraction: tx("tx.ors.mix.one_third_full", "one-third full"),
+          sachetMl: sachetMl
+        });
+      }
     }
     if (volumeMl > 0 && volumeMl < sachetMl) {
       return tx("tx.ors.mix.small_container", "This container holds {volumeMl} mL, but a full ORS sachet is for {sachetMl} mL of clean water. Use it only if local instructions show exactly how much powder to use for this volume; do not guess a fraction of a sachet. Prefer a clearly marked {sachetMl} mL container for one full sachet.", { volumeMl: volumeMl, sachetMl: sachetMl });

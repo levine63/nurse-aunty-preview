@@ -6,50 +6,43 @@
       "featureId": "ors_slideshow",
       "deckId": "seq.ors_mixing",
       "titleSlug": "tx.seq_ors_title",
-      "memoryProfile": "three_frame_cache",
-      "governanceStatus": "CODEX Decision - needs approval",
+      "governanceStatus": "Prototype content review pending",
       "steps": [
         {
           "id": "wash",
           "bodySlug": "tx.seq_ors_step1",
           "imageAsset": "img.generated.ors_wash_hands_v1",
-          "imageDesc": "Caregiver washing hands beside a clean cup and clean water.",
-          "note": "Memory profile: 3-frame cache keeps previous/current/next only."
+          "imageDesc": "Caregiver washing hands beside a clean cup and clean water."
         },
         {
           "id": "choose_container",
           "bodySlug": "tx.seq_ors_step_choose_container",
           "imageAsset": "img.generated.ors_choose_container_v1",
-          "imageDesc": "Caregiver choosing the actual household container before measuring water for ORS.",
-          "note": "Choose one container before measuring. Memory profile: 3-frame cache keeps previous/current/next only."
+          "imageDesc": "Caregiver choosing the actual household container before measuring water for ORS."
         },
         {
           "id": "measure",
           "bodySlug": "tx.seq_ors_step2",
           "imageAsset": "img.generated.ors_1l_mix_instruction_v2",
-          "imageDesc": "Clean water measured to a clearly labeled 1 L fill line on a container; if no line is visible, choose another measured container and do not guess.",
-          "note": "Memory profile: 3-frame cache keeps previous/current/next only."
+          "imageDesc": "Clean water measured to a clearly labeled 1 L fill line on a container; if no line is visible, choose another measured container and do not guess."
         },
         {
           "id": "mix",
           "bodySlug": "tx.seq_ors_step3",
           "imageAsset": "img.generated.ors_add_full_sachet_v1",
-          "imageDesc": "One full unbranded ORS sachet being emptied into exactly 1 liter of already measured clean water in a marked mixing jug.",
-          "note": "Memory profile: 3-frame cache keeps previous/current/next only."
+          "imageDesc": "One full unbranded ORS sachet being emptied into exactly 1 liter of already measured clean water in a marked mixing jug."
         },
         {
           "id": "mix_well",
           "bodySlug": "tx.seq_ors_step_mix_well",
           "imageAsset": "img.generated.ors_mix_well_v1",
-          "imageDesc": "Caregiver holding a marked 1 liter mixing jug steady and stirring prepared ORS thoroughly with a clean long spoon.",
-          "note": "Stir after the full sachet has been added. Memory profile: 3-frame cache keeps previous/current/next only."
+          "imageDesc": "Caregiver holding a marked 1 liter mixing jug steady and stirring prepared ORS thoroughly with a clean long spoon."
         },
         {
           "id": "use_same_day",
           "bodySlug": "tx.seq_ors_step4",
           "imageAsset": "img.generated.ors_cover_same_day_v1",
-          "imageDesc": "Prepared ORS kept covered and used the same day, with old ORS discarded.",
-          "note": "Memory profile: 3-frame cache keeps previous/current/next only."
+          "imageDesc": "Prepared ORS kept covered and used the same day, with old ORS discarded."
         }
       ]
     }
