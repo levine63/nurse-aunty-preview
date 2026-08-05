@@ -5227,7 +5227,6 @@ export function mountUI(engine) {
   if ($("demomodeon")) $("demomodeon").addEventListener("change", renderCatalog);
   if ($("showtriage")) $("showtriage").addEventListener("click", beginDangerFlow);
   if ($("resetdemo")) $("resetdemo").addEventListener("click", resetDemoState);
-  if ($("slidehome")) $("slidehome").addEventListener("click", goHome);
   if ($("slideread")) $("slideread").addEventListener("click", function () {
     playPrototypeSpeech(currentScreenReadAloudText());
   });
