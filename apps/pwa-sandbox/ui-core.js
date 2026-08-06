@@ -1346,7 +1346,7 @@ export function mountUI(engine) {
       clearInterval(uiTimer.interval);
     }
     uiTimer = null;
-    stopPrototypeMusic(null, "Prototype tune stopped.");
+    if (currentPrototypeMusic) stopPrototypeMusic(null, "Prototype tune stopped.");
   }
   function cancelAllUiTimers() {
     cancelUiCountdown();
@@ -1677,8 +1677,8 @@ export function mountUI(engine) {
   function setReadAloudStatus(message) {
     var localStatus = $("audiostatus");
     var globalStatus = $("globalaudiostatus");
-    if (localStatus) localStatus.textContent = message;
-    if (globalStatus) globalStatus.textContent = message;
+    if (localStatus) { localStatus.textContent = message; localStatus.hidden = false; }
+    if (globalStatus) { globalStatus.textContent = message; globalStatus.hidden = false; }
   }
   function setGlobalReadAloudPauseLabel(label) {
     ["slidepauseaudio", "bfpause", "bfassistpause"].forEach(function (id) {
@@ -2562,7 +2562,7 @@ export function mountUI(engine) {
     $("slidecache").innerHTML = reviewerDetails(storySource + "Story actions are Player deck actions: read aloud, quiz, timer, or related checklist. " + provenanceSummary(featureId) + assetSummary(featureId) + contractSummary(featureId)) + '<div class="slidecontrols"><button class="ghost" id="storyreadaloud" type="button">Read this page aloud</button>' + actions.map(function (action) {
       var cls = action.style === "ghost" ? ' class="ghost"' : "";
       return '<button' + cls + ' id="' + esc(action.id) + '" type="button">' + esc(t(action.labelSlug)) + "</button>";
-    }).join("") + '<span id="audiostatus" class="muted">Read-aloud idle.</span></div>';
+    }).join("") + '<span id="audiostatus" class="muted" hidden aria-live="polite"></span></div>';
     var read = $("storyreadaloud");
     if (read && !read.dataset.bound) {
       read.dataset.bound = "storyreadaloud";
@@ -3416,7 +3416,7 @@ export function mountUI(engine) {
   function renderHandwashingCoach(step) {
     var current = typeof step === "number" ? step : 0;
     handwashStep = current;
-    $("slidecache").innerHTML = reviewDetailsHtml("handwashing_timer", "Handwashing coach. Visible 20-second timer and practice steps.") + timerPanelHtml("Handwashing timer", "0:20", "Ready") + '<div class="progress-panel"><div class="muted">Coach covers palms, backs, between fingers, thumbs, and under nails.</div></div><div class="slidecontrols"><button id="handwashstart" type="button">Start</button><button class="ghost" id="handwashpause" type="button" disabled>Pause</button><button class="ghost" id="handwashreset" type="button">Reset timer</button><button class="ghost" id="handwashnext" type="button">Next step</button><button class="ghost" id="handwashdone" type="button">Done</button><button class="ghost" id="handwashtune" type="button">Play tune</button></div>' + trackerContractHtml("handwashing_timer");
+    $("slidecache").innerHTML = reviewDetailsHtml("handwashing_timer", "Handwashing coach. Visible 20-second timer and practice steps.") + timerPanelHtml("Handwashing timer", "0:20", "Ready") + '<div class="progress-panel"><div class="muted">Coach covers palms, backs, between fingers, thumbs, and under nails.</div></div><div class="slidecontrols"><button id="handwashstart" type="button">Start timer</button><button class="ghost" id="handwashstartmusic" type="button">Start timer &amp; music</button><button class="ghost" id="handwashpause" type="button" disabled>Pause</button><button class="ghost" id="handwashreset" type="button">Reset timer</button><button class="ghost" id="handwashnext" type="button">Next step</button><button class="ghost" id="handwashdone" type="button">Done</button><button class="ghost" id="handwashtune" type="button">Start tune</button></div>' + trackerContractHtml("handwashing_timer");
     var steps = [
       tx("tx.tool_handwashing_timer.step_wet", "Step 1 of 5: wet hands with clean running water, then add soap."),
       tx("tx.tool_handwashing_timer.step_palms", "Step 2 of 5: rub palms together, then scrub the backs of both hands."),
@@ -3424,7 +3424,7 @@ export function mountUI(engine) {
       tx("tx.tool_handwashing_timer.step_rinse", "Step 4 of 5: rinse well under clean running water."),
       tx("tx.tool_handwashing_timer.step_dry", "Step 5 of 5: dry hands with a clean towel or air dry them.")
     ];
-    var start = $("handwashstart"), next = $("handwashnext"), done = $("handwashdone"), tune = $("handwashtune");
+    var start = $("handwashstart"), startMusic = $("handwashstartmusic"), next = $("handwashnext"), done = $("handwashdone"), tune = $("handwashtune");
     if (start && !start.dataset.bound) {
       start.dataset.bound = "handwash";
       start.addEventListener("click", function () {
@@ -3435,7 +3435,16 @@ export function mountUI(engine) {
         handwashStep = 0;
         $("slidetext").textContent = steps[0];
         renderHandwashingCoach(0);
-        startUiCountdown("Handwashing", 20, null, { startId: "handwashstart", pauseId: "handwashpause", resetId: "handwashreset", startText: "Start", musicAssetId: "audio.prototype.handwashing_children_summer_loop", musicStatusId: "musicstatus", musicLoop: true });
+        startUiCountdown("Handwashing", 20, null, { startId: "handwashstart", pauseId: "handwashpause", resetId: "handwashreset", startText: "Start timer" });
+      });
+    }
+    if (startMusic && !startMusic.dataset.bound) {
+      startMusic.dataset.bound = "handwash";
+      startMusic.addEventListener("click", function () {
+        handwashStep = 0;
+        $("slidetext").textContent = steps[0];
+        renderHandwashingCoach(0);
+        startUiCountdown("Handwashing", 20, null, { startId: "handwashstart", pauseId: "handwashpause", resetId: "handwashreset", startText: "Start timer", musicAssetId: "audio.prototype.handwashing_children_summer_loop", musicStatusId: "musicstatus", musicLoop: true });
       });
     }
     bindUiCountdownButton("handwashpause", pauseOrResumeUiCountdown);
@@ -3460,7 +3469,8 @@ export function mountUI(engine) {
       tune.dataset.bound = "handwash";
       tune.addEventListener("click", function () {
         $("slidetext").textContent = tx("tx.tool_handwashing_timer.tune_note", "Handwashing tune is playing. Keep rubbing with soap while the countdown runs, including backs of hands, between fingers, thumbs, and under nails.");
-        togglePrototypeMusic("audio.prototype.handwashing_children_summer_loop", "musicstatus", true);
+        var playing = togglePrototypeMusic("audio.prototype.handwashing_children_summer_loop", "musicstatus", true);
+        tune.textContent = playing ? "Stop tune" : "Start tune";
       });
     }
     updateUiTimerControls();
