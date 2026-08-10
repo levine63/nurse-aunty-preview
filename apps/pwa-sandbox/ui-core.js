@@ -2415,7 +2415,7 @@ export function mountUI(engine) {
       var selectedClass = c.id === orsDeckContainerId ? " selected" : "";
       var label = localizedContainerLabel(c);
       var volume = String(c.volumeMl) + " mL";
-      return '<button class="card ors-container-choice' + selectedClass + '" data-container-id="' + esc(c.id) + '" type="button">' + containerVisual(c) + '<strong>' + esc(label) + '</strong>' + (label.indexOf(volume) >= 0 ? "" : '<div class="vol">' + esc(volume) + "</div>") + "</button>";
+      return '<button class="card ors-container-choice' + selectedClass + '" data-container-id="' + esc(c.id) + '" type="button"><strong>' + esc(label) + '</strong>' + (label.indexOf(volume) >= 0 ? "" : '<div class="vol">' + esc(volume) + "</div>") + "</button>";
     }).join("") + "</div>";
   }
   function renderOrsDeckStepControls(slide) {
@@ -5087,6 +5087,7 @@ export function mountUI(engine) {
   if ($("navtools")) $("navtools").addEventListener("click", function () { showCatalogScreen("tools"); });
   if ($("navurgent")) $("navurgent").addEventListener("click", beginDangerFlow);
   if ($("screenback")) $("screenback").addEventListener("click", function () {
+    cancelPrototypeSpeech();
     if (activeShellScreen === "urgent-check") returnToPreviousUnder5Step();
     else returnFromWork();
   });

@@ -8,5 +8,7 @@ The preview contains synthetic demonstration profiles only; it must not be used 
 
 ## Reviewer-follow-up log
 
+- 2026-08-09 — Reviewer feedback: the home entry screen repeated guidance, ORS choice cards led with decorative images, and Back did not reliably stop speech. Root cause: display and speech behavior were implemented independently without a state-transition check. Guardrail: every screen transition must cancel active media, and action choices should lead with the action rather than nonessential explanatory or decorative content.
+
 - 2026-08-05 — Handwashing feedback: the timer started bundled music by default and the music toggle retained an inaccurate label. Root cause: timer startup unconditionally passed a music asset, while the independent toggle had no state-derived label. Guardrail: optional media must require an explicit user action, and every media control must derive its label from the active state. The preview now separates “Start timer” from “Start timer & music” and uses Start/Stop tune labels.
 - 2026-08-05 — Story feedback: an inactive “Read-aloud idle.” message appeared as content. Root cause: the story action renderer showed an initial status string even when no read-aloud action had been requested. Guardrail: hide action-status UI until that action is invoked; use a live region only for real outcomes.
