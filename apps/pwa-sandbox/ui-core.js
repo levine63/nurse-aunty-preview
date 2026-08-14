@@ -2066,8 +2066,8 @@ export function mountUI(engine) {
     if ($("personname")) $("personname").value = "";
     if ($("persondob")) $("persondob").value = "";
     if ($("personrole")) $("personrole").value = "child_under5";
-    if ($("personeditlabel")) $("personeditlabel").textContent = "Add a person";
-    if ($("addperson")) $("addperson").textContent = "Add person";
+    if ($("personeditlabel")) $("personeditlabel").textContent = "+ Add a person";
+    if ($("addperson")) $("addperson").textContent = "+ Add person";
     if ($("cancelperson")) $("cancelperson").classList.add("hidden");
     if (clearFeedback && $("personeditfeedback")) $("personeditfeedback").textContent = "";
     if (closeEditor && $("personeditor")) $("personeditor").open = false;

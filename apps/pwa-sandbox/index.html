@@ -95,10 +95,11 @@
   .family-edit summary { min-height:48px; display:flex; align-items:center; color:#555; cursor:pointer; font-size:13px; }
   .people { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:8px; margin-top:8px; }
   .person-card { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:6px; min-width:0; }
-  .person { width:100%; border:1px solid var(--line); border-radius:12px; padding:8px 14px; min-height:48px; background:#fbfbfd; color:var(--ink); text-align:left; font-size:15px; }
+  .person { width:100%; border:1px solid var(--line); border-radius:12px; padding:8px 14px; min-height:48px; background:#fbfbfd; color:var(--ink); text-align:left; font-size:18px; }
   .person strong { display:block; }
   .person span { display:none; color:#666; }
-  .edit-person { min-width:64px; padding:8px 10px; border-radius:12px; }
+  .edit-person { min-width:64px; padding:8px 10px; border-radius:12px; font-size:14px; }
+  #showprefs { font-size:14px; }
   .person-editor-actions { display:flex; gap:6px; flex-wrap:wrap; }
   .person-edit-feedback { margin:8px 0 0; border-radius:8px; padding:10px; background:#e9f4f1; color:#173f37; font-weight:750; }
   .person-edit-feedback:empty { display:none; }
@@ -148,8 +149,8 @@ button.tab.dangerdoor:not(:disabled), #showtriage:not(:disabled) { background:va
   .result-action-button { margin-top:8px; width:100%; }
   .request-card { scroll-margin-top:16px; }
   .request-instruction { font-weight:700; margin-bottom:8px; }
-  .seller-card { border:2px solid var(--accent); border-radius:10px; padding:12px; background:#f7fffc; font-family:Georgia, "Times New Roman", serif; font-size:17px; line-height:1.35; }
-  .seller-card strong { display:block; font-family:system-ui, -apple-system, sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:0; color:#0b3d35; margin-bottom:6px; }
+  .seller-card { border:3px solid var(--accent); border-radius:10px; padding:16px; background:#f7fffc; font-family:Georgia, "Times New Roman", serif; font-size:19px; line-height:1.4; }
+  .seller-card strong { display:block; font-family:system-ui, -apple-system, sans-serif; font-size:15px; text-transform:uppercase; letter-spacing:0; color:#0b3d35; margin-bottom:8px; }
   .fineprint { font-size:11px; line-height:1.35; color:#666; border-top:1px solid var(--line); margin-top:10px; padding-top:8px; }
   .mix-instruction { border:2px solid var(--accent); border-radius:10px; background:#f7fffc; padding:12px; margin-top:12px; }
   .mix-instruction h3 { margin:0 0 8px; font-size:16px; }
@@ -389,7 +390,7 @@ button.tab.dangerdoor:not(:disabled), #showtriage:not(:disabled) { background:va
       <span class="muted">Tap a name to show their options below.</span>
       <div class="people" id="peoplelist"></div>
       <details class="family-edit" id="personeditor">
-        <summary id="personeditlabel">Add a person</summary>
+        <summary id="personeditlabel">+ Add a person</summary>
         <div class="muted">To change someone, tap Edit next to their name.</div>
         <div class="row">
           <input id="personname" aria-label="Name or nickname" placeholder="Name or nickname" />
@@ -403,7 +404,7 @@ button.tab.dangerdoor:not(:disabled), #showtriage:not(:disabled) { background:va
           </select>
           <input id="persondob" type="date" min="1900-01-01" data-max-today="true" aria-label="Date of birth" />
           <div class="person-editor-actions">
-            <button id="addperson" type="button">Add person</button>
+            <button id="addperson" type="button">+ Add person</button>
             <button class="ghost hidden" id="cancelperson" type="button">Cancel</button>
           </div>
         </div>
