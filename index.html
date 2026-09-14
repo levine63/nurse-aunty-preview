@@ -3,11 +3,48 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="refresh" content="0; url=./apps/pwa-sandbox/">
-    <title>NurseAunty preview</title>
-    <script>location.replace("./apps/pwa-sandbox/");</script>
+    <title>NurseAunty preview - retired</title>
+    <style>
+      :root { color-scheme: light dark; }
+      body {
+        margin: 0 auto; padding: 2rem 1rem; max-width: 34rem;
+        font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      h1 { font-size: 1.35rem; line-height: 1.3; margin: 0 0 1rem; }
+      .box { border: 2px solid #b00; border-radius: 6px; padding: 0.75rem 1rem; margin: 1.25rem 0; }
+      .box p { margin: 0.4rem 0; }
+      a.go { display: inline-block; margin: 0.5rem 0 1.25rem; font-size: 1.05rem; font-weight: 600; }
+      code { overflow-wrap: anywhere; }
+      footer { margin-top: 2rem; font-size: 0.875rem; opacity: 0.75; }
+    </style>
   </head>
   <body>
-    <p>Opening the NurseAunty preview… <a href="./apps/pwa-sandbox/">Continue</a></p>
+    <h1>This NurseAunty preview is retired.</h1>
+
+    <div class="box">
+      <p><strong>Do not rely on anything you saw here.</strong></p>
+      <p>
+        It was built on 14 August 2026 and was never updated. It is roughly 200 commits
+        behind, and it predates a correction to how the app tells a caregiver to measure
+        oral rehydration solution. Its clinical content is out of date, not merely old.
+      </p>
+    </div>
+
+    <p>The current published demo is here:</p>
+    <p>
+      <a class="go" href="https://levine63.github.io/NurseAunty-Demo/">https://levine63.github.io/NurseAunty-Demo/</a>
+    </p>
+    <p>
+      The canonical tester URL, when you can reach it, is
+      <code>https://hygieneheroes.berkeley.edu/nurseaunty/demo/</code>.
+    </p>
+
+    <footer>
+      <p>
+        NurseAunty is an unreviewed prototype carrying synthetic data only. It is not
+        approved for real care, for field use, or for use with real patients. Do not use
+        it to make a decision about anyone's health.
+      </p>
+    </footer>
   </body>
 </html>
