@@ -1,12 +1,37 @@
-# NurseAunty preview
+# NurseAunty preview — RETIRED
 
-Public, browser-ready preview of the NurseAunty/Mamma prototype.
+**This repository is retired. Do not use it, and do not quote its URL.**
 
-This repository contains only the runtime files needed by the static web app, copied from `levine63/mamma-app` commit `2b08180`. It deliberately excludes private project history.
+The current published demo is **https://levine63.github.io/NurseAunty-Demo/** (note the
+capitals — the path is case-sensitive). The canonical tester URL is
+`https://hygieneheroes.berkeley.edu/nurseaunty/demo/`.
 
-The preview contains synthetic demonstration profiles only; it must not be used with real patient information. The clinical material remains clearly labeled as prototype content pending clinical review.
+## Why it was retired
+
+This preview was copied from `levine63/mamma-app` at commit `2b08180` on 2026-08-14 and
+was never updated. It is roughly 200 commits behind, and it predates a correction to how
+the app tells a caregiver to measure oral rehydration solution (issue #46). Its clinical
+content is therefore **wrong, not merely old**, and it was reachable at a public URL with
+nothing on the page saying so.
+
+Every servable page here — the root, the app entry point, the self-contained
+`standalone.html`, and the generated-asset gallery — has been replaced with a notice
+pointing at the current demo. The data files remain in the repository, but nothing
+reachable renders them.
+
+If you saved a copy of `standalone.html` to open offline, delete it. A saved copy keeps
+working, and keeps showing the August content, with nothing to tell you so.
+
+NurseAunty is an **unreviewed prototype** carrying **synthetic data only**. It is not
+approved for real care, for field use, or for use with real patients. Do not use it to
+make a decision about anyone's health.
+
+---
 
 ## Reviewer-follow-up log
+
+Kept for the record. These entries describe what reviewers found in this preview and what
+was changed in response; the fixes live in the application repository, not here.
 
 - 2026-08-14 — Reviewer feedback: the person picker did not visually distinguish the primary name from Edit/Settings controls, the Add-person action lacked an additive cue, and the ORS drug-seller card was too easy to miss. Root cause: these caregiver-facing actions inherited generic control and card styling without hierarchy checks. Guardrail: review each screen at its target viewport so the primary item/action is visually dominant; use familiar action cues such as “+” only where they match the control’s behavior, and make clinically relevant handoff cards conspicuous without changing their approved copy.
 
